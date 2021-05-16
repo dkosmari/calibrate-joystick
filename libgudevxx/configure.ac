@@ -1,9 +1,9 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
-AC_INIT([calibrate-joystick], [0.1], [])
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_PREREQ([2.70])
+AC_INIT([libgudevxx], [0.1], [])
+AC_CONFIG_SRCDIR([src/client.hpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -25,7 +25,8 @@ AC_LANG([C++])
 AX_CXX_COMPILE_STDCXX_17([noext])
 
 # Checks for libraries.
-PKG_CHECK_MODULES([DEPS], [gtkmm-3.0 gudev-1.0 gmodule-export-2.0])
+PKG_CHECK_MODULES([GUDEV], [gudev-1.0])
+PKG_CHECK_MODULES([GLIBMM], [glibmm-2.4])
 
 # Checks for header files.
 
@@ -36,8 +37,6 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
-
-AC_CONFIG_SUBDIRS([libgudevxx])
-
+                 src/Makefile
+                 utils/Makefile])
 AC_OUTPUT

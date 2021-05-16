@@ -1,9 +1,10 @@
-# ./Makefile.am
-
 ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = bootstrap
 
 SUBDIRS = \
-	libgudevxx \
-	src
+	src \
+	utils
+
+DISTCLEANFILES = autoscan.log configure.scan
+

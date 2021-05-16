@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkApplicationWindow" id="main_window">
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Joystick Calibration</property>
+    <property name="window-position">center</property>
+    <property name="default-width">800</property>
+    <property name="default-height">500</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkStackSidebar">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="stack">device_stack</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStack" id="device_stack">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="border-width">18</property>
+            <property name="transition-type">slide-up-down</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="refresh_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">view-refresh</property>
+  </object>
+  <object class="GtkHeaderBar" id="header_bar">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Calibrate Joystick</property>
+    <property name="show-close-button">True</property>
+    <child>
+      <object class="GtkButton" id="refresh_button">
+        <property name="label">_Refresh</property>
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
+        <property name="image">refresh_icon</property>
+        <property name="use-underline">True</property>
+        <property name="always-show-image">True</property>
+        <signal name="clicked" handler="refresh_button_clicked_cb" swapped="no"/>
+      </object>
+    </child>
+  </object>
+</interface>

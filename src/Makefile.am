@@ -13,7 +13,8 @@ bin_PROGRAMS = calibrate-joystick
 
 
 calibrate_joystick_SOURCES = \
-	main.cpp
+	main.cpp \
+	utils.cpp utils.hpp
 
 
 calibrate_joystick_LDADD = \

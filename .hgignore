@@ -1,0 +1,24 @@
+syntax: glob
+
+*.lo
+*.o
+*.Po
+*~
+.deps
+.libs
+aclocal.m4
+autom4te.cache
+autoscan.log
+build-aux
+compile_flags.txt
+config.h
+config.h.in
+config.log
+config.status
+configure
+configure.scan
+libtool
+m4
+Makefile
+Makefile.in
+stamp-h1
