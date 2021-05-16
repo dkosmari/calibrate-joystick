@@ -27,13 +27,13 @@ using std::chrono::hours;
 using std::chrono::duration_cast;
 
 
-using gudevmm::Client;
-using gudevmm::Device;
+using gudevxx::Client;
+using gudevxx::Device;
 
 
 gboolean handle_sigint(Glib::MainLoop* loop)
 {
-    cout << "Caught Ctrl+C." << endl;
+    cout << "\nCaught Ctrl-C." << endl;
     loop->quit();
     return false;
 }

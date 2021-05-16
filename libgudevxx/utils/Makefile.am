@@ -1,7 +1,9 @@
-# utils/Makefile.am
+# libgudevxx/utils/Makefile.am
 
 
-AM_CPPFLAGS = $(GLIBMM_CFLAGS)
+AM_CPPFLAGS = \
+	-I../src \
+	$(GLIBMM_GUDEV_CFLAGS)
 
 
 noinst_PROGRAMS = \
@@ -13,7 +15,7 @@ test_listener_SOURCES = \
 
 test_listener_LDADD = \
 	../src/libgudevxx.la \
-	$(GLIBMM_LIBS)
+	$(GLIBMM_GUDEV_LIBS)
 
 
 

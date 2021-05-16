@@ -1,5 +1,5 @@
 #!/bin/bash -xe
 mkdir -p m4
 autoreconf --install --no-recursive "$@" || exit 1
-(cd gudevxx && ./bootstrap) || exit 1
+(cd libgudevxx && ./bootstrap) || exit 1
 exit 0

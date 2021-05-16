@@ -26,7 +26,7 @@ AX_CXX_COMPILE_STDCXX_17([noext])
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GUDEV], [gudev-1.0])
-PKG_CHECK_MODULES([GLIBMM], [glibmm-2.4])
+PKG_CHECK_MODULES([GLIBMM_GUDEV], [glibmm-2.4 gudev-1.0])
 
 # Checks for header files.
 
