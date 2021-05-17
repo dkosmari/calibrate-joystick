@@ -1,3 +1,40 @@
+/*
+ *  libgudevxx - a C++ wrapper for libgudev
+ *  Copyright (C) 2021  Daniel K. O.
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*------------------------------------------------------.
+| This is a test program for the gudevxx::Client class. |
+|                                                       |
+| It acts like 'udevadm monitor'.                       |
+|                                                       |
+| Usage:                                                |
+|                                                       |
+|     ./test-listener [subsystem ...]                   |
+|                                                       |
+| Examples:                                             |
+|                                                       |
+|     ./test-listener                                   |
+|                                                       |
+|     ./test-listener input                             |
+|                                                       |
+|     ./test-listener usb bluetooth                     |
+`------------------------------------------------------*/
+
+
 #include <chrono>
 #include <iostream>
 #include <sstream>
@@ -58,85 +95,9 @@ string human_time(std::chrono::duration<Rep, Ratio> t)
 }
 
 
-void print_device(const Device& dev)
-{
-    cout << "Device:\n";
-    if (auto subsystem = dev.subsystem())
-        cout << "      Subsystem: " << *subsystem << "\n";
-    if (auto devtype = dev.devtype())
-        cout << "        Devtype: " << *devtype << "\n";
-    if (auto name = dev.name())
-        cout << "           Name: " << *name << "\n";
-    if (auto number = dev.number())
-        cout << "         Number: " << *number << "\n";
-    if (auto sysfs = dev.sysfs())
-        cout << "          SysFS: " << sysfs->string() << "\n";
-    if (auto driver = dev.driver())
-        cout << "         Driver: " << *driver << "\n";
-    if (auto action = dev.action())
-        cout << "         Action: " << *action << "\n";
-
-    cout << "         Seqnum: " << dev.seqnum() << "\n";
-    cout << "    Device type: " << dev.device_type() << "\n";
-    cout << "  Device number: " << dev.device_number() << "\n";
-    if (dev.initialized())
-        cout << "    Initialized: "
-             << human_time(dev.since_initialized())
-             << " ago\n";
-
-    if (auto device_file = dev.device_file())
-        cout << "    Device File: " << device_file->string() << "\n";
-
-    if (auto symlinks = dev.device_symlinks(); !symlinks.empty()) {
-        cout << "       Symlinks: ";
-        const char* sep = "";
-        for (const auto& s : symlinks) {
-            cout << sep << s.string() << "\n";
-            sep = "                 ";
-        }
-    }
-
-    // TODO: print parents if a command line option was given
-
-    if (auto tags = dev.tags(); !tags.empty()) {
-        cout << "           Tags: ";
-        const char* sep = "";
-        for (const auto& t : tags) {
-            cout << sep << t;
-            sep = ", ";
-        }
-        cout << "\n";
-    }
-
-    if (auto pkeys = dev.property_keys(); !pkeys.empty()) {
-        cout << "     Properties: ";
-        const char* sep = "";
-        for (const auto& k : pkeys) {
-            cout << sep << k << " = " << dev.property_as<string>(k) << "\n";
-            sep = "                 ";
-        }
-    }
-
-#if 1
-    if (auto akeys = dev.sysfs_attr_keys(); !akeys.empty()) {
-        cout << "    Sysfs attrs: ";
-        const char* sep = "";
-        for (const auto& k : akeys) {
-            cout << sep << k;
-            auto val = dev.sysfs_attr(k);
-            if (val)
-                cout << " = " << val.value();
-            cout << "\n";
-            sep = "                 ";
-        }
-    }
-#endif
-}
-
-
 void print_event(GUdevClient* client_,
                  gchar* action_,
-                 GUdevDevice* device_,
+                 GUdevDevice* /*device_*/,
                  gpointer /*user_data*/)
 {
     Client client = Client::view(client_);
@@ -144,7 +105,6 @@ void print_event(GUdevClient* client_,
 
     cout << "Client: " << client.gobj() << " : "
          << action << endl;
-    print_device(Device::view(device_));
 
     cout << endl;
 }
@@ -152,6 +112,8 @@ void print_event(GUdevClient* client_,
 
 int main(int argc, char* argv[])
 {
+    Glib::init();
+
     vector<string> filters;
     for (int i=1; i<argc; ++i)
         filters.push_back(argv[i]);

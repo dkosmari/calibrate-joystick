@@ -60,23 +60,11 @@ namespace gudevxx {
 
 
     vector<Device>
-    Client::query()
-    {
-        GList* list = g_udev_client_query_by_subsystem(gobj(),
-                                                       nullptr);
-        auto vec = utils::gobj_list_to_vector<GUdevDevice*>(list);
-        vector<Device> result;
-        for (auto& d : vec)
-            result.push_back(Device::own(d));
-        return result;
-    }
-
-
-    vector<Device>
     Client::query(const string& subsystem)
     {
+        const char* arg = subsystem.empty() ? nullptr : subsystem.c_str();
         GList* list = g_udev_client_query_by_subsystem(gobj(),
-                                                       subsystem.c_str());
+                                                       arg);
         auto vec = utils::gobj_list_to_vector<GUdevDevice*>(list);
         vector<Device> result;
         for (auto& d : vec)

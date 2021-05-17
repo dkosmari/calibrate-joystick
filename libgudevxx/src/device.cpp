@@ -93,27 +93,31 @@ namespace gudevxx {
     }
 
 
-    uint64_t
+    opt_uint64_t
     Device::seqnum() const
     {
-        auto r = g_udev_device_get_seqnum(gobj());
-        if (r)
-            return r;
+        auto s = g_udev_device_get_seqnum(gobj());
+        if (s)
+            return s;
         return {};
     }
 
 
-    GUdevDeviceType
-    Device::device_type() const
+    Device::Type
+    Device::type() const
     {
-        return g_udev_device_get_device_type(gobj());
+        auto t = g_udev_device_get_device_type(gobj());
+        return Type{t};
     }
 
 
-    uint64_t
+    opt_uint64_t
     Device::device_number() const
     {
-        return g_udev_device_get_device_number(gobj());
+        auto n = g_udev_device_get_device_number(gobj());
+        if (n)
+            return n;
+        return {};
     }
 
 
@@ -338,5 +342,30 @@ namespace gudevxx {
         auto t = g_udev_device_get_sysfs_attr_as_strv(gobj(), key.c_str());
         return utils::strv_to_vector(t);
     }
+
+
+
+    string
+    to_string(Device::Type t)
+    {
+        switch (t) {
+            case Device::Type::no_device:
+                return "no device file";
+            case Device::Type::block_device:
+                return "block_device";
+            case Device::Type::char_device:
+                return "character device";
+            default:
+                throw std::logic_error{"invalid device type"};
+        }
+    }
+
+
+    std::ostream&
+    operator<<(std::ostream& out, Device::Type t)
+    {
+        return out << to_string(t);
+    }
+
 
 }

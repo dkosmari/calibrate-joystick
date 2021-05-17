@@ -57,10 +57,7 @@ namespace gudevxx {
         // query operations
 
         vector<Device>
-        query();
-
-        vector<Device>
-        query(const string& subsystem);
+        query(const string& subsystem = "");
 
         optional<Device>
         get(const string& subsystem,

@@ -27,6 +27,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <iosfwd>
 
 #include <gudev/gudev.h>
 
@@ -46,9 +47,17 @@ namespace gudevxx {
 
     using opt_string = optional<string>;
     using opt_path = optional<path>;
+    using opt_uint64_t = optional<uint64_t>;
 
 
     struct Device : GObjectBase<::GUdevDevice, Device> {
+
+
+        enum class Type {
+            no_device = G_UDEV_DEVICE_TYPE_NONE,
+            block_device = G_UDEV_DEVICE_TYPE_BLOCK,
+            char_device = G_UDEV_DEVICE_TYPE_CHAR,
+        };
 
 
         using Base = GObjectBase<::GUdevDevice, Device>;
@@ -64,11 +73,11 @@ namespace gudevxx {
         opt_string driver() const;
         opt_string action() const;
 
-        uint64_t seqnum() const;
+        opt_uint64_t seqnum() const;
 
-        GUdevDeviceType device_type() const;
+        Type type() const;
 
-        uint64_t device_number() const;
+        opt_uint64_t device_number() const;
 
         opt_path device_file() const;
 
@@ -118,6 +127,10 @@ namespace gudevxx {
 
     }; // class Device
 
+
+    string to_string(Device::Type t);
+
+    std::ostream& operator<<(std::ostream& out, Device::Type t);
 
 } // namespace gudevxx
 
