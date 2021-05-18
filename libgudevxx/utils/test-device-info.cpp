@@ -17,15 +17,17 @@
  */
 
 /*
- *
+ * Test program to print device info.
  */
 
 #include <chrono>
 #include <filesystem>
 #include <iostream>
 #include <locale>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #include <glibmm.h>
 
@@ -43,6 +45,8 @@ using std::chrono::seconds;
 using std::cout;
 using std::endl;
 using std::filesystem::path;
+using std::istringstream;
+using std::optional;
 using std::ostringstream;
 using std::string;
 
@@ -74,80 +78,109 @@ string human_time(std::chrono::duration<Rep, Ratio> t)
 
 void print_device(const Device& dev)
 {
+    const string indent(20, ' ');
+    const string indent2(40, ' ');
+
+    using std::to_string;
+    using gudevxx::to_string;
+
+    auto aprint = [&indent](const string& left, const string& right = "")
+    {
+        if (indent.size() > left.size()) {
+            size_t pad_size = indent.size() - left.size();
+            string padding = indent.substr(0, pad_size);
+            cout << padding;
+        }
+        cout << left << right << "\n";
+    };
+    auto printif = [&aprint](const string& label, const optional<auto>& val)
+    {
+        if (val) {
+            using T = std::remove_reference_t<
+                std::remove_cv_t<decltype(val.value())>>;
+
+            if constexpr(std::is_convertible_v<T, std::string>)
+                aprint(label, *val);
+            else
+                aprint(label, to_string(*val));
+        }
+    };
+
+    auto aprint2 = [&indent2](const string& left, const string& right = "")
+    {
+        if (indent2.size() > left.size()) {
+            size_t pad_size = indent2.size() - left.size();
+            string padding = indent2.substr(0, pad_size);
+            cout << padding;
+        }
+        cout << left;
+        if (!left.empty() && !right.empty())
+            cout << " = ";
+        else
+            cout << "   ";
+        cout << right << "\n";
+    };
+
     cout << "Device:\n";
-    if (auto subsystem = dev.subsystem())
-        cout << "      Subsystem: " << *subsystem << "\n";
-    if (auto devtype = dev.devtype())
-        cout << "        Devtype: " << *devtype << "\n";
-    if (auto name = dev.name())
-        cout << "           Name: " << *name << "\n";
-    if (auto number = dev.number())
-        cout << "         Number: " << *number << "\n";
-    if (auto sysfs = dev.sysfs())
-        cout << "          SysFS: " << sysfs->string() << "\n";
-    if (auto driver = dev.driver())
-        cout << "         Driver: " << *driver << "\n";
-    if (auto action = dev.action())
-        cout << "         Action: " << *action << "\n";
+    printif("Subsystem: ", dev.subsystem());
+    printif("Devtype: ", dev.devtype());
+    printif("Name: ", dev.name());
+    printif("Number: ", dev.number());
+    printif("SysFS: ", dev.sysfs());
+    printif("Driver: ", dev.driver());
+    printif("Action: ", dev.action());
+    printif("Seqnum: ", dev.seqnum());
+    printif("Device type: ", optional{dev.type()});
+    printif("Device number: ", dev.device_number());
 
-    if (auto seqnum = dev.seqnum())
-        cout << "         Seqnum: " << *seqnum << "\n";
-    cout << "    Device type: " << dev.type() << "\n";
-    if (auto devnum = dev.device_number())
-        cout << "  Device number: " << *devnum << "\n";
     if (dev.initialized())
-        cout << "    Initialized: "
-             << human_time(dev.since_initialized())
-             << " ago\n";
+        aprint("Initialized: ",
+               human_time(dev.since_initialized()) + " ago");
 
-    if (auto device_file = dev.device_file())
-        cout << "    Device File: " << device_file->string() << "\n";
+    printif("Device file: ", dev.device_file());
 
     if (auto symlinks = dev.device_symlinks(); !symlinks.empty()) {
-        cout << "       Symlinks: ";
-        const char* sep = "";
-        for (const auto& s : symlinks) {
-            cout << sep << s.string() << "\n";
-            sep = "                 ";
-        }
+        aprint("Symlinks: ", "");
+        for (const auto& s : symlinks)
+            aprint("", s.string());
     }
 
     if (auto tags = dev.tags(); !tags.empty()) {
-        cout << "           Tags: ";
-        const char* sep = "";
-        for (const auto& t : tags) {
-            cout << sep << t;
-            sep = ", ";
-        }
-        cout << "\n";
+        aprint("Tags: ");
+        for (const auto& t : tags)
+            aprint("", t);
     }
 
+    // TODO: print with the same syntax as udev
     if (auto pkeys = dev.property_keys(); !pkeys.empty()) {
-        cout << "     Properties: ";
-        const char* sep = "";
-        for (const auto& k : pkeys) {
-            cout << sep << k << " = " << dev.property_as<string>(k) << "\n";
-            sep = "                 ";
-        }
+        aprint("Properties: ");
+        for (const auto& k : pkeys)
+            aprint2(k, dev.property_as<string>(k));
     }
 
+    // TODO: print with the same syntax as udev
     if (auto akeys = dev.sysfs_attr_keys(); !akeys.empty()) {
-        cout << "    Sysfs attrs: ";
-        const char* sep = "";
+        aprint("Sysfs attrs: ");
         for (const auto& k : akeys) {
-            if (k == "uevent")
-                continue;
-            cout << sep << k;
             auto val = dev.sysfs_attr(k);
-            if (val)
-                cout << " = " << val.value();
-            cout << "\n";
-            sep = "                 ";
+            if (val) {
+                if (val->find('\n') == string::npos)
+                    aprint2(k, *val);
+                else {
+                    aprint2(k, "{");
+                    istringstream input{*val};
+                    string line;
+                    while (getline(input, line))
+                        cout << indent2 << line << "\n";
+                    aprint2("", "}");
+                }
+            } else {
+                // only they key
+                aprint2(k);
+            }
         }
     }
 }
-
-
 
 
 int main(int argc, char* argv[])
@@ -156,21 +189,13 @@ try {
 
     Glib::init();
 
-    bool show_help = false;
     Glib::ustring subsystem;
     Glib::ustring file;
     bool show_parents = false;
 
     OptionContext ctx;
-    ctx.set_help_enabled(false);
 
     OptionGroup grp{"options", "Main options"};
-
-    OptionEntry help_opt;
-    help_opt.set_long_name("help");
-    help_opt.set_short_name('h');
-    help_opt.set_description("Show help.");
-    grp.add_entry(help_opt, show_help);
 
     OptionEntry sub_opt;
     sub_opt.set_long_name("subsystem");
@@ -179,13 +204,18 @@ try {
     sub_opt.set_description("Only list from selected subsystem.");
     grp.add_entry(sub_opt, subsystem);
 
-    OptionEntry file_opt;
-    file_opt.set_long_name("file");
-    file_opt.set_short_name('f');
-    file_opt.set_arg_description("FILE");
-    file_opt.set_description("Print device info from specified FILE.");
-    grp.add_entry(file_opt, file);
+    OptionEntry dev_opt;
+    dev_opt.set_long_name("device");
+    dev_opt.set_short_name('d');
+    dev_opt.set_arg_description("FILE");
+    dev_opt.set_description("Print device info from specified FILE.");
+    grp.add_entry(dev_opt, file);
 
+    OptionEntry par_opt;
+    par_opt.set_long_name("parents");
+    par_opt.set_short_name('p');
+    par_opt.set_description("Show parent devices.");
+    grp.add_entry(par_opt, show_parents);
 
     ctx.set_main_group(grp);
 
@@ -195,18 +225,31 @@ try {
         return -1;
     }
 
-    if (show_help) {
-        cout << ctx.get_help();
-        return 0;
-    }
-
 
     Client client;
 
 
     if (!file.empty()) {
-        Device d = client.get(path{file.raw()}).value();
-        print_device(d);
+        path dev_path = file.raw();
+        auto dev_printer = [show_parents](const Device& d)
+        {
+            print_device(d);
+            if (show_parents)
+                for (auto p = d.parent(); p; p = p->parent()) {
+                    cout << "\nParent:" << endl;
+                    print_device(*p);
+                }
+        };
+
+        if (auto d = client.get(dev_path))
+            dev_printer(*d);
+        else if (auto d = client.get_sysfs(dev_path))
+            dev_printer(*d);
+        else {
+            cerr << "Could not access device " << dev_path << endl;
+            return -1;
+        }
+
         return 0;
     }
 

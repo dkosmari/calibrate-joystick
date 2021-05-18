@@ -13,6 +13,7 @@ LDADD = \
 
 noinst_PROGRAMS = \
 	test-device-info \
+	test-enumerator \
 	test-listener
 
 
@@ -22,6 +23,10 @@ test_listener_SOURCES = \
 
 test_device_info_SOURCES = \
 	test-device-info.cpp
+
+
+test_enumerator_SOURCES = \
+	test-enumerator.cpp
 
 
 .PHONY: company

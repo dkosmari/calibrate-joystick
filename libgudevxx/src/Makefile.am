@@ -18,6 +18,7 @@ AM_CPPFLAGS = \
 libgudevxx_la_SOURCES = \
 	client.cpp client.hpp \
 	device.cpp device.hpp \
+	enumerator.cpp enumerator.hpp \
 	gobject_base.hpp \
 	utils.hpp
 

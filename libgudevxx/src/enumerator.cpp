@@ -17,7 +17,7 @@
  */
 
 #include "enumerator.hpp"
-
+#include "utils.hpp"
 
 namespace gudevxx {
 
@@ -94,9 +94,9 @@ namespace gudevxx {
     Enumerator::execute()
     {
         GList* list = g_udev_enumerator_execute(gobj());
-        auto vec = wrapper::to_vector_ref<::GUdevDevice*>(list);
+        auto devs = utils::gobj_list_to_vector<GUdevDevice*>(list);
         vector<Device> result;
-        for (ato& d : vec)
+        for (auto& d : devs)
             result.push_back(Device::own(d));
         return result;
     }

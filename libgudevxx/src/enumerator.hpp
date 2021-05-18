@@ -36,9 +36,9 @@ namespace gudevxx {
     using std::vector;
 
 
-    struct Enumerator : GObjectBas<::GUdevEnumerator, Enumerator> {
+    struct Enumerator : GObjectBase<GUdevEnumerator, Enumerator> {
 
-        using Base = GObjectBase<::GUdevEnumerator, Enumerator>;
+        using Base = GObjectBase<GUdevEnumerator, Enumerator>;
 
 
         Enumerator(Client& client);
@@ -48,7 +48,7 @@ namespace gudevxx {
         void nomatch_subsystem(const string& subsystem);
 
         void match_sysfs_attr(const string& key, const string& val);
-        void nomatch_sysfs_attr(const string& key, const stirng& val);
+        void nomatch_sysfs_attr(const string& key, const string& val);
 
         void match_property(const string& key, const string& val);
 
