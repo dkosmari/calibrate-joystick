@@ -36,6 +36,7 @@
 
 
 #include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -50,22 +51,22 @@
 #include "client.hpp"
 
 
-using std::cout;
-using std::endl;
-using std::flush;
-using std::string;
-using std::vector;
-using std::ostringstream;
+using std::chrono::duration_cast;
+using std::chrono::hours;
 using std::chrono::microseconds;
 using std::chrono::milliseconds;
-using std::chrono::seconds;
 using std::chrono::minutes;
-using std::chrono::hours;
-using std::chrono::duration_cast;
+using std::chrono::seconds;
+using std::cout;
+using std::endl;
+using std::ostringstream;
+using std::setw;
+using std::string;
+using std::vector;
 
 
-using gudevxx::Client;
-using gudevxx::Device;
+using gudev::Client;
+using gudev::Device;
 
 
 gboolean handle_sigint(Glib::MainLoop* loop)
@@ -95,19 +96,45 @@ string human_time(std::chrono::duration<Rep, Ratio> t)
 }
 
 
-void print_event(GUdevClient* client_,
-                 gchar* action_,
-                 GUdevDevice* /*device_*/,
-                 gpointer /*user_data*/)
+string
+to_string(const Device& device)
 {
-    Client client = Client::view(client_);
-    string action = action_;
+    ostringstream output;
 
-    cout << "Client: " << client.gobj() << " : "
-         << action << endl;
+    if (auto subsystem = device.subsystem())
+        output << *subsystem << " | ";
 
-    cout << endl;
+    if (auto name = device.name())
+        output << *name << " | ";
+
+    if (auto file = device.device_file())
+        output << file->string() << " | ";
+    else if (auto sysfs = device.sysfs())
+        output << sysfs->string() << " | ";
+
+    if (auto seqnum = device.seqnum())
+        output << *seqnum;
+    else
+        output << device.gobj();
+
+    return output.str();
 }
+
+
+struct MyClient : Client {
+
+    using Client::Client;
+
+    void on_uevent(const string& action,
+                   const Device& device) override
+    {
+        cout << setw(6) << action
+             << " | "
+             << to_string(device)
+             << endl;
+    }
+
+};
 
 
 int main(int argc, char* argv[])
@@ -125,12 +152,7 @@ int main(int argc, char* argv[])
                       main_loop.get());
 
 
-    Client client = Client::listener(filters);
-
-    g_signal_connect(client.gobj(),
-                     "uevent",
-                     G_CALLBACK(print_event),
-                     nullptr);
+    MyClient client{filters};
 
     main_loop->run();
 

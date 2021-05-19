@@ -26,7 +26,7 @@
 #include <glib.h>
 
 
-namespace gudevxx::utils {
+namespace gudev::utils {
 
 
     template<typename T>
@@ -61,7 +61,7 @@ namespace gudevxx::utils {
     }
 
 
-} // namespace gudevxx::utils
+} // namespace gudev::utils
 
 
 #endif

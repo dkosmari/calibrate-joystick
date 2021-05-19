@@ -25,7 +25,8 @@ AC_LANG([C++])
 AX_CXX_COMPILE_STDCXX_17([noext])
 
 # Checks for libraries.
-PKG_CHECK_MODULES([DEPS], [gtkmm-3.0 gudev-1.0 gmodule-export-2.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
+PKG_CHECK_MODULES([GUDEV], [gudev-1.0])
 
 # Checks for header files.
 

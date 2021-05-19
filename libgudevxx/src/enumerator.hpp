@@ -29,7 +29,8 @@
 #include "gobject_base.hpp"
 
 
-namespace gudevxx {
+namespace gudev {
+
 
     using std::filesystem::path;
     using std::string;
@@ -57,6 +58,7 @@ namespace gudevxx {
         void match_tag(const string& tag);
 
         void match_initialized();
+
 
         void add_sysfs_path(const path& sysfs_path);
 

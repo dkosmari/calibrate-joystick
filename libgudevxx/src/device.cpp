@@ -16,12 +16,14 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
+
 #include "device.hpp"
 
 #include "utils.hpp"
 
 
-namespace gudevxx {
+namespace gudev {
 
     opt_string
     Device::subsystem() const
@@ -179,6 +181,14 @@ namespace gudevxx {
     {
         auto t = g_udev_device_get_tags(gobj());
         return utils::strv_to_vector(t);
+    }
+
+
+    bool
+    Device::has_tag(const string& tag) const
+    {
+        auto list = tags();
+        return find(list.begin(), list.end(), tag) != list.end();
     }
 
 

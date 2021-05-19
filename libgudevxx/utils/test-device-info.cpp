@@ -53,8 +53,8 @@ using std::string;
 using Glib::OptionContext;
 using Glib::OptionGroup;
 using Glib::OptionEntry;
-using gudevxx::Client;
-using gudevxx::Device;
+using gudev::Client;
+using gudev::Device;
 
 
 template<typename Rep, typename Ratio>
@@ -82,7 +82,7 @@ void print_device(const Device& dev)
     const string indent2(40, ' ');
 
     using std::to_string;
-    using gudevxx::to_string;
+    using gudev::to_string;
 
     auto aprint = [&indent](const string& left, const string& right = "")
     {

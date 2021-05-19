@@ -35,9 +35,9 @@ using std::pair;
 
 using namespace std::literals;
 
-using gudevxx::Client;
-using gudevxx::Device;
-using gudevxx::Enumerator;
+using gudev::Client;
+using gudev::Device;
+using gudev::Enumerator;
 
 
 void print(const Device& d)

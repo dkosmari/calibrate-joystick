@@ -19,7 +19,7 @@
 #include "enumerator.hpp"
 #include "utils.hpp"
 
-namespace gudevxx {
+namespace gudev {
 
 
     Enumerator::Enumerator(Client& client) :

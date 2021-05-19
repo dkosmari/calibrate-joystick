@@ -34,7 +34,7 @@
 #include "gobject_base.hpp"
 
 
-namespace gudevxx {
+namespace gudev {
 
 
     using std::chrono::microseconds;
@@ -90,6 +90,8 @@ namespace gudevxx {
 
         vector<string> tags() const;
 
+        bool has_tag(const string& tag) const;
+
         bool initialized() const;
 
         microseconds since_initialized() const;
@@ -132,7 +134,7 @@ namespace gudevxx {
 
     std::ostream& operator<<(std::ostream& out, Device::Type t);
 
-} // namespace gudevxx
+} // namespace gudev
 
 
 #endif

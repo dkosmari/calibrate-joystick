@@ -28,30 +28,62 @@ using std::runtime_error;
 using std::size_t;
 
 
-namespace gudevxx {
+namespace gudev {
+
+
+    namespace {
+
+        GUdevClient*
+        make_filter_client(const vector<string>& subsystems)
+        {
+            vector<const char*> filter;
+            for (auto& s : subsystems)
+                filter.push_back(s.c_str());
+            filter.push_back(nullptr);
+            return g_udev_client_new(filter.data());
+        }
+
+
+        void
+        dispatch_uevent_signal(GUdevClient* client_,
+                               gchar*       action_,
+                               GUdevDevice* device_,
+                               gpointer     data)
+        {
+            Client* client = reinterpret_cast<Client*>(data);
+            string action = action_;
+            Device device = Device::view(device_);
+            client->on_uevent(action, device);
+        }
+    }
 
 
     // Default constructor: don't listen to any events
     Client::Client() :
         Base{g_udev_client_new(nullptr), true}
-    {
-        if (!ptr)
-            throw runtime_error{"Failed to construct GUdevClient."};
-    }
+    {}
 
 
     // Named constructor: listen events for subsystems
-    Client
-    Client::listener(const vector<string>& subsystems)
-    {
-        vector<const char*> arg;
-        for (auto& s : subsystems)
-            arg.push_back(s.c_str());
-        arg.push_back(nullptr);
+    Client::Client(const vector<string>& subsystems) :
+        Base{make_filter_client(subsystems), true}
+    {}
 
-        return Client::own(g_udev_client_new(arg.data()));
+
+    Client::~Client()
+    {
+        g_signal_handler_disconnect(gobj(), uevent_handler);
     }
 
+
+    gulong
+    Client::connect_uevent()
+    {
+        return g_signal_connect(gobj(),
+                                "uevent",
+                                G_CALLBACK(dispatch_uevent_signal),
+                                this);
+    }
 
 
     /*------------------*/
@@ -120,5 +152,11 @@ namespace gudevxx {
             return Device::own(d);
         return {};
     }
+
+
+    void
+    Client::on_uevent(const string& /*action*/,
+                      const Device& /*device*/)
+    {}
 
 }

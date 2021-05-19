@@ -32,7 +32,7 @@
 #include "gobject_base.hpp"
 
 
-namespace gudevxx {
+namespace gudev {
 
 
     using std::optional;
@@ -49,9 +49,9 @@ namespace gudevxx {
 
 
         Client(); // don't listen on any subsystem
+        Client(const vector<string>& subsystems);
 
-        // named constructor: empty list means listen to all events
-        static Client listener(const vector<string>& subsystems = {});
+        virtual ~Client();
 
 
         // query operations
@@ -74,15 +74,23 @@ namespace gudevxx {
         get_sysfs(const path& sysfs_path);
 
 
+        virtual
+        void
+        on_uevent(const string& action,
+                  const Device& device);
+
+
     private:
 
         using Base::Base;
+        gulong uevent_handler = connect_uevent();
 
+        gulong connect_uevent();
 
     }; // class Client
 
 
-} // namespace gudevxx
+} // namespace gudev
 
 
 #endif

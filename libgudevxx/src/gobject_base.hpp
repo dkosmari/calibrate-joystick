@@ -25,17 +25,13 @@
 #include <glib.h>
 
 
-namespace gudevxx {
+namespace gudev {
 
     
     template<typename T,
              typename Derived>
     class GObjectBase {
 
-        
-    protected:
-
-        
         struct Deleter {
             void operator()(T* obj) const
             {
@@ -45,14 +41,16 @@ namespace gudevxx {
 
         std::unique_ptr<T, Deleter> ptr;
 
-
-        GObjectBase(T* object, bool steal) :
-            ptr{object}
+        
+    protected:
+        
+        GObjectBase(T* obj, bool steal) :
+            ptr{obj}
         {
-            if (!object)
+            if (!gobj())
                 throw std::logic_error{"Constructing from a null pointer."};
             if (!steal)
-                g_object_ref(object);
+                g_object_ref(gobj());
         }
 
 
