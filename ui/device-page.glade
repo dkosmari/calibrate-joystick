@@ -12,25 +12,23 @@
     <property name="can-focus">False</property>
     <property name="icon-name">dialog-ok</property>
   </object>
-  <object class="GtkBox" id="device_page">
+  <object class="GtkBox" id="device_box">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="orientation">vertical</property>
     <property name="spacing">18</property>
     <child>
-      <!-- n-columns=3 n-rows=3 -->
+      <!-- n-columns=2 n-rows=3 -->
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="row-spacing">6</property>
         <property name="column-spacing">12</property>
-        <property name="column-homogeneous">True</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">Name:</property>
-            <property name="justify">right</property>
             <property name="xalign">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -46,7 +44,6 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">Path:</property>
-            <property name="justify">right</property>
             <property name="xalign">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -61,7 +58,7 @@
           <object class="GtkLabel" id="name_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">label</property>
+            <property name="label" translatable="yes">name</property>
             <property name="xalign">0</property>
           </object>
           <packing>
@@ -73,7 +70,7 @@
           <object class="GtkLabel" id="path_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">label</property>
+            <property name="label" translatable="yes">path</property>
             <property name="selectable">True</property>
             <property name="xalign">0</property>
           </object>
@@ -83,19 +80,31 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Axes:</property>
+            <property name="xalign">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">2</property>
+          </packing>
         </child>
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
+          <object class="GtkLabel" id="axes_label">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">axes</property>
+            <property name="xalign">0</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">2</property>
+          </packing>
         </child>
       </object>
       <packing>
@@ -108,16 +117,21 @@
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="shadow-type">in</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="overlay-scrolling">False</property>
+        <property name="propagate-natural-width">True</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="shadow-type">none</property>
             <child>
               <object class="GtkBox" id="axes_box">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">18</property>
                 <child>
                   <placeholder/>
                 </child>

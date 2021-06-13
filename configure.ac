@@ -19,6 +19,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+AC_CHECK_PROGS([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
 
 AC_LANG([C++])
 
@@ -26,7 +27,8 @@ AX_CXX_COMPILE_STDCXX_17([noext])
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
-PKG_CHECK_MODULES([GUDEV], [gudev-1.0])
+PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx])
+PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx])
 
 # Checks for header files.
 
@@ -38,7 +40,5 @@ AC_TYPE_UINT64_T
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
-
-AC_CONFIG_SUBDIRS([libgudevxx])
 
 AC_OUTPUT

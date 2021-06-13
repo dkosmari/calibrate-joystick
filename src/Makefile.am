@@ -3,8 +3,9 @@
 
 AM_CPPFLAGS = \
 	$(GTKMM_CFLAGS) \
-	$(GUDEV_CFLAGS) \
-	-I../libgudevxx/src
+	$(LIBGUDEVXX_CFLAGS) \
+	$(LIBEVDEVXX_CFLAGS) \
+	-DRESOURCE_DIR=\"$(abs_top_builddir)\"
 
 
 AM_CXXFLAGS = \
@@ -12,9 +13,9 @@ AM_CXXFLAGS = \
 
 
 LDADD = \
-	$(top_builddir)/libgudevxx/src/libgudevxx.la \
 	$(GTKMM_LIBS) \
-	$(GUDEV_LIBS)
+	$(LIBGUDEVXX_LIBS) \
+	$(LIBEVDEVXX_LIBS)
 
 
 bin_PROGRAMS = calibrate-joystick
@@ -22,6 +23,8 @@ bin_PROGRAMS = calibrate-joystick
 
 calibrate_joystick_SOURCES = \
 	app.cpp app.hpp \
+	axis_canvas.cpp axis_canvas.hpp \
+	axis_info.cpp axis_info.hpp \
 	device_page.cpp device_page.hpp \
 	joystick_listener.cpp joystick_listener.hpp \
 	main.cpp \
@@ -29,10 +32,11 @@ calibrate_joystick_SOURCES = \
 	utils.cpp utils.hpp
 
 
-#calibrate_joystick_LDFLAGS = -rdynamic $(AM_LDFLAGS)
-
-
 .PHONY: company
 
-company: Makefile
-	echo "$(AM_CPPFLAGS)" | xargs -n1 echo | sort -u > compile_flags.txt
+company: compile_flags.txt
+
+compile_flags.txt: Makefile
+	echo "$(AM_CPPFLAGS) $(CPPFLAGS) $(DEFS)" \
+		| xargs -n1 echo | sort -u \
+		> $(srcdir)/compile_flags.txt

@@ -1,10 +1,9 @@
 #include <iostream>
 
-#include "enumerator.hpp"
+#include <gudevxx/enumerator.hpp>
 
 #include "app.hpp"
 
-#include "refresh_button.hpp"
 #include "device_page.hpp"
 #include "utils.hpp"
 
@@ -13,21 +12,25 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+using std::make_unique;
 
-using gudev::Device;
+using UDevice = gudev::Device;
 using gudev::Enumerator;
 
 
 App::App() :
-    Gtk::Application{"org.calibrate-joystick"},
+    Gtk::Application{"none.calibrate_joystick"},
     joystick_listener{*this}
 {}
+
+
+App::~App() = default;
 
 
 void
 App::create_main_window()
 {
-    auto builder = Gtk::Builder::create_from_file(ui_main_window_path);
+    auto builder = Gtk::Builder::create_from_resource(ui_main_window_path);
 
     main_window = get_widget<Gtk::ApplicationWindow>(builder,
                                                      "main_window");
@@ -62,36 +65,38 @@ App::clear_devices()
 
 
 void
-App::add_device(const Device& device)
+App::add_device(const UDevice& device)
 {
-    auto path = device.device_file().value();
-    cout << "adding " << path.string() << endl;
-    devices.emplace_back(device);
-    auto& dev = devices.back();
-    dev.box->show_all();
+    auto dev_path = device.device_file().value();
+    //cout << "adding " << dev_path << endl;
+    devices.emplace_back(make_unique<DevicePage>(dev_path));
+    auto& dev_page = devices.back();
+    dev_page->root().show_all();
+
+    auto title = dev_page->name();
     auto name = device.name().value();
-    device_stack->add(*dev.box, name, name);
+    device_stack->add(dev_page->root(), name, title);
 
 }
 
+
 void
-App::remove_device(const Device& device)
+App::remove_device(const UDevice& device)
 {
-    auto path = device.device_file().value();
-    cout << "removing " << path.string() << endl;
+    auto dev_path = device.device_file().value();
+    //cout << "removing " << dev_path << endl;
     for (size_t idx = 0; idx < devices.size(); ++idx)
-        if (devices[idx].dev_file == path) {
-            devices.erase(devices.begin()+idx);
+        if (devices[idx]->path() == dev_path) {
+            devices.erase(devices.begin() + idx);
             return;
         }
 }
 
 
-
 void
 App::refresh_joysticks()
 {
-    cout << "refresh" << endl;
+    //cout << "refresh" << endl;
     clear_devices();
 
     Enumerator e{joystick_listener};

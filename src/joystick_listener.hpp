@@ -1,7 +1,7 @@
 #ifndef JOYSTICK_LISTENER_HPP
 #define JOYSTICK_LISTENER_HPP
 
-#include "client.hpp"
+#include <gudevxx/client.hpp>
 
 
 class App;

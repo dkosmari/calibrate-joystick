@@ -18,11 +18,10 @@ config.log
 config.status
 configure
 configure.scan
-libgudevxx/utils/test-device-info
-libgudevxx/utils/test-enumerator
-libgudevxx/utils/test-listener
 libtool
 m4
 Makefile
 Makefile.in
 stamp-h1
+*.gresource
+src/calibrate-joystick

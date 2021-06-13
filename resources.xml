@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/none/calibrate_joystick">
+    <file>ui/axis-info.glade</file>
+    <file>ui/device-page.glade</file>
+    <file>ui/main-window.glade</file>
+  </gresource>
+</gresources>

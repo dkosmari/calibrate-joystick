@@ -4,12 +4,18 @@
 ACLOCAL_AMFLAGS = -I m4
 
 
-EXTRA_DIST = bootstrap
+EXTRA_DIST = bootstrap \
+	resources.xml
 
 
-SUBDIRS = \
-	libgudevxx \
-	src
+SUBDIRS = src
 
 
-DISTCLEANFILES = autoscan.log configure.scan
+resoucedir = $(datadir)/calibrate-joystick
+resouce_DATA = resources.gresource
+
+CLEAN_FILES = resources.gresource
+
+
+.xml.gresource:
+	$(GLIB_COMPILE_RESOURCES) $< --target=$@

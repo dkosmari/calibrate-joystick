@@ -4,19 +4,54 @@
 #include <memory>
 #include <string>
 #include <filesystem>
+#include <map>
 
 #include <gtkmm.h>
+#include <libevdevxx/device.hpp>
+#include <libevdevxx/event.hpp>
 
-#include "device.hpp"
+
+class AxisInfo;
 
 
-struct DevicePage {
-    std::filesystem::path dev_file;
-    std::unique_ptr<Gtk::Box> box;
-    std::unique_ptr<Gtk::Label> name_label;
-    std::unique_ptr<Gtk::Label> path_label;
+class DevicePage {
 
-    DevicePage(const gudev::Device& device);
+    template<typename T>
+    using ptr = std::unique_ptr<T>;
+
+    std::filesystem::path dev_path; // TODO: should be in evdev::Device
+
+    evdev::Device device;
+
+
+    ptr<Gtk::Box> device_box;
+    ptr<Gtk::Label> name_label;
+    ptr<Gtk::Label> path_label;
+    ptr<Gtk::Label> axes_label;
+    ptr<Gtk::Box> axes_box;
+
+    std::map<evdev::Code, ptr<AxisInfo>> axes;
+
+    sigc::connection io_conn;
+
+
+    void load_widgets();
+
+    bool handle_io(Glib::IOCondition cond);
+
+    void handle_read();
+
+
+public:
+
+    DevicePage(const std::filesystem::path& dev_path);
+    ~DevicePage();
+
+    Gtk::Widget& root();
+
+    std::string name() const;
+    const std::filesystem::path& path() const;
+
 
 };
 

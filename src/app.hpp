@@ -8,14 +8,14 @@
 
 // system libraries
 #include <gtkmm.h>
-
-// local libraries
-#include "client.hpp"
+#include <gudevxx/client.hpp>
 
 // local headers
-#include "device_page.hpp"
 #include "refresh_button.hpp"
 #include "joystick_listener.hpp"
+
+
+class DevicePage;
 
 
 class App : public Gtk::Application {
@@ -28,17 +28,18 @@ class App : public Gtk::Application {
     RefreshButton* refresh_button = nullptr;
     Gtk::Stack* device_stack = nullptr;
 
+    std::vector<std::unique_ptr<DevicePage>> devices;
 
-    std::vector<DevicePage> devices;
+
+    void on_activate() override;
 
 public:
 
     App();
+    ~App();
 
 
     void create_main_window();
-
-    void on_activate() override;
 
 
     void clear_devices();
