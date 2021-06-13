@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     resources->register_global();
 
     App app;
-    cout << app.get_resource_base_path() << endl;
+    //cout << app.get_resource_base_path() << endl;
 
     return app.run(argc, argv);
 }

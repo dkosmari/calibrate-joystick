@@ -10,6 +10,7 @@
 extern const std::string ui_main_window_path;
 extern const std::string ui_device_page_path;
 extern const std::string ui_axis_info_path;
+extern const std::string ui_about_dialog_path;
 
 
 bool

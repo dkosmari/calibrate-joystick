@@ -33,14 +33,17 @@ Author: Daniel K. O.
     <property name="title" translatable="yes">Joystick Calibration</property>
     <property name="window-position">center</property>
     <property name="default-height">600</property>
+    <property name="icon-name">input-gaming</property>
+    <property name="show-menubar">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <object class="GtkStackSidebar">
+          <object class="GtkStackSwitcher">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
             <property name="stack">device_stack</property>
           </object>
           <packing>
@@ -77,6 +80,7 @@ Author: Daniel K. O.
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Calibrate Joystick</property>
+    <property name="has-subtitle">False</property>
     <property name="show-close-button">True</property>
     <child>
       <object class="GtkButton" id="refresh_button">

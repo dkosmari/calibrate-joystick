@@ -8,6 +8,11 @@
 #include "utils.hpp"
 
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+
 using std::cout;
 using std::endl;
 using std::string;
@@ -16,6 +21,8 @@ using std::make_unique;
 
 using UDevice = gudev::Device;
 using gudev::Enumerator;
+
+using Glib::RefPtr;
 
 
 App::App() :
@@ -47,9 +54,32 @@ App::create_main_window()
 
 
 void
+App::on_startup()
+{
+    //cout << "on_startup()" << endl;
+
+    Gtk::Application::on_startup();
+
+    add_action("about", [this]
+    {
+        auto builder = Gtk::Builder::create_from_resource(ui_about_dialog_path);
+        auto about_dialog = get_widget<Gtk::AboutDialog>(builder, "about_dialog");
+        about_dialog->set_application(main_window->get_application());
+        about_dialog->set_version(PACKAGE_VERSION);
+        about_dialog->run();
+    });
+
+    add_action("quit", sigc::mem_fun(this, &App::quit));
+}
+
+
+void
 App::on_activate()
 {
+    //cout << "on_activate()" << endl;
+
     create_main_window();
+
     main_window->show_all();
     main_window->present();
 

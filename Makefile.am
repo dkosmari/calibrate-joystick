@@ -11,11 +11,20 @@ EXTRA_DIST = bootstrap \
 SUBDIRS = src
 
 
-resoucedir = $(datadir)/calibrate-joystick
-resouce_DATA = resources.gresource
+resourcesdir = $(datadir)/calibrate-joystick
+resources_DATA = resources.gresource
 
-CLEAN_FILES = resources.gresource
+CLEANFILES = resources.gresource
+
+resources_DEPS = $(shell $(GLIB_COMPILE_RESOURCES) \
+				--sourcedir=$(srcdir) \
+				--generate-dependencies \
+				resources.xml)
+
+resources.gresource: resources.xml $(resources_DEPS)
+	$(GLIB_COMPILE_RESOURCES) $< \
+		--target=$@ \
+		--sourcedir=$(srcdir) \
+		--generate
 
 
-.xml.gresource:
-	$(GLIB_COMPILE_RESOURCES) $< --target=$@

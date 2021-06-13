@@ -4,5 +4,7 @@
     <file>ui/axis-info.glade</file>
     <file>ui/device-page.glade</file>
     <file>ui/main-window.glade</file>
+    <file>ui/about-dialog.glade</file>
+    <file alias="gtk/menus.ui">ui/actions.ui</file>
   </gresource>
 </gresources>

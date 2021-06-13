@@ -31,6 +31,8 @@ class App : public Gtk::Application {
     std::vector<std::unique_ptr<DevicePage>> devices;
 
 
+    void on_startup() override;
+
     void on_activate() override;
 
 public:
