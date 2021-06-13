@@ -28,44 +28,42 @@ Author: Daniel K. O.
   <!-- interface-description A program to calibrate the range of joysticks. -->
   <!-- interface-copyright 2021 -->
   <!-- interface-authors Daniel K. O. -->
+  <object class="GtkHeaderBar" id="header_bar">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Calibrate Joystick</property>
+    <property name="has-subtitle">False</property>
+    <property name="show-close-button">True</property>
+  </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can-focus">False</property>
+    <property name="hexpand">True</property>
+    <property name="border-width">18</property>
     <property name="title" translatable="yes">Joystick Calibration</property>
     <property name="window-position">center</property>
-    <property name="default-height">600</property>
+    <property name="default-height">700</property>
     <property name="icon-name">input-gaming</property>
     <property name="show-menubar">False</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkNotebook" id="device_notebook">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkStackSwitcher">
+        <property name="can-focus">True</property>
+        <property name="hexpand">True</property>
+        <property name="scrollable">True</property>
+        <property name="enable-popup">True</property>
+        <child type="action-start">
+          <object class="GtkButton" id="refresh_button">
+            <property name="label">_Refresh</property>
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <property name="stack">device_stack</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">app.refresh</property>
+            <property name="image">refresh_icon</property>
+            <property name="use-underline">True</property>
+            <property name="always-show-image">True</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStack" id="device_stack">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="border-width">18</property>
-            <property name="transition-type">slide-up-down</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="tab-fill">False</property>
           </packing>
         </child>
       </object>
@@ -75,23 +73,5 @@ Author: Daniel K. O.
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">view-refresh</property>
-  </object>
-  <object class="GtkHeaderBar" id="header_bar">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Calibrate Joystick</property>
-    <property name="has-subtitle">False</property>
-    <property name="show-close-button">True</property>
-    <child>
-      <object class="GtkButton" id="refresh_button">
-        <property name="label">_Refresh</property>
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="receives-default">True</property>
-        <property name="image">refresh_icon</property>
-        <property name="use-underline">True</property>
-        <property name="always-show-image">True</property>
-      </object>
-    </child>
   </object>
 </interface>

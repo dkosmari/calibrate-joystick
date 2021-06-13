@@ -28,7 +28,6 @@ calibrate_joystick_SOURCES = \
 	device_page.cpp device_page.hpp \
 	joystick_listener.cpp joystick_listener.hpp \
 	main.cpp \
-	refresh_button.cpp refresh_button.hpp \
 	utils.cpp utils.hpp
 
 

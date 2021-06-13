@@ -16,6 +16,8 @@ using std::filesystem::path;
 
 using Glib::ustring;
 using Glib::IOCondition;
+using Gio::SimpleActionGroup;
+using Gio::ActionMap;
 
 using evdev::Type;
 
@@ -24,7 +26,15 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     dev_path{dev_path},
     device{dev_path}
 {
+
+    act_grp = SimpleActionGroup::create();
+
+    act_grp->add_action("apply", []{ cout << "APPLY!" << endl; });
+    act_grp->add_action("clear", []{ cout << "CLEAR!" << endl; });
+
     load_widgets();
+
+    device_box->insert_action_group("dev", act_grp);
 
     name_label->set_label(device.name());
     path_label->set_label(dev_path.string());

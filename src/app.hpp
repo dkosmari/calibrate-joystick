@@ -11,7 +11,6 @@
 #include <gudevxx/client.hpp>
 
 // local headers
-#include "refresh_button.hpp"
 #include "joystick_listener.hpp"
 
 
@@ -25,8 +24,7 @@ class App : public Gtk::Application {
     std::unique_ptr<Gtk::ApplicationWindow> main_window;
     std::unique_ptr<Gtk::HeaderBar> header_bar;
 
-    RefreshButton* refresh_button = nullptr;
-    Gtk::Stack* device_stack = nullptr;
+    Gtk::Notebook* device_notebook = nullptr;
 
     std::vector<std::unique_ptr<DevicePage>> devices;
 
@@ -51,7 +49,7 @@ public:
     void remove_device(const gudev::Device& d);
 
 
-    void refresh_joysticks();
+    void refresh();
 
 };
 

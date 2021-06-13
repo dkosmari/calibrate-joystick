@@ -23,6 +23,7 @@ class DevicePage {
 
     evdev::Device device;
 
+    Glib::RefPtr<Gio::SimpleActionGroup> act_grp;
 
     ptr<Gtk::Box> device_box;
     ptr<Gtk::Label> name_label;

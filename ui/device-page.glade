@@ -15,6 +15,8 @@
   <object class="GtkBox" id="device_box">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
+    <property name="hexpand">True</property>
+    <property name="border-width">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">18</property>
     <child>
@@ -117,13 +119,14 @@
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
+        <property name="hexpand">True</property>
         <property name="hscrollbar-policy">never</property>
         <property name="overlay-scrolling">False</property>
-        <property name="propagate-natural-width">True</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="hexpand">True</property>
             <property name="shadow-type">none</property>
             <child>
               <object class="GtkBox" id="axes_box">
@@ -158,6 +161,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="receives-default">False</property>
+            <property name="action-name">dev.clear</property>
             <property name="image">clear_icon</property>
             <property name="use-underline">True</property>
             <property name="always-show-image">True</property>
@@ -174,6 +178,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <property name="action-name">dev.apply</property>
             <property name="image">ok_icon</property>
             <property name="use-underline">True</property>
             <property name="always-show-image">True</property>

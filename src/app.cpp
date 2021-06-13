@@ -45,9 +45,9 @@ App::create_main_window()
                                             "header_bar");
     main_window->set_titlebar(*header_bar);
 
-    builder->get_widget_derived("refresh_button", refresh_button, *this);
+    //builder->get_widget_derived("refresh_button", refresh_button, *this);
 
-    builder->get_widget("device_stack", device_stack);
+    builder->get_widget("device_notebook", device_notebook);
 
     add_window(*main_window);
 }
@@ -70,6 +70,10 @@ App::on_startup()
     });
 
     add_action("quit", sigc::mem_fun(this, &App::quit));
+
+    add_action("refresh", sigc::mem_fun(this, &App::refresh));
+
+    add_action("apply", []{ cout << "APPLY" << endl; });
 }
 
 
@@ -83,7 +87,7 @@ App::on_activate()
     main_window->show_all();
     main_window->present();
 
-    refresh_joysticks();
+    refresh();
 }
 
 
@@ -103,10 +107,9 @@ App::add_device(const UDevice& device)
     auto& dev_page = devices.back();
     dev_page->root().show_all();
 
-    auto title = dev_page->name();
+    //auto title = dev_page->name();
     auto name = device.name().value();
-    device_stack->add(dev_page->root(), name, title);
-
+    device_notebook->append_page(dev_page->root(), name);
 }
 
 
@@ -124,9 +127,10 @@ App::remove_device(const UDevice& device)
 
 
 void
-App::refresh_joysticks()
+App::refresh()
 {
-    //cout << "refresh" << endl;
+    cout << "refresh()" << endl;
+
     clear_devices();
 
     Enumerator e{joystick_listener};
