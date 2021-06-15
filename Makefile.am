@@ -5,7 +5,8 @@ ACLOCAL_AMFLAGS = -I m4
 
 
 EXTRA_DIST = bootstrap \
-	resources.xml
+	resources.xml \
+	ui
 
 
 SUBDIRS = src

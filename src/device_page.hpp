@@ -23,7 +23,7 @@ class DevicePage {
 
     evdev::Device device;
 
-    Glib::RefPtr<Gio::SimpleActionGroup> act_grp;
+    Glib::RefPtr<Gio::SimpleActionGroup> actions;
 
     ptr<Gtk::Box> device_box;
     ptr<Gtk::Label> name_label;
@@ -42,6 +42,15 @@ class DevicePage {
 
     void handle_read();
 
+    void action_apply();
+    void action_reset();
+
+    void action_apply_axis(const Glib::VariantBase& arg);
+    void action_reset_axis(const Glib::VariantBase& arg);
+
+
+    void apply_axis(evdev::Code code);
+    void reset_axis(evdev::Code code);
 
 public:
 

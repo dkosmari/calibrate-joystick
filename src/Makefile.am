@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	$(GTKMM_CFLAGS) \
 	$(LIBGUDEVXX_CFLAGS) \
 	$(LIBEVDEVXX_CFLAGS) \
-	-DRESOURCE_DIR=\"$(abs_top_builddir)\"
+	-DRESOURCE_DIR=\"$(datadir)/calibrate-joystick\"
 
 
 AM_CXXFLAGS = \

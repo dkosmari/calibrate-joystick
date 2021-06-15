@@ -1,6 +1,7 @@
 //#include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <cstdint>
 
 #include "axis_info.hpp"
 
@@ -13,46 +14,21 @@ using std::endl;
 using std::string;
 
 using Glib::ustring;
+using Gio::SimpleActionGroup;
+using Glib::Variant;
+
+using evdev::AbsInfo;
 
 
 AxisInfo::AxisInfo(evdev::Code axis_code,
-                   const evdev::AbsInfo& info) :
-    orig{info},
-    calc{info}
+                   const AbsInfo& info) :
+    code{axis_code}
 {
-    calc.min = calc.max = info.val;
-
-
     load_widgets();
-
     name_label->set_label(evdev::to_string(evdev::Type::abs, axis_code));
 
-    orig_min_label->set_label(ustring::format(orig.min));
-    orig_max_label->set_label(ustring::format(orig.max));
-
-    orig_fuzz_label->set_label(ustring::format(orig.fuzz));
-
-    orig_flat_label->set_label(ustring::format(info.flat));
-
-    orig_res_label->set_label(ustring::format(info.res));
-
-
-    calc_min_spin->set_range(orig.min, orig.max);
-    calc_max_spin->set_range(orig.min, orig.max);
-
-
-    calc_fuzz_spin->set_range(0, orig.max);
-    calc_fuzz_spin->set_value(calc.fuzz);
-
-    calc_flat_spin->set_range(0, orig.max);
-    calc_flat_spin->set_value(calc.flat);
-
-    calc_res_spin->set_range(0, info.max);
-    calc_res_spin->set_value(calc.res);
-
-
-    update_value(info.val);
-
+    actions = SimpleActionGroup::create();
+    root().insert_action_group("axis", actions);
 
     // NOTE: since "this" is captured, this object is not movable
 #define CONN_SYNC_SPIN(x)                                               \
@@ -68,6 +44,12 @@ AxisInfo::AxisInfo(evdev::Code axis_code,
     CONN_SYNC_SPIN(flat);
     CONN_SYNC_SPIN(res);
 
+    actions->add_action("apply", sigc::mem_fun(this, &AxisInfo::action_apply));
+    actions->add_action("reset", sigc::mem_fun(this, &AxisInfo::action_reset));
+
+#undef CONN_SYNC_SPIN
+
+    reset(info);
 }
 
 
@@ -178,4 +160,52 @@ AxisInfo::update_res(int res)
 {
     calc.res = res;
     update_canvas();
+}
+
+
+void
+AxisInfo::action_apply()
+{
+    cout << "AxisInfo::action_apply(): " << code << endl;
+    root().get_action_group("dev")
+        ->activate_action("apply_axis", Variant<guint16>::create(code));
+}
+
+
+void
+AxisInfo::action_reset()
+{
+    cout << "AxisInfo::action_reset(): " << code << endl;
+    root().get_action_group("dev")
+        ->activate_action("reset_axis", Variant<guint16>::create(code));
+}
+
+
+const AbsInfo&
+AxisInfo::get_calc() const noexcept
+{
+    return calc;
+}
+
+
+void
+AxisInfo::reset(const AbsInfo& new_orig)
+{
+    calc = orig = new_orig;
+    calc.min = calc.max = orig.val;
+
+    orig_min_label->set_label(ustring::format(orig.min));
+    orig_max_label->set_label(ustring::format(orig.max));
+    orig_fuzz_label->set_label(ustring::format(orig.fuzz));
+    orig_flat_label->set_label(ustring::format(orig.flat));
+    orig_res_label->set_label(ustring::format(orig.res));
+
+    calc_fuzz_spin->set_value(calc.fuzz);
+    calc_flat_spin->set_value(calc.flat);
+    calc_res_spin->set_value(calc.res);
+
+    update_value(calc.val);
+
+    if (axis_canvas)
+        axis_canvas->reset(orig, calc);
 }

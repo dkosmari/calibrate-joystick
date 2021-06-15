@@ -21,7 +21,7 @@ AxisCanvas::AxisCanvas(BaseObjectType* cobject,
 bool
 AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
-    const double padding = 24;
+    const double padding = 18;
 
     const double width = get_allocated_width();
     const double height = get_allocated_height();
@@ -33,6 +33,8 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
 
     double range = orig.max - orig.min;
+    if (range < 1)
+        range = 1;
 
     auto translate = [this, width, range, padding](double x) -> double
     {
@@ -182,6 +184,15 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     }
 
     return true;
+}
+
+
+void
+AxisCanvas::reset(const AbsInfo& new_orig,
+                  const AbsInfo& new_calc)
+{
+    orig = new_orig;
+    update(new_calc);
 }
 
 

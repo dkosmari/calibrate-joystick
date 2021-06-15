@@ -18,6 +18,8 @@ class AxisInfo {
     template<typename T>
     using ptr = std::unique_ptr<T>;
 
+    Glib::RefPtr<Gio::SimpleActionGroup> actions;
+
     using LabelPtr = ptr<Gtk::Label>;
     using SpinButtonPtr = ptr<Gtk::SpinButton>;
 
@@ -40,14 +42,16 @@ class AxisInfo {
 
     AxisCanvas* axis_canvas;
 
-    evdev::AbsInfo orig;
-    evdev::AbsInfo calc;
-
     sigc::connection min_changed_conn;
     sigc::connection max_changed_conn;
     sigc::connection fuzz_changed_conn;
     sigc::connection flat_changed_conn;
     sigc::connection res_changed_conn;
+
+    evdev::Code code;
+    evdev::AbsInfo orig;
+    evdev::AbsInfo calc;
+
 
 
     void load_widgets();
@@ -60,6 +64,9 @@ class AxisInfo {
     void update_flat(int flat);
     void update_res(int res);
 
+    void action_apply();
+    void action_reset();
+
 public:
 
     AxisInfo(evdev::Code axis_code,
@@ -71,6 +78,10 @@ public:
     void update_value(int value);
 
     Gtk::Widget& root();
+
+    const evdev::AbsInfo& get_calc() const noexcept;
+
+    void reset(const evdev::AbsInfo& new_orig);
 
 };
 

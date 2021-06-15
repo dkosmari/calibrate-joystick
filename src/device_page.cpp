@@ -17,9 +17,11 @@ using std::filesystem::path;
 using Glib::ustring;
 using Glib::IOCondition;
 using Gio::SimpleActionGroup;
-using Gio::ActionMap;
+using Glib::VariantBase;
+using Glib::Variant;
 
 using evdev::Type;
+using evdev::Code;
 
 
 DevicePage::DevicePage(const std::filesystem::path& dev_path) :
@@ -27,14 +29,10 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     device{dev_path}
 {
 
-    act_grp = SimpleActionGroup::create();
-
-    act_grp->add_action("apply", []{ cout << "APPLY!" << endl; });
-    act_grp->add_action("clear", []{ cout << "CLEAR!" << endl; });
-
     load_widgets();
 
-    device_box->insert_action_group("dev", act_grp);
+    actions = SimpleActionGroup::create();
+    root().insert_action_group("dev", actions);
 
     name_label->set_label(device.name());
     path_label->set_label(dev_path.string());
@@ -46,6 +44,7 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
 
     for (auto code : abs_codes) {
         auto info = device.abs_info(code);
+        cout << "creating axis info for code: " << code << endl;
         auto [iter, inserted] = axes.emplace(code, make_unique<AxisInfo>(code, info));
         if (inserted)
             axes_box->pack_start(iter->second->root(),
@@ -55,6 +54,21 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     io_conn = Glib::signal_io().connect(sigc::mem_fun(this, &DevicePage::handle_io),
                                         device.fd(),
                                         IOCondition::IO_IN);
+
+    actions->add_action("apply", sigc::mem_fun(this, &DevicePage::action_apply));
+    actions->add_action("reset", sigc::mem_fun(this, &DevicePage::action_reset));
+
+
+    auto arg_type = Glib::VariantType{G_VARIANT_TYPE_UINT16};
+    actions->add_action_with_parameter("apply_axis",
+                                       arg_type,
+                                       sigc::mem_fun(this,
+                                                     &DevicePage::action_apply_axis));
+
+    actions->add_action_with_parameter("reset_axis",
+                                       arg_type,
+                                       sigc::mem_fun(this,
+                                                     &DevicePage::action_reset_axis));
 }
 
 
@@ -125,4 +139,59 @@ DevicePage::handle_read()
 
         axes.at(event.code)->update_value(event.value);
     }
+}
+
+
+void
+DevicePage::action_apply()
+{
+    cout << "DevicePage::action_apply()" << endl;
+    for (auto& [code, _] : axes)
+        apply_axis(code);
+}
+
+
+void
+DevicePage::action_reset()
+{
+    cout << "DevicePage::action_reset()" << endl;
+    for (auto& [code, _] : axes)
+        reset_axis(code);
+}
+
+
+void
+DevicePage::action_apply_axis(const Glib::VariantBase& arg)
+{
+    cout << "DevicePage::action_apply_axis()" << endl;
+    Code code = VariantBase::cast_dynamic<Variant<guint16>>(arg)
+        .get();
+    apply_axis(code);
+}
+
+
+void
+DevicePage::action_reset_axis(const Glib::VariantBase& arg)
+{
+    cout << "DevicePage::action_reset_axis()" << endl;
+    Code code = VariantBase::cast_dynamic<Variant<guint16>>(arg)
+        .get();
+    reset_axis(code);
+}
+
+
+void
+DevicePage::apply_axis(Code code)
+{
+    device.kernel_abs_info(code,
+                           axes.at(code)->get_calc());
+    reset_axis(code);
+}
+
+
+void
+DevicePage::reset_axis(Code code)
+{
+    auto new_abs = device.abs_info(code);
+    axes.at(code)->reset(new_abs);
 }

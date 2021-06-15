@@ -3,19 +3,36 @@
 #include "app.hpp"
 
 
+using std::cerr;
 using std::cout;
 using std::endl;
+
+using Gio::Resource;
+
+
+Glib::RefPtr<Resource>
+load_resources()
+{
+    if (auto r = Resource::create_from_file("resources.gresource"))
+        return r;
+
+    if (auto r = Resource::create_from_file(RESOURCE_DIR "/resources.gresource"))
+        return r;
+
+    return {};
+}
 
 
 int main(int argc, char* argv[])
 {
-    auto resources =
-        Gio::Resource::create_from_file(RESOURCE_DIR
-                                        "/resources.gresource");
+    auto resources = load_resources();
+    if (!resources) {
+        cerr << "could not load resources.gresource" << endl;
+        return -1;
+    }
     resources->register_global();
 
     App app;
-    //cout << app.get_resource_base_path() << endl;
 
     return app.run(argc, argv);
 }

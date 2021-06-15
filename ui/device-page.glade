@@ -2,15 +2,15 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkImage" id="apply_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">dialog-ok</property>
+  </object>
   <object class="GtkImage" id="clear_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">edit-clear</property>
-  </object>
-  <object class="GtkImage" id="ok_icon">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-ok</property>
   </object>
   <object class="GtkBox" id="device_box">
     <property name="visible">True</property>
@@ -61,6 +61,8 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">name</property>
+            <property name="ellipsize">middle</property>
+            <property name="single-line-mode">True</property>
             <property name="xalign">0</property>
           </object>
           <packing>
@@ -73,7 +75,8 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">path</property>
-            <property name="selectable">True</property>
+            <property name="ellipsize">start</property>
+            <property name="single-line-mode">True</property>
             <property name="xalign">0</property>
           </object>
           <packing>
@@ -101,6 +104,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">axes</property>
+            <property name="single-line-mode">True</property>
             <property name="xalign">0</property>
           </object>
           <packing>
@@ -157,11 +161,11 @@
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkButton" id="clear_button">
-            <property name="label" translatable="yes" context="gtk30">_Clear</property>
+            <property name="label" translatable="yes" context="gtk30">_Reset</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="receives-default">False</property>
-            <property name="action-name">dev.clear</property>
+            <property name="action-name">dev.reset</property>
             <property name="image">clear_icon</property>
             <property name="use-underline">True</property>
             <property name="always-show-image">True</property>
@@ -177,9 +181,10 @@
             <property name="label" translatable="yes" context="gtk30">_Apply</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="can-default">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">dev.apply</property>
-            <property name="image">ok_icon</property>
+            <property name="image">apply_icon</property>
             <property name="use-underline">True</property>
             <property name="always-show-image">True</property>
           </object>

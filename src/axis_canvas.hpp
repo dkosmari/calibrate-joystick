@@ -22,6 +22,7 @@ public:
                const evdev::AbsInfo& orig);
 
 
+    void reset(const evdev::AbsInfo& new_orig, const evdev::AbsInfo& new_calc);
     void update(const evdev::AbsInfo& new_calc);
 };
 
