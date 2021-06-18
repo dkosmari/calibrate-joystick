@@ -1,9 +1,12 @@
 syntax: glob
 
+*.gresource
 *.la
 *.lo
 *.o
 *.Po
+*.tar.gz
+*.tar.gz2
 *~
 .deps
 .libs
@@ -22,6 +25,5 @@ libtool
 m4
 Makefile
 Makefile.in
-stamp-h1
-*.gresource
 src/calibrate-joystick
+stamp-h1

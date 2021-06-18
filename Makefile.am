@@ -28,4 +28,3 @@ resources.gresource: resources.xml $(resources_DEPS)
 		--sourcedir=$(srcdir) \
 		--generate
 
-

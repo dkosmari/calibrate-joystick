@@ -31,6 +31,15 @@ calibrate_joystick_SOURCES = \
 	utils.cpp utils.hpp
 
 
+CLEANFILES = resources.gresource
+
+all-local: resources.gresource
+
+
+resources.gresource:
+	$(LN_S) $(abs_top_builddir)/resources.gresource $(builddir)/resources.gresource
+
+
 .PHONY: company
 
 company: compile_flags.txt
