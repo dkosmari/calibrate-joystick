@@ -15,11 +15,26 @@ Usage
 - On the application window, select the desired input device.
 - Move the sticks to their maximum range. This will be detected as the
   new minimum and maximum ranges.
-- If needed, manually adjust the "Flat" paramter; that is the dead
+- If needed, manually adjust the "Flat" parameter; that is the dead
   zone.
-- Click "apply."
+- Click "Apply."
 - Customization of joysticks is not permanent; it's lost when the
   device is unplugged, or when the system reboots.
+
+Note: input devices are enumerated through udev. Only devices with the
+property "ID_INPUT_JOYSTICK=1" are processed. If your joystick isn't
+shown in calibrate-joysticks, use this command to inspect it:
+
+    udevadm info /dev/input/eventN
+
+where "eventN" is the desired device. Udev uses heuristics to guess
+which devices are joysticks, but this can be overridden with udev
+rules.
+
+Note: for security reasons, udev only allows users direct access to
+devices with the "uaccess" tag. If your device was not tagged with
+"uaccess", either create a custom udev rule to tag it with "uaccess",
+or run calibrate-joystick with sudo/root permissions.
 
 
 Dependencies

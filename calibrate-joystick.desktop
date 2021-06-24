@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Calibrate Joystick
+Categories=System;
+X-GNOME-FullName[en_US]=Calibrate Joystick
+Comment=Quickly calibrate the range and dead zone of your joysticks.
+Icon=input-gaming
+Exec=calibrate-joystick
+Terminal=false
+X-GNOME-UsesNotifications=false
+Keywords=controller,gamepad,joystick,input,calibrate,calibration

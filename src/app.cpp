@@ -17,8 +17,6 @@
  */
 
 
-#include <iostream>
-
 #include <gudevxx/enumerator.hpp>
 
 #include "app.hpp"
@@ -32,8 +30,6 @@
 #endif
 
 
-using std::cout;
-using std::endl;
 using std::string;
 using std::vector;
 using std::make_unique;
@@ -64,8 +60,6 @@ App::create_main_window()
                                             "header_bar");
     main_window->set_titlebar(*header_bar);
 
-    //builder->get_widget_derived("refresh_button", refresh_button, *this);
-
     builder->get_widget("device_notebook", device_notebook);
 
     add_window(*main_window);
@@ -75,8 +69,6 @@ App::create_main_window()
 void
 App::on_startup()
 {
-    //cout << "on_startup()" << endl;
-
     Gtk::Application::on_startup();
 
     add_action("about", [this]
@@ -91,16 +83,12 @@ App::on_startup()
     add_action("quit", sigc::mem_fun(this, &App::quit));
 
     add_action("refresh", sigc::mem_fun(this, &App::refresh));
-
-    add_action("apply", []{ cout << "APPLY" << endl; });
 }
 
 
 void
 App::on_activate()
 {
-    //cout << "on_activate()" << endl;
-
     create_main_window();
 
     main_window->show_all();
@@ -121,12 +109,10 @@ void
 App::add_device(const UDevice& device)
 {
     auto dev_path = device.device_file().value();
-    //cout << "adding " << dev_path << endl;
     devices.emplace_back(make_unique<DevicePage>(dev_path));
     auto& dev_page = devices.back();
     dev_page->root().show_all();
 
-    //auto title = dev_page->name();
     auto name = device.name().value();
     device_notebook->append_page(dev_page->root(), name);
 }
@@ -136,7 +122,6 @@ void
 App::remove_device(const UDevice& device)
 {
     auto dev_path = device.device_file().value();
-    //cout << "removing " << dev_path << endl;
     for (size_t idx = 0; idx < devices.size(); ++idx)
         if (devices[idx]->path() == dev_path) {
             devices.erase(devices.begin() + idx);
@@ -148,8 +133,6 @@ App::remove_device(const UDevice& device)
 void
 App::refresh()
 {
-    cout << "refresh()" << endl;
-
     clear_devices();
 
     Enumerator e{joystick_listener};

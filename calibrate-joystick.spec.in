@@ -1,0 +1,42 @@
+Name:           @PACKAGE_NAME@
+Version:        @PACKAGE_VERSION@
+Release:        1%{?dist}
+Summary:        A joystick calibration program.
+
+License:        GPLv3
+Source0:        @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
+
+BuildRequires:  libevdevxx-devel
+BuildRequires:  libgudevxx-devel
+#BuildRequires:  lib64gtkmm3.0-devel
+
+#Requires:       libevdevxx
+#Requires:       libgudevxx
+#Requires:       lib64gtkmm3.0
+
+Group:          System/Kernel and hardware
+
+%description
+%{name} is a graphical program to calibrate joysticks. Just select the device, move the stick around, and apply the calculated minimum and maximum range.
+
+
+%prep
+%autosetup
+
+
+%build
+%configure --disable-static
+%make_build
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%make_install
+
+
+%files
+%license COPYING
+%doc README
+%{_bindir}/calibrate-joystick
+%{_datadir}/calibrate-joystick/resources.gresource
+%{_datadir}/applications/calibrate-joystick.desktop

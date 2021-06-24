@@ -18,40 +18,47 @@
 
 
 #include <iostream>
+#include <stdexcept>
 
 #include "app.hpp"
 
 
 using std::cerr;
-using std::cout;
 using std::endl;
 
 using Gio::Resource;
 
 
-Glib::RefPtr<Resource>
-load_resources()
+bool
+load_resources(const std::filesystem::path& res_path)
 {
-    if (auto r = Resource::create_from_file("resources.gresource"))
-        return r;
-
-    if (auto r = Resource::create_from_file(RESOURCE_DIR "/resources.gresource"))
-        return r;
-
-    return {};
+    try {
+        g_debug("trying to load resources from \"%s\"", res_path.c_str());
+        auto r = Resource::create_from_file(res_path);
+        if (!r)
+            return false;
+        g_debug("loaded resource file from \"%s\"", res_path.c_str());
+        r->register_global();
+        return true;
+    }
+    catch (...) {
+        return false;
+    }
 }
 
 
 int main(int argc, char* argv[])
 {
-    auto resources = load_resources();
-    if (!resources) {
-        cerr << "could not load resources.gresource" << endl;
+    try {
+        if (!load_resources("resources.gresource") &&
+            !load_resources(RESOURCE_DIR "/resources.gresource"))
+            throw std::runtime_error{"could not load resource file."};
+
+        App app;
+        return app.run(argc, argv);
+    }
+    catch (std::exception& e) {
+        cerr << "Error: " << e.what() << endl;
         return -1;
     }
-    resources->register_global();
-
-    App app;
-
-    return app.run(argc, argv);
 }

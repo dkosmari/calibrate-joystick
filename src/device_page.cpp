@@ -18,7 +18,6 @@
 
 
 #include <algorithm>
-#include <iostream>
 #include <utility>
 
 #include "device_page.hpp"
@@ -27,8 +26,6 @@
 #include "utils.hpp"
 
 
-using std::cout;
-using std::endl;
 using std::string;
 using std::make_unique;
 using std::filesystem::path;
@@ -63,7 +60,6 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
 
     for (auto code : abs_codes) {
         auto info = device.abs_info(code);
-        cout << "creating axis info for code: " << code << endl;
         auto [iter, inserted] = axes.emplace(code, make_unique<AxisInfo>(code, info));
         if (inserted)
             axes_box->pack_start(iter->second->root(),
@@ -164,7 +160,6 @@ DevicePage::handle_read()
 void
 DevicePage::action_apply()
 {
-    cout << "DevicePage::action_apply()" << endl;
     for (auto& [code, _] : axes)
         apply_axis(code);
 }
@@ -173,7 +168,6 @@ DevicePage::action_apply()
 void
 DevicePage::action_reset()
 {
-    cout << "DevicePage::action_reset()" << endl;
     for (auto& [code, _] : axes)
         reset_axis(code);
 }
@@ -182,7 +176,6 @@ DevicePage::action_reset()
 void
 DevicePage::action_apply_axis(const Glib::VariantBase& arg)
 {
-    cout << "DevicePage::action_apply_axis()" << endl;
     Code code = VariantBase::cast_dynamic<Variant<guint16>>(arg)
         .get();
     apply_axis(code);
@@ -192,7 +185,6 @@ DevicePage::action_apply_axis(const Glib::VariantBase& arg)
 void
 DevicePage::action_reset_axis(const Glib::VariantBase& arg)
 {
-    cout << "DevicePage::action_reset_axis()" << endl;
     Code code = VariantBase::cast_dynamic<Variant<guint16>>(arg)
         .get();
     reset_axis(code);

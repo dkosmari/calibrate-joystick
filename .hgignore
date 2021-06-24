@@ -5,8 +5,9 @@ syntax: glob
 *.lo
 *.o
 *.Po
+*.spec
 *.tar.gz
-*.tar.gz2
+*.tar.bz2
 *~
 .deps
 .libs

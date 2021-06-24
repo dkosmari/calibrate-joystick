@@ -17,10 +17,8 @@
  */
 
 
-//#include <algorithm>
-#include <stdexcept>
-#include <iostream>
 #include <cstdint>
+#include <stdexcept>
 
 #include "axis_info.hpp"
 
@@ -28,8 +26,6 @@
 #include "utils.hpp"
 
 
-using std::cout;
-using std::endl;
 using std::string;
 
 using Glib::ustring;
@@ -185,7 +181,6 @@ AxisInfo::update_res(int res)
 void
 AxisInfo::action_apply()
 {
-    cout << "AxisInfo::action_apply(): " << code << endl;
     root().get_action_group("dev")
         ->activate_action("apply_axis", Variant<guint16>::create(code));
 }
@@ -194,7 +189,6 @@ AxisInfo::action_apply()
 void
 AxisInfo::action_reset()
 {
-    cout << "AxisInfo::action_reset(): " << code << endl;
     root().get_action_group("dev")
         ->activate_action("reset_axis", Variant<guint16>::create(code));
 }

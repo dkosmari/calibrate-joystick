@@ -17,8 +17,6 @@
  */
 
 
-#include <iostream>
-
 #include "joystick_listener.hpp"
 
 #include "app.hpp"
@@ -26,8 +24,6 @@
 
 
 using std::string;
-using std::cout;
-using std::endl;
 
 using gudev::Client;
 using gudev::Device;
@@ -61,6 +57,4 @@ JoystickListener::on_uevent(const string& action,
         app.add_device(device);
     else if (action == "remove")
         app.remove_device(device);
-    else
-        cout << "ignoring action: " << action << endl;
 }
