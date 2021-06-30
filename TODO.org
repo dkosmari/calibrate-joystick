@@ -1,11 +1,11 @@
 * DONE Create .destkop file.
 
-* Accept argument: specific device to calibrate.
-** Must bypass udev filtering.
-** Accept more than path.
-** Show error message if a device was requested but could not be opened.
-** JoystickListener must ignore the filtering.
-
-* Ensure there's a graceful close of devices that produce error.
+* DONE Accept argument: specific device to calibrate.
+** DONE Must bypass udev filtering.
+** DONE Accept more than path.
+** DONE Show error message if a device was requested but could not be opened.
+** DONE JoystickListener must ignore the filtering.
+   
+* DONE Ensure there's a graceful close of devices that produce error.
   
-* Ask to escalate privileges for devices that don't have uaccess.
+* TODO Ask to escalate privileges for devices that don't have uaccess.

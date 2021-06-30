@@ -1,0 +1,218 @@
+# Portuguese translations for calibrate-joystick package
+# Traduções em português brasileiro para o pacote calibrate-joystick.
+# Copyright (C) 2021 Daniel K. O.
+# This file is distributed under the same license as the calibrate-joystick package.
+# Daniel K. O. <dkosmari@gmail.com>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: calibrate-joystick 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-30 15:01-0300\n"
+"PO-Revision-Date: 2021-06-30 15:01-0300\n"
+"Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge."
+"net>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#: src/app.cpp:66
+msgid "Show program version"
+msgstr "Mostra a versão do programa"
+
+#: src/app.cpp:70
+msgid "Could not load resource file."
+msgstr "Não pode carregar o arquivo de recursos."
+
+#: src/app.cpp:138
+msgid "_Close"
+msgstr "_Fechar"
+
+#: src/app.cpp:148
+msgid "Open device..."
+msgstr "Abrir dispositivo..."
+
+#: src/app.cpp:154
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: src/app.cpp:155 ui/actions.ui:11
+msgid "_Open"
+msgstr "_Abrir"
+
+#: src/app.cpp:158
+msgid "evdev devices"
+msgstr "dispositivos evdev"
+
+#: src/app.cpp:163
+msgid "all files"
+msgstr "todos os arquivos"
+
+#: src/app.cpp:234
+msgid "Error opening file"
+msgstr "Error abrindo o arquivo"
+
+#: src/axis_info.cpp:116 src/device_page.cpp:133
+msgid "Failed to load root widget."
+msgstr "Falhou ao carregar o componente raiz."
+
+#: src/device_page.cpp:160
+msgid "Device disconnected."
+msgstr "Dispositivo desconectado."
+
+#: src/device_page.cpp:162
+msgid "Input/output error."
+msgstr "Erro de entrada/saída."
+
+#: ui/about-dialog.glade:10
+msgid "A utility to calibrate joysticks."
+msgstr "Um utilitário para calibrar joysticks."
+
+#: ui/actions.ui:6
+msgid "_Refresh"
+msgstr "Atualiza_r"
+
+#: ui/actions.ui:18
+msgid "_About"
+msgstr "_Sobre"
+
+#: ui/actions.ui:23
+msgid "_Quit"
+msgstr "Sa_ir"
+
+#: ui/axis-info.glade:65
+msgid "Minimum value for this axis."
+msgstr "Valor mínimo para este eixo."
+
+#. Abbreviation for "minimum value."
+#: ui/axis-info.glade:66
+msgctxt "axis min"
+msgid "Min:"
+msgstr "Mín:"
+
+#: ui/axis-info.glade:82
+msgid "Maximum value for the axis."
+msgstr "Valor máximo para este eixo."
+
+#. Abbreviation for "maximum value."
+#: ui/axis-info.glade:83
+msgctxt "axis max"
+msgid "Max:"
+msgstr "Máx:"
+
+#: ui/axis-info.glade:127
+msgid ""
+"Noise filter.\n"
+"Variations smaller than this will be ignored.\n"
+"When <i>fuzzy = N</i>, only when the value changes by more than <i>N</i>, "
+"the value will be sent to the application."
+msgstr ""
+"Filtro de ruido.\n"
+"Variações menores que isto serão ignoradas.\n"
+"Quando <i>fuzzy = N</i>, somente quando o valor muda por mais que <i>N</i>, "
+"o valor é enviado ao programa."
+
+#. Probably left untranslated.
+#: ui/axis-info.glade:130
+msgctxt "axis fuzzy"
+msgid "Fuzzy:"
+msgstr "Fuzzy:"
+
+#: ui/axis-info.glade:176
+msgid ""
+"Also known as \"<b>dead zone</b>.\"\n"
+"Values smaller than this will be interpreted as zero."
+msgstr ""
+"Também conhecido como \"<b>dead zone</b>.\"\n"
+"Valores menores que isot serão interpretados como zero."
+
+#. Name for "near zero" field. Probably best left untranslated.
+#: ui/axis-info.glade:178
+msgctxt "axis flat"
+msgid "Flat:"
+msgstr "Flat:"
+
+#: ui/axis-info.glade:224
+msgid ""
+"Resolution of this axis.\n"
+"Most input devices ignore this field."
+msgstr ""
+"Resolução deste eixo.\n"
+"A maioria dos dispositivos ignoram este campo."
+
+#. Abbreviation for "resolution."
+#: ui/axis-info.glade:226
+msgctxt "axis res"
+msgid "Res:"
+msgstr "Res:"
+
+#: ui/axis-info.glade:272
+msgid "Raw value of this axis."
+msgstr "Valor bruto deste eixo."
+
+#: ui/axis-info.glade:273
+msgctxt "axis value"
+msgid "Value:"
+msgstr "Valor:"
+
+#. Apply settings for a single axis.
+#: ui/axis-info.glade:331
+msgctxt "axis apply"
+msgid "Apply"
+msgstr "Aplicar"
+
+#. Revert settings for a single axis.
+#: ui/axis-info.glade:346
+msgctxt "revert axis"
+msgid "Revert"
+msgstr "Reverter"
+
+#: ui/device-page.glade:50
+msgid "Error:"
+msgstr "Erro:"
+
+#: ui/device-page.glade:100
+msgctxt "device name"
+msgid "Name:"
+msgstr "Nome:"
+
+#: ui/device-page.glade:115
+msgctxt "device path"
+msgid "Path:"
+msgstr "Caminho:"
+
+#. Number of axes in a device.
+#: ui/device-page.glade:158
+msgctxt "num axes"
+msgid "Axes:"
+msgstr "Eixos:"
+
+#: ui/device-page.glade:231
+msgid "_Reset"
+msgstr "_Resetar"
+
+#: ui/device-page.glade:248
+msgid "_Apply"
+msgstr "_Aplicar"
+
+#: ui/main-window.glade:35
+msgid "Calibrate Joystick"
+msgstr "Calibrar Joystick"
+
+#: ui/main-window.glade:59
+msgctxt "application name"
+msgid "Calibrate Joystick"
+msgstr "Calibrar Joystick"
+
+#. Button to refresh the list of devices.
+#: ui/main-window.glade:64
+msgctxt "refresh devices"
+msgid "_Refresh"
+msgstr "Atualiza_r"
+
+#~ msgid "Joystick Calibration"
+#~ msgstr "Calibragem de Joystick"

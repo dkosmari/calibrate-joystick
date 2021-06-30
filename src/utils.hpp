@@ -21,15 +21,16 @@
 #define UTILS_HPP
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #include <gtkmm.h>
 
 
-extern const std::string ui_main_window_path;
-extern const std::string ui_device_page_path;
-extern const std::string ui_axis_info_path;
 extern const std::string ui_about_dialog_path;
+extern const std::string ui_axis_info_path;
+extern const std::string ui_device_page_path;
+extern const std::string ui_main_window_path;
 
 
 bool
@@ -44,8 +45,18 @@ get_widget(Glib::RefPtr<Gtk::Builder>& builder,
 {
     T* ptr = nullptr;
     builder->get_widget(name, ptr);
+    if (!ptr)
+        throw std::runtime_error{"widget \"" + name + "\" not found."};
     ptr->reference();
     return std::unique_ptr<T>{ptr};
+}
+
+
+template<typename T>
+T
+variant_cast(const Glib::VariantBase& v)
+{
+    return Glib::VariantBase::cast_dynamic<Glib::Variant<T>>(v).get();
 }
 
 

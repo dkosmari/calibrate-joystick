@@ -18,47 +18,33 @@
 
 
 #include <iostream>
-#include <stdexcept>
+#include <exception>
+#include <clocale>
+
 
 #include "app.hpp"
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-using std::cerr;
-using std::endl;
-
-using Gio::Resource;
-
-
-bool
-load_resources(const std::filesystem::path& res_path)
-{
-    try {
-        g_debug("trying to load resources from \"%s\"", res_path.c_str());
-        auto r = Resource::create_from_file(res_path);
-        if (!r)
-            return false;
-        g_debug("loaded resource file from \"%s\"", res_path.c_str());
-        r->register_global();
-        return true;
-    }
-    catch (...) {
-        return false;
-    }
-}
+#include <glibmm/i18n.h>
 
 
 int main(int argc, char* argv[])
 {
-    try {
-        if (!load_resources("resources.gresource") &&
-            !load_resources(RESOURCE_DIR "/resources.gresource"))
-            throw std::runtime_error{"could not load resource file."};
+    std::setlocale(LC_ALL, "");
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
+    textdomain(PACKAGE);
 
+
+    try {
         App app;
         return app.run(argc, argv);
     }
     catch (std::exception& e) {
-        cerr << "Error: " << e.what() << endl;
+        std::cerr << "Error: " << e.what() << std::endl;
         return -1;
     }
 }

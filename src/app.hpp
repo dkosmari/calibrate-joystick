@@ -21,16 +21,15 @@
 #define APP_HPP
 
 // standard libraries
+#include <filesystem>
+#include <map>
 #include <memory>
 #include <string>
-#include <vector>
 
 // system libraries
 #include <gtkmm.h>
-#include <gudevxx/client.hpp>
 
-// local headers
-#include "joystick_listener.hpp"
+#include <gudevxx/client.hpp>
 
 
 class DevicePage;
@@ -38,37 +37,61 @@ class DevicePage;
 
 class App : public Gtk::Application {
 
-    JoystickListener joystick_listener;
+    template<typename T>
+    using rptr = Glib::RefPtr<T>;
 
-    std::unique_ptr<Gtk::ApplicationWindow> main_window;
-    std::unique_ptr<Gtk::HeaderBar> header_bar;
+    template<typename T>
+    using uptr = std::unique_ptr<T>;
+
+
+    rptr<Gio::Resource> resource;
+
+    uptr<Gtk::ApplicationWindow> main_window;
+    uptr<Gtk::HeaderBar> header_bar;
 
     Gtk::Notebook* device_notebook = nullptr;
 
-    std::vector<std::unique_ptr<DevicePage>> devices;
+    std::map<std::filesystem::path,
+             uptr<DevicePage>> devices;
+
+    uptr<gudev::Client> uclient;
 
 
     void on_startup() override;
 
     void on_activate() override;
 
+    void on_open(const type_vec_files& files,
+                 const Glib::ustring& hint) override;
+
+    int on_handle_local_options(const rptr<Glib::VariantDict>& options);
+
+    void on_action_about();
+
+    void on_action_open();
+
+    void on_action_refresh();
+
+    bool load_resources(const std::filesystem::path& res_path);
+
+    void present_gui();
+
+    void on_uevent(const std::string& action, const gudev::Device& device);
+
 public:
 
     App();
+
     ~App();
-
-
-    void create_main_window();
 
 
     void clear_devices();
 
-    void add_device(const gudev::Device& d);
+    void add_device(const std::filesystem::path& dev_path);
 
-    void remove_device(const gudev::Device& d);
+    void remove_device(const std::filesystem::path& dev_path);
 
 
-    void refresh();
 
 };
 

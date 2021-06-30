@@ -1,5 +1,7 @@
 # ./Makefile.am
 
+ACLOCAL_AMFLAGS = -I m4
+
 
 EXTRA_DIST = \
 	bootstrap \
@@ -9,7 +11,7 @@ EXTRA_DIST = \
 	ui
 
 
-SUBDIRS = src
+SUBDIRS = src po
 
 
 # .desktop entry

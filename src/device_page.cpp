@@ -18,6 +18,7 @@
 
 
 #include <algorithm>
+#include <iostream>
 #include <utility>
 
 #include "device_page.hpp"
@@ -25,7 +26,11 @@
 #include "axis_info.hpp"
 #include "utils.hpp"
 
+#include <glibmm/i18n.h>
 
+
+using std::cout;
+using std::endl;
 using std::string;
 using std::make_unique;
 using std::filesystem::path;
@@ -66,24 +71,34 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
                                  Gtk::PackOptions::PACK_SHRINK);
     }
 
-    io_conn = Glib::signal_io().connect(sigc::mem_fun(this, &DevicePage::handle_io),
+    io_conn = Glib::signal_io().connect(sigc::mem_fun(this, &DevicePage::on_io),
                                         device.fd(),
-                                        IOCondition::IO_IN);
+                                        IOCondition::IO_IN |
+                                        IOCondition::IO_ERR |
+                                        IOCondition::IO_HUP);
 
-    actions->add_action("apply", sigc::mem_fun(this, &DevicePage::action_apply));
-    actions->add_action("reset", sigc::mem_fun(this, &DevicePage::action_reset));
+    apply_action =
+        actions->add_action("apply",
+                            sigc::mem_fun(this, &DevicePage::on_action_apply));
+
+    reset_action =
+        actions->add_action("reset",
+                            sigc::mem_fun(this, &DevicePage::on_action_reset));
 
 
     auto arg_type = Glib::VariantType{G_VARIANT_TYPE_UINT16};
-    actions->add_action_with_parameter("apply_axis",
-                                       arg_type,
-                                       sigc::mem_fun(this,
-                                                     &DevicePage::action_apply_axis));
 
-    actions->add_action_with_parameter("reset_axis",
-                                       arg_type,
-                                       sigc::mem_fun(this,
-                                                     &DevicePage::action_reset_axis));
+    apply_axis_action =
+        actions->add_action_with_parameter("apply_axis",
+                                           arg_type,
+                                           sigc::mem_fun(this,
+                                                         &DevicePage::on_action_apply_axis));
+
+    reset_axis_action =
+        actions->add_action_with_parameter("reset_axis",
+                                           arg_type,
+                                           sigc::mem_fun(this,
+                                                         &DevicePage::on_action_reset_axis));
 }
 
 
@@ -105,6 +120,9 @@ DevicePage::load_widgets()
     axes_label = get_widget<Gtk::Label>(builder, "axes_label");
 
     axes_box = get_widget<Gtk::Box>(builder, "axes_box");
+
+    info_bar = get_widget<Gtk::InfoBar>(builder, "info_bar");
+    error_label = get_widget<Gtk::Label>(builder, "error_label");
 }
 
 
@@ -112,7 +130,7 @@ Gtk::Widget&
 DevicePage::root()
 {
     if (!device_box)
-        throw std::runtime_error{"failed to load root widget"};
+        throw std::runtime_error{_("Failed to load root widget.")};
     return *device_box;
 }
 
@@ -132,13 +150,25 @@ DevicePage::path() const
 
 
 bool
-DevicePage::handle_io(IOCondition cond)
+DevicePage::on_io(IOCondition cond)
 {
+    if (cond & (IOCondition::IO_HUP | IOCondition::IO_ERR)) {
+        device.close();
+        disable();
+
+        if (cond & IOCondition::IO_HUP)
+            error_label->set_text(_("Device disconnected."));
+        else
+            error_label->set_text(_("Input/output error."));
+        info_bar->show();
+        info_bar->set_property("revealed", true);
+
+        return false;
+    }
+
     if (cond & IOCondition::IO_IN)
         handle_read();
 
-    if (cond & (IOCondition::IO_HUP | IOCondition::IO_ERR))
-        return false;
 
     return true;
 }
@@ -158,7 +188,7 @@ DevicePage::handle_read()
 
 
 void
-DevicePage::action_apply()
+DevicePage::on_action_apply()
 {
     for (auto& [code, _] : axes)
         apply_axis(code);
@@ -166,7 +196,7 @@ DevicePage::action_apply()
 
 
 void
-DevicePage::action_reset()
+DevicePage::on_action_reset()
 {
     for (auto& [code, _] : axes)
         reset_axis(code);
@@ -174,19 +204,17 @@ DevicePage::action_reset()
 
 
 void
-DevicePage::action_apply_axis(const Glib::VariantBase& arg)
+DevicePage::on_action_apply_axis(const Glib::VariantBase& arg)
 {
-    Code code = VariantBase::cast_dynamic<Variant<guint16>>(arg)
-        .get();
+    Code code = variant_cast<guint16>(arg);
     apply_axis(code);
 }
 
 
 void
-DevicePage::action_reset_axis(const Glib::VariantBase& arg)
+DevicePage::on_action_reset_axis(const Glib::VariantBase& arg)
 {
-    Code code = VariantBase::cast_dynamic<Variant<guint16>>(arg)
-        .get();
+    Code code = variant_cast<guint16>(arg);
     reset_axis(code);
 }
 
@@ -194,6 +222,9 @@ DevicePage::action_reset_axis(const Glib::VariantBase& arg)
 void
 DevicePage::apply_axis(Code code)
 {
+    if (!device.is_open())
+        return;
+
     device.kernel_abs_info(code,
                            axes.at(code)->get_calc());
     reset_axis(code);
@@ -203,6 +234,22 @@ DevicePage::apply_axis(Code code)
 void
 DevicePage::reset_axis(Code code)
 {
+    if (!device.is_open())
+        return;
+
     auto new_abs = device.abs_info(code);
     axes.at(code)->reset(new_abs);
+}
+
+
+void
+DevicePage::disable()
+{
+    apply_action->set_enabled(false);
+    reset_action->set_enabled(false);
+    apply_axis_action->set_enabled(false);
+    reset_axis_action->set_enabled(false);
+
+    for (auto& [_, axis] : axes)
+        axis->disable();
 }

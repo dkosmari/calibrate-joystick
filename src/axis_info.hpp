@@ -35,15 +35,22 @@ class AxisCanvas;
 class AxisInfo {
 
     template<typename T>
-    using ptr = std::unique_ptr<T>;
+    using uptr = std::unique_ptr<T>;
 
-    Glib::RefPtr<Gio::SimpleActionGroup> actions;
-
-    using LabelPtr = ptr<Gtk::Label>;
-    using SpinButtonPtr = ptr<Gtk::SpinButton>;
+    template<typename T>
+    using rptr = Glib::RefPtr<T>;
 
 
-    ptr<Gtk::Frame> info_frame;
+    rptr<Gio::SimpleActionGroup> actions;
+    rptr<Gio::SimpleAction> apply_action;
+    rptr<Gio::SimpleAction> reset_action;
+
+
+    using LabelPtr = uptr<Gtk::Label>;
+    using SpinButtonPtr = uptr<Gtk::SpinButton>;
+
+
+    uptr<Gtk::Frame> info_frame;
     LabelPtr name_label;
 
     LabelPtr value_label;
@@ -83,8 +90,8 @@ class AxisInfo {
     void update_flat(int flat);
     void update_res(int res);
 
-    void action_apply();
-    void action_reset();
+    void on_action_apply();
+    void on_action_reset();
 
 public:
 
@@ -102,6 +109,7 @@ public:
 
     void reset(const evdev::AbsInfo& new_orig);
 
+    void disable();
 };
 
 

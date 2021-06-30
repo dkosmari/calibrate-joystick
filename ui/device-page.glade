@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.38.2 -->
-<interface>
+<interface domain="calibrate-joystick">
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkImage" id="apply_icon">
     <property name="visible">True</property>
@@ -20,6 +20,73 @@
     <property name="orientation">vertical</property>
     <property name="spacing">18</property>
     <child>
+      <object class="GtkInfoBar" id="info_bar">
+        <property name="can-focus">False</property>
+        <property name="message-type">error</property>
+        <property name="revealed">False</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="spacing">6</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child internal-child="content_area">
+          <object class="GtkBox">
+            <property name="can-focus">False</property>
+            <property name="spacing">16</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Error:</property>
+                <property name="single-line-mode">True</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="error_label">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="wrap">True</property>
+                <property name="xalign">0</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
       <!-- n-columns=2 n-rows=3 -->
       <object class="GtkGrid">
         <property name="visible">True</property>
@@ -30,7 +97,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Name:</property>
+            <property name="label" translatable="yes" context="device name">Name:</property>
             <property name="xalign">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -45,7 +112,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Path:</property>
+            <property name="label" translatable="yes" context="device path">Path:</property>
             <property name="xalign">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -60,7 +127,7 @@
           <object class="GtkLabel" id="name_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">name</property>
+            <property name="label">name</property>
             <property name="ellipsize">middle</property>
             <property name="single-line-mode">True</property>
             <property name="xalign">0</property>
@@ -74,7 +141,7 @@
           <object class="GtkLabel" id="path_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">path</property>
+            <property name="label">path</property>
             <property name="ellipsize">start</property>
             <property name="single-line-mode">True</property>
             <property name="xalign">0</property>
@@ -88,7 +155,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Axes:</property>
+            <property name="label" translatable="yes" context="num axes" comments="Number of axes in a device.">Axes:</property>
             <property name="xalign">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -103,7 +170,7 @@
           <object class="GtkLabel" id="axes_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">axes</property>
+            <property name="label">0</property>
             <property name="single-line-mode">True</property>
             <property name="xalign">0</property>
           </object>
@@ -116,7 +183,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">0</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
@@ -150,7 +217,7 @@
       <packing>
         <property name="expand">True</property>
         <property name="fill">True</property>
-        <property name="position">1</property>
+        <property name="position">2</property>
       </packing>
     </child>
     <child>
@@ -161,7 +228,7 @@
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkButton" id="clear_button">
-            <property name="label" translatable="yes" context="gtk30">_Reset</property>
+            <property name="label" translatable="yes">_Reset</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="receives-default">False</property>
@@ -178,7 +245,7 @@
         </child>
         <child>
           <object class="GtkButton" id="apply_button">
-            <property name="label" translatable="yes" context="gtk30">_Apply</property>
+            <property name="label" translatable="yes">_Apply</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="can-default">True</property>
@@ -198,7 +265,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
-        <property name="position">2</property>
+        <property name="position">3</property>
       </packing>
     </child>
   </object>

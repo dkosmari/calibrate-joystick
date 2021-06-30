@@ -5,7 +5,8 @@ AM_CPPFLAGS = \
 	$(GTKMM_CFLAGS) \
 	$(LIBGUDEVXX_CFLAGS) \
 	$(LIBEVDEVXX_CFLAGS) \
-	-DRESOURCE_DIR=\"$(datadir)/calibrate-joystick\"
+	-DRESOURCE_DIR=\"$(datadir)/calibrate-joystick\" \
+	-DLOCALEDIR=\"$(localedir)\"
 
 
 AM_CXXFLAGS = \
@@ -15,8 +16,9 @@ AM_CXXFLAGS = \
 LDADD = \
 	$(GTKMM_LIBS) \
 	$(LIBGUDEVXX_LIBS) \
-	$(LIBEVDEVXX_LIBS)
-
+	$(LIBEVDEVXX_LIBS) \
+	$(LIBINTL) \
+	$(LTLIBICONV)
 
 bin_PROGRAMS = calibrate-joystick
 
@@ -26,7 +28,6 @@ calibrate_joystick_SOURCES = \
 	axis_canvas.cpp axis_canvas.hpp \
 	axis_info.cpp axis_info.hpp \
 	device_page.cpp device_page.hpp \
-	joystick_listener.cpp joystick_listener.hpp \
 	main.cpp \
 	utils.cpp utils.hpp
 
@@ -37,7 +38,7 @@ all-local: resources.gresource
 
 
 resources.gresource:
-	$(LN_S) $(abs_top_builddir)/resources.gresource $(builddir)/resources.gresource
+	$(LN_S) -f $(abs_top_builddir)/resources.gresource $(builddir)/resources.gresource
 
 
 .PHONY: company

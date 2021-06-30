@@ -36,40 +36,52 @@ class AxisInfo;
 class DevicePage {
 
     template<typename T>
-    using ptr = std::unique_ptr<T>;
+    using uptr = std::unique_ptr<T>;
+
+    template<typename T>
+    using rptr = Glib::RefPtr<T>;
 
     std::filesystem::path dev_path; // TODO: should be in evdev::Device
 
     evdev::Device device;
 
-    Glib::RefPtr<Gio::SimpleActionGroup> actions;
+    rptr<Gio::SimpleActionGroup> actions;
+    rptr<Gio::SimpleAction> apply_action;
+    rptr<Gio::SimpleAction> reset_action;
+    rptr<Gio::SimpleAction> apply_axis_action;
+    rptr<Gio::SimpleAction> reset_axis_action;
 
-    ptr<Gtk::Box> device_box;
-    ptr<Gtk::Label> name_label;
-    ptr<Gtk::Label> path_label;
-    ptr<Gtk::Label> axes_label;
-    ptr<Gtk::Box> axes_box;
 
-    std::map<evdev::Code, ptr<AxisInfo>> axes;
+    uptr<Gtk::Box> device_box;
+    uptr<Gtk::Label> name_label;
+    uptr<Gtk::Label> path_label;
+    uptr<Gtk::Label> axes_label;
+    uptr<Gtk::Box> axes_box;
+    uptr<Gtk::InfoBar> info_bar;
+    uptr<Gtk::Label> error_label;
+
+    std::map<evdev::Code, uptr<AxisInfo>> axes;
 
     sigc::connection io_conn;
 
 
     void load_widgets();
 
-    bool handle_io(Glib::IOCondition cond);
+    bool on_io(Glib::IOCondition cond);
 
     void handle_read();
 
-    void action_apply();
-    void action_reset();
+    void on_action_apply();
+    void on_action_reset();
 
-    void action_apply_axis(const Glib::VariantBase& arg);
-    void action_reset_axis(const Glib::VariantBase& arg);
+    void on_action_apply_axis(const Glib::VariantBase& arg);
+    void on_action_reset_axis(const Glib::VariantBase& arg);
 
 
     void apply_axis(evdev::Code code);
     void reset_axis(evdev::Code code);
+
+    void disable();
 
 public:
 

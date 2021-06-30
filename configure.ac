@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
-AC_INIT([calibrate-joystick], [0.1], [])
+AC_PREREQ([2.70])
+AC_INIT([calibrate-joystick],[0.1],[])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -20,6 +20,11 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_CHECK_PROGS([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
+
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.21])
+AM_ICONV
+
 
 AC_LANG([C++])
 
@@ -40,6 +45,7 @@ AC_TYPE_UINT64_T
 
 AC_CONFIG_FILES([calibrate-joystick.spec
                  Makefile
-                 src/Makefile])
+                 src/Makefile
+                 po/Makefile.in])
 
 AC_OUTPUT

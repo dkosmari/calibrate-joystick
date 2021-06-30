@@ -7,6 +7,11 @@
         <attribute name="action">app.refresh</attribute>
         <attribute name="accel">F5</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Open</attribute>
+        <attribute name="action">app.open</attribute>
+        <attribute name="accel">&lt;Control&gt;o</attribute>
+      </item>
     </section>
     <section>
       <item>

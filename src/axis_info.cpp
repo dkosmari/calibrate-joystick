@@ -25,6 +25,8 @@
 #include "axis_canvas.hpp"
 #include "utils.hpp"
 
+#include <glibmm/i18n.h>
+
 
 using std::string;
 
@@ -59,8 +61,13 @@ AxisInfo::AxisInfo(evdev::Code axis_code,
     CONN_SYNC_SPIN(flat);
     CONN_SYNC_SPIN(res);
 
-    actions->add_action("apply", sigc::mem_fun(this, &AxisInfo::action_apply));
-    actions->add_action("reset", sigc::mem_fun(this, &AxisInfo::action_reset));
+    apply_action =
+        actions->add_action("apply",
+                            sigc::mem_fun(this, &AxisInfo::on_action_apply));
+
+    reset_action =
+        actions->add_action("reset",
+                            sigc::mem_fun(this, &AxisInfo::on_action_reset));
 
 #undef CONN_SYNC_SPIN
 
@@ -106,7 +113,7 @@ Gtk::Widget&
 AxisInfo::root()
 {
     if (!info_frame)
-        throw std::runtime_error{"failed to load root widget"};
+        throw std::runtime_error{_("Failed to load root widget.")};
     return *info_frame;
 }
 
@@ -179,7 +186,7 @@ AxisInfo::update_res(int res)
 
 
 void
-AxisInfo::action_apply()
+AxisInfo::on_action_apply()
 {
     root().get_action_group("dev")
         ->activate_action("apply_axis", Variant<guint16>::create(code));
@@ -187,7 +194,7 @@ AxisInfo::action_apply()
 
 
 void
-AxisInfo::action_reset()
+AxisInfo::on_action_reset()
 {
     root().get_action_group("dev")
         ->activate_action("reset_axis", Variant<guint16>::create(code));
@@ -221,4 +228,18 @@ AxisInfo::reset(const AbsInfo& new_orig)
 
     if (axis_canvas)
         axis_canvas->reset(orig, calc);
+}
+
+
+void
+AxisInfo::disable()
+{
+    apply_action->set_enabled(false);
+    reset_action->set_enabled(false);
+
+    calc_min_spin->set_sensitive(false);
+    calc_max_spin->set_sensitive(false);
+    calc_fuzz_spin->set_sensitive(false);
+    calc_flat_spin->set_sensitive(false);
+    calc_res_spin->set_sensitive(false);
 }

@@ -1,18 +1,14 @@
 Name:           @PACKAGE_NAME@
 Version:        @PACKAGE_VERSION@
-Release:        1%{?dist}
+Release:        %mkrel 1
 Summary:        A joystick calibration program.
 
 License:        GPLv3
 Source0:        @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
 
-BuildRequires:  libevdevxx-devel
-BuildRequires:  libgudevxx-devel
-#BuildRequires:  lib64gtkmm3.0-devel
-
-#Requires:       libevdevxx
-#Requires:       libgudevxx
-#Requires:       lib64gtkmm3.0
+BuildRequires:  pkgconfig(libevdevxx)
+BuildRequires:  pkgconfig(libgudevxx)
+BuildRequires:  pkgconfig(gtkmm-3.0)
 
 Group:          System/Kernel and hardware
 
@@ -33,10 +29,13 @@ Group:          System/Kernel and hardware
 rm -rf $RPM_BUILD_ROOT
 %make_install
 
+%find_lang %{name}
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc README
 %{_bindir}/calibrate-joystick
 %{_datadir}/calibrate-joystick/resources.gresource
 %{_datadir}/applications/calibrate-joystick.desktop
+
+
