@@ -53,7 +53,7 @@ using Glib::VariantType;
 
 
 
-#if 1
+#if 0
 #define TRACE cout << __PRETTY_FUNCTION__ << endl
 #else
 #define TRACE while (false)
