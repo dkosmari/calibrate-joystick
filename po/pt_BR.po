@@ -1,28 +1,29 @@
 # Portuguese translations for calibrate-joystick package
-# TraduÁıes em portuguÍs brasileiro para o pacote calibrate-joystick.
+# Tradu√ß√µes em portugu√™s brasileiro para o pacote calibrate-joystick.
 # Copyright (C) 2021 Daniel K. O.
 # This file is distributed under the same license as the calibrate-joystick package.
 # Daniel K. O. <dkosmari@gmail.com>, 2021.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: calibrate-joystick 0.1\n"
+"Project-Id-Version: calibrate-joystick 0.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-11 00:31-0300\n"
-"PO-Revision-Date: 2021-07-11 00:33-0300\n"
+"PO-Revision-Date: 2021-07-11 02:26-0300\n"
 "Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge."
 "net>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #: src/app.cpp:75
 msgid "Show program version"
-msgstr "Mostra a vers„o do programa"
+msgstr "Mostra a vers√£o do programa"
 
 #: src/app.cpp:79
 msgid "Run in daemon mode."
@@ -30,11 +31,11 @@ msgstr "Executar em modo daemon."
 
 #: src/app.cpp:83
 msgid "Could not load resource file."
-msgstr "N„o pode carregar o arquivo de recursos."
+msgstr "N√£o pode carregar o arquivo de recursos."
 
 #: src/app.cpp:166
 msgid "Daemon running."
-msgstr "Daemon em execuÁ„o."
+msgstr "Daemon em execu√ß√£o."
 
 #: src/app.cpp:167
 msgid "Monitoring new joysticks..."
@@ -82,11 +83,11 @@ msgstr "Dispositivo desconectado."
 
 #: src/device_page.cpp:162
 msgid "Input/output error."
-msgstr "Erro de entrada/saÌda."
+msgstr "Erro de entrada/sa√≠da."
 
 #: ui/about-dialog.glade:10
 msgid "A utility to calibrate joysticks."
-msgstr "Um utilit·rio para calibrar joysticks."
+msgstr "Um utilit√°rio para calibrar joysticks."
 
 #: ui/actions.ui:6
 msgid "_Refresh"
@@ -102,23 +103,23 @@ msgstr "Sa_ir"
 
 #: ui/axis-info.glade:65
 msgid "Minimum value for this axis."
-msgstr "Valor mÌnimo para este eixo."
+msgstr "Valor m√≠nimo para este eixo."
 
 #. Abbreviation for "minimum value."
 #: ui/axis-info.glade:66
 msgctxt "axis min"
 msgid "Min:"
-msgstr "MÌn:"
+msgstr "M√≠n:"
 
 #: ui/axis-info.glade:82
 msgid "Maximum value for the axis."
-msgstr "Valor m·ximo para este eixo."
+msgstr "Valor m√°ximo para este eixo."
 
 #. Abbreviation for "maximum value."
 #: ui/axis-info.glade:83
 msgctxt "axis max"
 msgid "Max:"
-msgstr "M·x:"
+msgstr "M√°x:"
 
 #: ui/axis-info.glade:127
 msgid ""
@@ -128,9 +129,9 @@ msgid ""
 "the value will be sent to the application."
 msgstr ""
 "Filtro de ruido.\n"
-"VariaÁıes menores que isto ser„o ignoradas.\n"
+"Varia√ß√µes menores que isto ser√£o ignoradas.\n"
 "Quando <i>fuzzy = N</i>, somente quando o valor muda por mais que <i>N</i>, "
-"o valor È enviado ao programa."
+"o valor √© enviado ao programa."
 
 #. Probably left untranslated.
 #: ui/axis-info.glade:130
@@ -143,8 +144,8 @@ msgid ""
 "Also known as \"<b>dead zone</b>.\"\n"
 "Values smaller than this will be interpreted as zero."
 msgstr ""
-"TambÈm conhecido como \"<b>dead zone</b>.\"\n"
-"Valores menores que isot ser„o interpretados como zero."
+"Tamb√©m conhecido como \"<b>dead zone</b>.\"\n"
+"Valores menores que isot ser√£o interpretados como zero."
 
 #. Name for "near zero" field. Probably best left untranslated.
 #: ui/axis-info.glade:178
@@ -157,7 +158,7 @@ msgid ""
 "Resolution of this axis.\n"
 "Most input devices ignore this field."
 msgstr ""
-"ResoluÁ„o deste eixo.\n"
+"Resolu√ß√£o deste eixo.\n"
 "A maioria dos dispositivos ignoram este campo."
 
 #. Abbreviation for "resolution."
