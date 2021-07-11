@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.4
+Type=Application
+Name=Calibrate Joystick (daemon)
+Categories=System;
+Comment=Show calibration window when a joystick is inserted.
+Icon=input-gaming
+Exec=calibrate-joystick -d

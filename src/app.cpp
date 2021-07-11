@@ -51,9 +51,17 @@ using Glib::VariantBase;
 using Glib::VariantType;
 
 
+
+
+#if 1
+#define TRACE cout << __PRETTY_FUNCTION__ << endl
+#else
+#define TRACE while (false)
+#endif
+
+
 static const auto app_flags =
     ApplicationFlags::APPLICATION_HANDLES_OPEN;
-
 
 
 App::App() :
@@ -61,9 +69,14 @@ App::App() :
 {
     signal_handle_local_options()
         .connect(sigc::mem_fun(this, &App::on_handle_local_options));
+
     add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
                           "version", 'V',
                           _("Show program version"));
+
+    add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
+                          "daemon", 'd',
+                          _("Run in daemon mode."));
 
     if (!load_resources("resources.gresource") &&
         !load_resources(RESOURCE_DIR "/resources.gresource"))
@@ -74,57 +87,87 @@ App::App() :
 App::~App() = default;
 
 
-void
-App::on_startup()
+bool
+App::load_resources(const std::filesystem::path& res_path)
 {
-    cout << __PRETTY_FUNCTION__ << endl;
-
-    Gtk::Application::on_startup();
-
-    add_action("about",   sigc::mem_fun(this, &App::on_action_about));
-    add_action("open",    sigc::mem_fun(this, &App::on_action_open));
-    add_action("quit",    sigc::mem_fun(this, &App::quit));
-    add_action("refresh", sigc::mem_fun(this, &App::on_action_refresh));
-}
-
-
-void
-App::on_activate()
-{
-    cout << __PRETTY_FUNCTION__ << endl;
-
-    present_gui();
-
-    activate_action("refresh");
-}
-
-
-void
-App::on_open(const type_vec_files& files,
-             const ustring&)
-{
-    cout << __PRETTY_FUNCTION__ << endl;
-
-    present_gui();
-    clear_devices();
-    uclient.reset();
-
-    for (auto& f : files) {
-        path dev_path = f->get_path();
-        cout << "  " << dev_path << endl;
-        add_device(dev_path);
+    try {
+        g_debug("Trying to load resources from \"%s\".", res_path.c_str());
+        resource = Resource::create_from_file(res_path);
+        if (!resource)
+            return false;
+        g_debug("Loaded resource file from \"%s\".", res_path.c_str());
+        resource->register_global();
+        return true;
+    }
+    catch (...) {
+        return false;
     }
 }
 
 
-int
-App::on_handle_local_options(const RefPtr<Glib::VariantDict>& options)
+void
+App::present_gui()
 {
-    if (options->contains("version")) {
-        cout << PACKAGE_VERSION << endl;
-        return 0;
+    TRACE;
+
+    if (!main_window) {
+        //cout << "building window" << endl;
+
+        auto builder = Gtk::Builder::create_from_resource(ui_main_window_path);
+
+        main_window = get_widget<Gtk::ApplicationWindow>(builder,
+                                                         "main_window");
+        add_window(*main_window);
+
+        header_bar = get_widget<Gtk::HeaderBar>(builder,
+                                                "header_bar");
+        main_window->set_titlebar(*header_bar);
+
+        builder->get_widget("device_notebook", device_notebook);
+
+        builder->get_widget("quit_button", quit_button);
+        if (opt_daemon) {
+            quit_button->show();
+
+            // every time the window is hidden, send a new notification
+            main_window->signal_delete_event().connect([this](GdkEventAny*) -> bool
+            {
+                send_daemon_notification();
+                return false;
+            });
+        }
     }
-    return -1;
+
+    // every time the window gets hidden, it's removed from the application
+    // so we need to manually add it again
+    add_window(*main_window);
+    main_window->present();
+}
+
+
+void
+App::connect_uevent()
+{
+    if (!uclient) {
+        uclient = make_unique<gudev::Client>(vector<string>{"input"});
+        uclient->uevent_callback =
+            [this](const string& action,
+                   const gudev::Device& device)
+            {
+                on_uevent(action, device);
+            };
+    }
+}
+
+
+void
+App::send_daemon_notification()
+{
+    auto notif = Gio::Notification::create(_("Daemon running."));
+    notif->set_body(_("Monitoring new joysticks..."));
+    //notif->set_priority(Gio::NotificationPriority::NOTIFICATION_PRIORITY_LOW);
+    notif->add_button(_("Quit daemon"), "app.quit");
+    send_notification("daemon", notif);
 }
 
 
@@ -143,7 +186,7 @@ App::on_action_about()
 void
 App::on_action_open()
 {
-    cout << __PRETTY_FUNCTION__ << endl;
+    TRACE;
 
     Gtk::FileChooserDialog diag{*main_window, _("Open device...")};
     diag.set_select_multiple();
@@ -170,42 +213,148 @@ App::on_action_open()
 }
 
 
-bool
-App::load_resources(const std::filesystem::path& res_path)
+void
+App::on_action_quit()
 {
-    try {
-        g_debug("Trying to load resources from \"%s\".", res_path.c_str());
-        resource = Resource::create_from_file(res_path);
-        if (!resource)
-            return false;
-        g_debug("Loaded resource file from \"%s\".", res_path.c_str());
-        resource->register_global();
-        return true;
+    TRACE;
+
+    if (opt_daemon) {
+        withdraw_notification("daemon");
+        release();
     }
-    catch (...) {
-        return false;
+
+    quit();
+}
+
+
+void
+App::on_action_refresh()
+{
+    TRACE;
+
+    clear_devices();
+
+    connect_uevent();
+
+    gudev::Enumerator e{*uclient};
+
+    e.match_subsystem("input");
+    e.match_property("ID_INPUT_JOYSTICK", "1");
+    e.match_name("event*");
+
+    auto devices = e.execute();
+
+    for (const auto& d : devices) {
+        auto name = d.name();
+        auto path = d.device_file();
+        if (!name || !path)
+            continue;
+        add_device(*path);
+    }
+
+}
+
+
+void
+App::on_activate()
+{
+    TRACE;
+
+    if (opt_daemon && silent_start) {
+        silent_start = false;
+        return;
+    }
+
+    present_gui();
+    activate_action("refresh");
+}
+
+
+int
+App::on_handle_local_options(const RefPtr<Glib::VariantDict>& options)
+{
+    TRACE;
+
+    if (options->contains("version")) {
+        cout << PACKAGE_VERSION << endl;
+        return 0;
+    }
+
+    if (options->contains("daemon")) {
+        silent_start = true;
+        opt_daemon = true;
+    }
+
+    return -1;
+}
+
+
+void
+App::on_open(const type_vec_files& files,
+             const ustring&)
+{
+    TRACE;
+
+    silent_start = false;
+
+    present_gui();
+    clear_devices();
+
+    // if not running as daemon, stop auto-refreshing
+    if (!opt_daemon)
+        uclient.reset();
+
+    for (auto& f : files) {
+        path dev_path = f->get_path();
+        add_device(dev_path);
     }
 }
 
 
 void
-App::present_gui()
+App::on_startup()
 {
-    if (!main_window) {
-        auto builder = Gtk::Builder::create_from_resource(ui_main_window_path);
+    TRACE;
 
-        main_window = get_widget<Gtk::ApplicationWindow>(builder,
-                                                         "main_window");
-        add_window(*main_window);
+    Gtk::Application::on_startup();
 
-        header_bar = get_widget<Gtk::HeaderBar>(builder,
-                                                "header_bar");
-        main_window->set_titlebar(*header_bar);
+    add_action("about",   sigc::mem_fun(this, &App::on_action_about));
+    add_action("open",    sigc::mem_fun(this, &App::on_action_open));
+    add_action("quit",    sigc::mem_fun(this, &App::on_action_quit));
+    add_action("refresh", sigc::mem_fun(this, &App::on_action_refresh));
 
-        builder->get_widget("device_notebook", device_notebook);
+
+    if (opt_daemon) {
+        //cout << "running as daemon" << endl;
+        hold(); // keep it running without window
+        connect_uevent();
+
+        send_daemon_notification();
     }
+}
 
-    main_window->present();
+
+void
+App::on_uevent(const string& action,
+               const gudev::Device& device)
+{
+    TRACE;
+
+    if (auto name = device.name();
+        !name || !starts_with(*name, "event"))
+        return;
+
+    if (!device.property_as<bool>("ID_INPUT_JOYSTICK"))
+        return;
+
+    auto dev_path = device.device_file();
+    if (!dev_path)
+        return;
+
+    if (action == "add")
+        add_device(*dev_path);
+    else if (action == "remove")
+        remove_device(*dev_path);
 }
 
 
@@ -219,9 +368,11 @@ App::clear_devices()
 void
 App::add_device(const path& dev_path)
 {
+    present_gui();
+
     try {
-        auto [iter, inserted] = devices.emplace(dev_path,
-                                            make_unique<DevicePage>(dev_path));
+        auto [iter, inserted] =
+            devices.emplace(dev_path, make_unique<DevicePage>(dev_path));
         if (!inserted)
             return;
 
@@ -244,61 +395,4 @@ void
 App::remove_device(const path& dev_path)
 {
     devices.erase(dev_path);
-}
-
-
-void
-App::on_action_refresh()
-{
-    cout << __PRETTY_FUNCTION__ << endl;
-
-    clear_devices();
-
-    if (!uclient) {
-        uclient = make_unique<gudev::Client>(vector<string>{"input"});
-        uclient->uevent_callback =
-            [this](const string& action,
-                   const gudev::Device& device)
-            {
-                on_uevent(action, device);
-            };
-    }
-
-    gudev::Enumerator e{*uclient};
-
-    e.match_subsystem("input");
-    e.match_property("ID_INPUT_JOYSTICK", "1");
-    e.match_name("event*");
-
-    auto devices = e.execute();
-
-    for (const auto& d : devices) {
-        auto name = d.name();
-        auto path = d.device_file();
-        if (!name || !path)
-            continue;
-        add_device(*path);
-    }
-}
-
-
-void
-App::on_uevent(const string& action,
-               const gudev::Device& device)
-{
-    if (auto name = device.name();
-        !name || !starts_with(*name, "event"))
-        return;
-
-    if (!device.property_as<bool>("ID_INPUT_JOYSTICK"))
-        return;
-
-    auto dev_path = device.device_file();
-    if (!dev_path)
-        return;
-
-    if (action == "add")
-        add_device(*dev_path);
-    else if (action == "remove")
-        remove_device(*dev_path);
 }

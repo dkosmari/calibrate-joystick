@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.70])
-AC_INIT([calibrate-joystick],[0.1],[])
+AC_INIT([calibrate-joystick],[0.2],[])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -32,8 +32,8 @@ AX_CXX_COMPILE_STDCXX_17([noext])
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
-PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx])
 PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx])
+PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx])
 
 # Checks for header files.
 

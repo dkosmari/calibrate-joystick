@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-30 15:01-0300\n"
-"PO-Revision-Date: 2021-06-30 15:01-0300\n"
+"POT-Creation-Date: 2021-07-11 00:31-0300\n"
+"PO-Revision-Date: 2021-07-11 00:33-0300\n"
 "Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge."
 "net>\n"
@@ -20,39 +20,55 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: src/app.cpp:66
+#: src/app.cpp:75
 msgid "Show program version"
 msgstr "Mostra a versão do programa"
 
-#: src/app.cpp:70
+#: src/app.cpp:79
+msgid "Run in daemon mode."
+msgstr "Executar em modo daemon."
+
+#: src/app.cpp:83
 msgid "Could not load resource file."
 msgstr "Não pode carregar o arquivo de recursos."
 
-#: src/app.cpp:138
+#: src/app.cpp:166
+msgid "Daemon running."
+msgstr "Daemon em execução."
+
+#: src/app.cpp:167
+msgid "Monitoring new joysticks..."
+msgstr "Monitorando novos joysticks..."
+
+#: src/app.cpp:169
+msgid "Quit daemon"
+msgstr "Terminar daemon"
+
+#: src/app.cpp:181
 msgid "_Close"
 msgstr "_Fechar"
 
-#: src/app.cpp:148
+#: src/app.cpp:191
 msgid "Open device..."
 msgstr "Abrir dispositivo..."
 
-#: src/app.cpp:154
+#: src/app.cpp:197
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/app.cpp:155 ui/actions.ui:11
+#: src/app.cpp:198 ui/actions.ui:11
 msgid "_Open"
 msgstr "_Abrir"
 
-#: src/app.cpp:158
+#: src/app.cpp:201
 msgid "evdev devices"
 msgstr "dispositivos evdev"
 
-#: src/app.cpp:163
+#: src/app.cpp:206
 msgid "all files"
 msgstr "todos os arquivos"
 
-#: src/app.cpp:234
+#: src/app.cpp:385
 msgid "Error opening file"
 msgstr "Error abrindo o arquivo"
 
@@ -171,31 +187,31 @@ msgctxt "revert axis"
 msgid "Revert"
 msgstr "Reverter"
 
-#: ui/device-page.glade:50
+#: ui/device-page.glade:51
 msgid "Error:"
 msgstr "Erro:"
 
-#: ui/device-page.glade:100
+#: ui/device-page.glade:101
 msgctxt "device name"
 msgid "Name:"
 msgstr "Nome:"
 
-#: ui/device-page.glade:115
+#: ui/device-page.glade:116
 msgctxt "device path"
 msgid "Path:"
 msgstr "Caminho:"
 
 #. Number of axes in a device.
-#: ui/device-page.glade:158
+#: ui/device-page.glade:159
 msgctxt "num axes"
 msgid "Axes:"
 msgstr "Eixos:"
 
-#: ui/device-page.glade:231
+#: ui/device-page.glade:232
 msgid "_Reset"
 msgstr "_Resetar"
 
-#: ui/device-page.glade:248
+#: ui/device-page.glade:249
 msgid "_Apply"
 msgstr "_Aplicar"
 
@@ -203,16 +219,28 @@ msgstr "_Aplicar"
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
-#: ui/main-window.glade:59
+#: ui/main-window.glade:64
 msgctxt "application name"
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
 #. Button to refresh the list of devices.
-#: ui/main-window.glade:64
+#: ui/main-window.glade:69
 msgctxt "refresh devices"
 msgid "_Refresh"
 msgstr "Atualiza_r"
+
+#: ui/main-window.glade:81
+msgid "_Quit daemon"
+msgstr "_Terminar daemon"
+
+#~ msgid "Quit"
+#~ msgstr "Sa_ir"
+
+#, fuzzy
+#~| msgid "_Refresh"
+#~ msgid "Refreshing."
+#~ msgstr "Atualiza_r"
 
 #~ msgid "Joystick Calibration"
 #~ msgstr "Calibragem de Joystick"

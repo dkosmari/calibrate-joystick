@@ -5,8 +5,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
 	bootstrap \
-	calibrate-joystick.desktop \
 	calibrate-joystick.spec.in \
+	none.calibrate_joystick.desktop \
+	none.calibrate_joystick-daemon.desktop \
 	resources.xml \
 	ui
 
@@ -17,7 +18,9 @@ SUBDIRS = src po
 # .desktop entry
 
 desktopdir = $(datadir)/applications
-desktop_DATA = calibrate-joystick.desktop
+desktop_DATA = \
+	none.calibrate_joystick.desktop \
+	none.calibrate_joystick-daemon.desktop
 
 
 # .gresource file
@@ -30,9 +33,9 @@ CLEANFILES = resources.gresource
 resources_DEPS = $(shell $(GLIB_COMPILE_RESOURCES) \
 				--sourcedir=$(srcdir) \
 				--generate-dependencies \
-				resources.xml)
+				$(srcdir)/resources.xml)
 
-resources.gresource: resources.xml $(resources_DEPS)
+resources.gresource: $(srcdir)/resources.xml $(resources_DEPS)
 	$(GLIB_COMPILE_RESOURCES) $< \
 		--target=$@ \
 		--sourcedir=$(srcdir) \

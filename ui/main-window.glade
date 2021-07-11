@@ -48,6 +48,11 @@ Author: Daniel K. O.
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="quit_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">application-exit</property>
+  </object>
   <object class="GtkImage" id="refresh_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -70,6 +75,22 @@ Author: Daniel K. O.
         <property name="use-underline">True</property>
         <property name="always-show-image">True</property>
       </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="quit_button">
+        <property name="label" translatable="yes">_Quit daemon</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
+        <property name="no-show-all">True</property>
+        <property name="action-name">app.quit</property>
+        <property name="image">quit_icon</property>
+        <property name="use-underline">True</property>
+        <property name="always-show-image">True</property>
+      </object>
+      <packing>
+        <property name="pack-type">end</property>
+        <property name="position">1</property>
+      </packing>
     </child>
   </object>
 </interface>

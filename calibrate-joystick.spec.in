@@ -30,12 +30,11 @@ rm -rf $RPM_BUILD_ROOT
 %make_install
 
 %find_lang %{name}
-
 %files -f %{name}.lang
+
 %license COPYING
 %doc README
 %{_bindir}/calibrate-joystick
 %{_datadir}/calibrate-joystick/resources.gresource
-%{_datadir}/applications/calibrate-joystick.desktop
-
+%{_datadir}/applications/*.desktop
 

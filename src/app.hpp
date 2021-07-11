@@ -50,32 +50,31 @@ class App : public Gtk::Application {
     uptr<Gtk::HeaderBar> header_bar;
 
     Gtk::Notebook* device_notebook = nullptr;
+    Gtk::Button* quit_button = nullptr;
 
     std::map<std::filesystem::path,
              uptr<DevicePage>> devices;
 
     uptr<gudev::Client> uclient;
 
+    bool opt_daemon = false;
+    bool silent_start = false;
 
-    void on_startup() override;
-
-    void on_activate() override;
-
-    void on_open(const type_vec_files& files,
-                 const Glib::ustring& hint) override;
-
-    int on_handle_local_options(const rptr<Glib::VariantDict>& options);
-
-    void on_action_about();
-
-    void on_action_open();
-
-    void on_action_refresh();
 
     bool load_resources(const std::filesystem::path& res_path);
-
     void present_gui();
+    void connect_uevent();
+    void send_daemon_notification();
 
+    void on_action_about();
+    void on_action_open();
+    void on_action_quit();
+    void on_action_refresh();
+    void on_activate() override;
+    int  on_handle_local_options(const rptr<Glib::VariantDict>& options);
+    void on_open(const type_vec_files& files,
+                 const Glib::ustring& hint) override;
+    void on_startup() override;
     void on_uevent(const std::string& action, const gudev::Device& device);
 
 public:
@@ -90,8 +89,6 @@ public:
     void add_device(const std::filesystem::path& dev_path);
 
     void remove_device(const std::filesystem::path& dev_path);
-
-
 
 };
 
