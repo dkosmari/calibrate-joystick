@@ -113,7 +113,7 @@ Gtk::Widget&
 AxisInfo::root()
 {
     if (!info_frame)
-        throw std::runtime_error{_("Failed to load root widget.")};
+        throw std::runtime_error{"Failed to load root widget."};
     return *info_frame;
 }
 

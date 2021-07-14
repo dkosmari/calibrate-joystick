@@ -72,7 +72,7 @@ App::App() :
 
     add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
                           "version", 'V',
-                          _("Show program version"));
+                          _("Show program version."));
 
     add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
                           "daemon", 'd',

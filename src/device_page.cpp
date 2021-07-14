@@ -130,7 +130,7 @@ Gtk::Widget&
 DevicePage::root()
 {
     if (!device_box)
-        throw std::runtime_error{_("Failed to load root widget.")};
+        throw std::runtime_error{"Failed to load root widget."};
     return *device_box;
 }
 
