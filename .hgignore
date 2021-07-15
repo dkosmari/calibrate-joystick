@@ -36,6 +36,7 @@ po/en@quot.insert-header
 po/en@quot.po
 po/insert-header.sin
 po/Makefile.in.in
+po/Makevars.template
 po/POTFILES
 po/quot.sed
 po/remove-potcdate.sed
@@ -44,4 +45,3 @@ po/Rules-quot
 po/stamp-po
 src/calibrate-joystick
 stamp-h1
-po/Makevars.template

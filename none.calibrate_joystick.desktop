@@ -2,8 +2,16 @@
 Version=1.4
 Type=Application
 Name=Calibrate Joystick
+Name[es]=Calibrar el Joystick
+Name[fr]=Calibrer le Joystick
+Name[it]=Calibrare il joystick
+Name[pt]=Calibrar Joystick
 Categories=System;
 Comment=Quickly calibrate the range and dead zone of your joysticks.
+Comment[es]=Calibra rápidamente el alcance y la zona muerta de tus joysticks.
+Comment[fr]=Calibrez rapidement la portée et la zone morte de vos joysticks.
+Comment[it]=Calibra rapidamente la portata e la zona morta dei tuoi joystick.
+Comment[pt]=Calibre rapidamente o alcance e a zona morta de seus joysticks.
 Icon=input-gaming
 Exec=calibrate-joystick
 Terminal=false

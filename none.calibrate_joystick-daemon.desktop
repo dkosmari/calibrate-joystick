@@ -2,7 +2,15 @@
 Version=1.4
 Type=Application
 Name=Calibrate Joystick (daemon)
+Name[es]=Calibrar Joystick (daemon)
+Name[fr]=Calibrer le Joystick (daemon)
+Name[it]=Calibrare il joystick (daemon)
+Name[pt]=Calibre o Joystick (daemon)
 Categories=System;
 Comment=Show calibration window when a joystick is inserted.
+Comment[es]=Mostrar la ventana de calibración cuando se inserta un joystick.
+Comment[fr]=Afficher la fenêtre de calibration lorsqu'un joystick est inséré.
+Comment[it]=Mostra la finestra di calibrazione quando è inserito un joystick.
+Comment[pt]=Mostrar janela de calibração quando um joystick é inserido.
 Icon=input-gaming
 Exec=calibrate-joystick -d
