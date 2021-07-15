@@ -28,12 +28,12 @@ using std::equal;
 using namespace std::literals;
 
 
-const string resource_prefix = "/none/calibrate_joystick/";
+#define RES_PREFIX "/none/calibrate_joystick/"
 
-const string ui_about_dialog_path = resource_prefix + "ui/about-dialog.glade"s;
-const string ui_axis_info_path = resource_prefix + "ui/axis-info.glade"s;
-const string ui_device_page_path = resource_prefix + "ui/device-page.glade"s;
-const string ui_main_window_path = resource_prefix + "ui/main-window.glade"s;
+const string ui_about_dialog_path = RES_PREFIX "ui/about-dialog.glade";
+const string ui_axis_info_path    = RES_PREFIX "ui/axis-info.glade";
+const string ui_device_page_path  = RES_PREFIX "ui/device-page.glade";
+const string ui_main_window_path  = RES_PREFIX "ui/main-window.glade";
 
 
 bool

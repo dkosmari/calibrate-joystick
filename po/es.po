@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-14 22:34+0000\n"
+"POT-Creation-Date: 2021-07-15 00:34-0300\n"
 "PO-Revision-Date: 2021-07-15 02:21+0000\n"
 "Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
 "Language-Team: \n"
@@ -20,63 +20,63 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: src/app.cpp:75
+#: src/app.cpp:90
 msgid "Show program version."
 msgstr "Mostrar la versión del programa."
 
-#: src/app.cpp:79
+#: src/app.cpp:94
 msgid "Run in daemon mode."
 msgstr "Ejecutar en modo daemon."
 
-#: src/app.cpp:83
+#: src/app.cpp:98
 msgid "Could not load resource file."
 msgstr "No se ha podido cargar el archivo de recursos."
 
-#: src/app.cpp:166
+#: src/app.cpp:181
 msgid "Daemon running."
 msgstr "Daemon funcionando."
 
-#: src/app.cpp:167
+#: src/app.cpp:182
 msgid "Monitoring new joysticks..."
 msgstr "Monitorización de nuevos joysticks..."
 
-#: src/app.cpp:169
+#: src/app.cpp:184
 msgid "Quit daemon"
 msgstr "Salir del daemon"
 
-#: src/app.cpp:181
+#: src/app.cpp:196
 msgid "_Close"
 msgstr "_Cerrar"
 
-#: src/app.cpp:191
+#: src/app.cpp:206
 msgid "Open device..."
 msgstr "Abrir dispositivo..."
 
-#: src/app.cpp:197
+#: src/app.cpp:212
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/app.cpp:198 ui/actions.ui:11
+#: src/app.cpp:213 ui/actions.ui:11
 msgid "_Open"
 msgstr "_Abrir"
 
-#: src/app.cpp:201
+#: src/app.cpp:216
 msgid "evdev devices"
 msgstr "dispositivos evdev"
 
-#: src/app.cpp:206
+#: src/app.cpp:221
 msgid "all files"
 msgstr "todos los archivos"
 
-#: src/app.cpp:385
+#: src/app.cpp:405
 msgid "Error opening file"
 msgstr "Error al abrir el archivo"
 
-#: src/device_page.cpp:160
+#: src/device_page.cpp:163
 msgid "Device disconnected."
 msgstr "Dispositivo desconectado."
 
-#: src/device_page.cpp:162
+#: src/device_page.cpp:165
 msgid "Input/output error."
 msgstr "Error de entrada/salida."
 

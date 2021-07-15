@@ -26,6 +26,9 @@
 #include "axis_info.hpp"
 #include "utils.hpp"
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <glibmm/i18n.h>
 
 

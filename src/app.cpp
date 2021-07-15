@@ -20,6 +20,11 @@
 #include <iostream>
 #include <vector>
 
+#include <glib.h>
+#ifdef G_OS_UNIX
+#include <glib-unix.h>
+#endif
+
 #include <gudevxx/enumerator.hpp>
 
 #include "app.hpp"
@@ -31,7 +36,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 #include <glibmm/i18n.h>
 
 
@@ -62,6 +66,17 @@ using Glib::VariantType;
 
 static const auto app_flags =
     ApplicationFlags::APPLICATION_HANDLES_OPEN;
+
+
+#ifdef G_OS_UNIX
+static
+gboolean
+stop_application(App* app)
+{
+    app->quit();
+    return FALSE;
+}
+#endif
 
 
 App::App() :
@@ -165,7 +180,7 @@ App::send_daemon_notification()
 {
     auto notif = Gio::Notification::create(_("Daemon running."));
     notif->set_body(_("Monitoring new joysticks..."));
-    //notif->set_priority(Gio::NotificationPriority::NOTIFICATION_PRIORITY_LOW);
+    notif->set_priority(Gio::NotificationPriority::NOTIFICATION_PRIORITY_LOW);
     notif->add_button(_("Quit daemon"), "app.quit");
     send_notification("daemon", notif);
 }
@@ -317,6 +332,11 @@ App::on_startup()
     TRACE;
 
     Gtk::Application::on_startup();
+
+#ifdef G_OS_UNIX
+    g_unix_signal_add(SIGINT, G_SOURCE_FUNC(stop_application), this);
+    g_unix_signal_add(SIGTERM, G_SOURCE_FUNC(stop_application), this);
+#endif
 
     add_action("about",   sigc::mem_fun(this, &App::on_action_about));
     add_action("open",    sigc::mem_fun(this, &App::on_action_open));
