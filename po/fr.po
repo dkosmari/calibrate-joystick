@@ -123,8 +123,8 @@ msgid ""
 msgstr ""
 "Filtre de bruit.\n"
 "Les variations inférieures à cette valeur seront ignorées.\n"
-"Lorsque <i>fuzzy = N</i>, ce n'est que lorsque la valeur change de plus "
-"de <i>N</i>, que la valeur sera envoyée à l'application."
+"Lorsque <i>fuzzy = N</i>, ce n'est que lorsque la valeur change de plus de "
+"<i>N</i>, que la valeur sera envoyée à l'application."
 
 #. Probably left untranslated.
 #: ui/axis-info.glade:130
