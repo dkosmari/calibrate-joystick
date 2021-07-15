@@ -8,6 +8,7 @@ EXTRA_DIST = \
 	calibrate-joystick.spec.in \
 	none.calibrate_joystick.desktop \
 	none.calibrate_joystick-daemon.desktop \
+	po/README \
 	resources.xml \
 	ui
 

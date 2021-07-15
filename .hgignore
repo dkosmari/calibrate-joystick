@@ -44,3 +44,4 @@ po/Rules-quot
 po/stamp-po
 src/calibrate-joystick
 stamp-h1
+po/Makevars.template
