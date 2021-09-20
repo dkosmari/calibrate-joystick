@@ -43,7 +43,6 @@ resources.gresource: $(srcdir)/resources.xml $(resources_DEPS)
 		--generate
 
 
-# RPM packaging
 
 .PHONY: rpm
 

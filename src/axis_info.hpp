@@ -74,7 +74,7 @@ class AxisInfo {
     sigc::connection flat_changed_conn;
     sigc::connection res_changed_conn;
 
-    evdev::Code code;
+    evdev::Event::Code code;
     evdev::AbsInfo orig;
     evdev::AbsInfo calc;
 
@@ -95,7 +95,7 @@ class AxisInfo {
 
 public:
 
-    AxisInfo(evdev::Code axis_code,
+    AxisInfo(evdev::Event::Code axis_code,
              const evdev::AbsInfo& info);
 
     // disable moving

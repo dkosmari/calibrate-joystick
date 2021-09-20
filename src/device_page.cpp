@@ -44,8 +44,8 @@ using Gio::SimpleActionGroup;
 using Glib::VariantBase;
 using Glib::Variant;
 
-using evdev::Type;
-using evdev::Code;
+using Type = evdev::Event::Type;
+using Code = evdev::Event::Code;
 
 
 DevicePage::DevicePage(const std::filesystem::path& dev_path) :
@@ -61,7 +61,7 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     name_label->set_label(device.name());
     path_label->set_label(dev_path.string());
 
-    auto abs_codes = device.codes(evdev::Type::abs);
+    auto abs_codes = device.codes(Type::abs);
     unsigned num_axes = abs_codes.size();
 
     axes_label->set_label(ustring::compose("%1", num_axes));
@@ -209,7 +209,7 @@ DevicePage::on_action_reset()
 void
 DevicePage::on_action_apply_axis(const Glib::VariantBase& arg)
 {
-    Code code = variant_cast<guint16>(arg);
+    Code code{variant_cast<guint16>(arg)};
     apply_axis(code);
 }
 
@@ -217,7 +217,7 @@ DevicePage::on_action_apply_axis(const Glib::VariantBase& arg)
 void
 DevicePage::on_action_reset_axis(const Glib::VariantBase& arg)
 {
-    Code code = variant_cast<guint16>(arg);
+    Code code{variant_cast<guint16>(arg)};
     reset_axis(code);
 }
 
