@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-15 00:34-0300\n"
+"POT-Creation-Date: 2021-10-10 23:25-0300\n"
 "PO-Revision-Date: 2021-07-15 02:21+0000\n"
 "Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
 "Language-Team: \n"
@@ -36,7 +36,7 @@ msgstr "Impossibile caricare il file delle risorse."
 msgid "Daemon running."
 msgstr "Demone in esecuzione."
 
-#: src/app.cpp:182
+#: src/app.cpp:182 src/app.cpp:355
 msgid "Monitoring new joysticks..."
 msgstr "Monitoraggio dei nuovi joystick..."
 
@@ -68,7 +68,11 @@ msgstr "dispositivi evdev"
 msgid "all files"
 msgstr "tutti i file"
 
-#: src/app.cpp:405
+#: src/app.cpp:354 ui/main-window.glade:35
+msgid "Calibrate Joystick"
+msgstr "Calibrare il joystick"
+
+#: src/app.cpp:412
 msgid "Error opening file"
 msgstr "Errore nell'apertura del file"
 
@@ -210,10 +214,6 @@ msgstr "_Resettare"
 #: ui/device-page.glade:249
 msgid "_Apply"
 msgstr "_Applicare"
-
-#: ui/main-window.glade:35
-msgid "Calibrate Joystick"
-msgstr "Calibrare il joystick"
 
 #: ui/main-window.glade:64
 msgctxt "application name"

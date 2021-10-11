@@ -349,6 +349,13 @@ App::on_startup()
         hold(); // keep it running without window
         connect_uevent();
 
+        status_icon = Gtk::StatusIcon::create("input-gaming");
+        status_icon->set_name("none.calibrate_joystick");
+        status_icon->set_title(_("Calibrate Joystick"));
+        status_icon->set_tooltip_text(_("Monitoring new joysticks..."));
+        status_icon->signal_activate().connect(sigc::mem_fun(this, &App::activate));
+        status_icon->set_visible(true);
+
         send_daemon_notification();
     }
 }

@@ -57,6 +57,8 @@ class App : public Gtk::Application {
 
     uptr<gudev::Client> uclient;
 
+    rptr<Gtk::StatusIcon> status_icon;
+
     bool opt_daemon = false;
     bool silent_start = false;
 
