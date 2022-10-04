@@ -33,8 +33,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 
 %license COPYING
-%doc README
+%doc ChangeLog NEWS README
 %{_bindir}/calibrate-joystick
-%{_datadir}/calibrate-joystick/@PACKAGE_NAME@.gresource
+%{_datadir}/@PACKAGE_NAME@/@PACKAGE_NAME@.gresource
 %{_datadir}/applications/*.desktop
 
