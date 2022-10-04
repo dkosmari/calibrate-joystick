@@ -37,27 +37,20 @@ class DevicePage;
 
 class App : public Gtk::Application {
 
-    template<typename T>
-    using rptr = Glib::RefPtr<T>;
+    Glib::RefPtr<Gio::Resource> resource;
 
-    template<typename T>
-    using uptr = std::unique_ptr<T>;
-
-
-    rptr<Gio::Resource> resource;
-
-    uptr<Gtk::ApplicationWindow> main_window;
-    uptr<Gtk::HeaderBar> header_bar;
+    std::unique_ptr<Gtk::ApplicationWindow> main_window;
+    std::unique_ptr<Gtk::HeaderBar> header_bar;
 
     Gtk::Notebook* device_notebook = nullptr;
     Gtk::Button* quit_button = nullptr;
 
     std::map<std::filesystem::path,
-             uptr<DevicePage>> devices;
+             std::unique_ptr<DevicePage>> devices;
 
-    uptr<gudev::Client> uclient;
+    std::unique_ptr<gudev::Client> uclient;
 
-    rptr<Gtk::StatusIcon> status_icon;
+    Glib::RefPtr<Gtk::StatusIcon> status_icon;
 
     bool opt_daemon = false;
     bool silent_start = false;
@@ -73,7 +66,7 @@ class App : public Gtk::Application {
     void on_action_quit();
     void on_action_refresh();
     void on_activate() override;
-    int  on_handle_local_options(const rptr<Glib::VariantDict>& options);
+    int  on_handle_local_options(const Glib::RefPtr<Glib::VariantDict>& options);
     void on_open(const type_vec_files& files,
                  const Glib::ustring& hint) override;
     void on_startup() override;

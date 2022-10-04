@@ -80,7 +80,7 @@ stop_application(App* app)
 
 
 App::App() :
-    Gtk::Application{"none.calibrate_joystick", app_flags}
+    Gtk::Application{APPLICATION_ID, app_flags}
 {
     signal_handle_local_options()
         .connect(sigc::mem_fun(this, &App::on_handle_local_options));
@@ -93,9 +93,9 @@ App::App() :
                           "daemon", 'd',
                           _("Run in daemon mode."));
 
-    if (!load_resources("resources.gresource") &&
-        !load_resources(RESOURCE_DIR "/resources.gresource"))
-        throw std::runtime_error{_("Could not load resource file.")};
+    if (!load_resources(PACKAGE_NAME ".gresource") &&
+        !load_resources(RESOURCES_DIR "/" PACKAGE_NAME ".gresource"))
+        throw std::runtime_error{_("Could not load resources file.")};
 }
 
 
@@ -147,7 +147,8 @@ App::present_gui()
             // every time the window is hidden, send a new notification
             main_window->signal_delete_event().connect([this](GdkEventAny*) -> bool
             {
-                send_daemon_notification();
+                if (!status_icon->is_embedded())
+                    send_daemon_notification();
                 return false;
             });
         }
@@ -356,7 +357,9 @@ App::on_startup()
         status_icon->signal_activate().connect(sigc::mem_fun(this, &App::activate));
         status_icon->set_visible(true);
 
-        send_daemon_notification();
+        // if no status icon is available, send a notification instead
+        if (!status_icon->is_embedded())
+            send_daemon_notification();
     }
 }
 

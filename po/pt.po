@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-10 23:25-0300\n"
+"POT-Creation-Date: 2022-10-04 19:11-0300\n"
 "PO-Revision-Date: 2021-07-15 02:22+0000\n"
 "Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
 "Language-Team: \n"
@@ -30,50 +30,52 @@ msgid "Run in daemon mode."
 msgstr "Executar em modo daemon."
 
 #: src/app.cpp:98
-msgid "Could not load resource file."
+#, fuzzy
+#| msgid "Could not load resource file."
+msgid "Could not load resources file."
 msgstr "Não pode carregar o arquivo de recursos."
 
-#: src/app.cpp:181
+#: src/app.cpp:182
 msgid "Daemon running."
 msgstr "Daemon em execução."
 
-#: src/app.cpp:182 src/app.cpp:355
+#: src/app.cpp:183 src/app.cpp:356
 msgid "Monitoring new joysticks..."
 msgstr "Monitorando novos joysticks..."
 
-#: src/app.cpp:184
+#: src/app.cpp:185
 msgid "Quit daemon"
 msgstr "Terminar daemon"
 
-#: src/app.cpp:196
+#: src/app.cpp:197
 msgid "_Close"
 msgstr "_Fechar"
 
-#: src/app.cpp:206
+#: src/app.cpp:207
 msgid "Open device..."
 msgstr "Abrir dispositivo..."
 
-#: src/app.cpp:212
+#: src/app.cpp:213
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/app.cpp:213 ui/actions.ui:11
+#: src/app.cpp:214 ui/actions.ui:11
 msgid "_Open"
 msgstr "_Abrir"
 
-#: src/app.cpp:216
+#: src/app.cpp:217
 msgid "evdev devices"
 msgstr "dispositivos evdev"
 
-#: src/app.cpp:221
+#: src/app.cpp:222
 msgid "all files"
 msgstr "todos os arquivos"
 
-#: src/app.cpp:354 ui/main-window.glade:35
+#: src/app.cpp:355 ui/main-window.glade:35
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
-#: src/app.cpp:412
+#: src/app.cpp:415
 msgid "Error opening file"
 msgstr "Error abrindo o arquivo"
 

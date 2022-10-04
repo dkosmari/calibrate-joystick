@@ -1,3 +1,6 @@
+2022-10-04 - Daniel K. O.
+	* Don't show notification when a status icon is detected.
+
 2021-10-10 - Daniel K. O.
 	* Added a tray icon indicator when run in daemon mode.
 

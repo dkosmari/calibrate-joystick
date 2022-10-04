@@ -1,11 +1,14 @@
 # src/Makefile.am
 
 
+RESOURCES_ARCHIVE = @PACKAGE_NAME@.gresource
+
+
 AM_CPPFLAGS = \
 	$(GTKMM_CFLAGS) \
 	$(LIBGUDEVXX_CFLAGS) \
 	$(LIBEVDEVXX_CFLAGS) \
-	-DRESOURCE_DIR=\"$(datadir)/calibrate-joystick\" \
+	-DRESOURCES_DIR=\"$(datadir)/$(PACKAGE_NAME)\" \
 	-DLOCALEDIR=\"$(localedir)\"
 
 
@@ -32,13 +35,13 @@ calibrate_joystick_SOURCES = \
 	utils.cpp utils.hpp
 
 
-CLEANFILES = resources.gresource
+CLEANFILES = $(RESOURCES_ARCHIVE)
 
-all-local: resources.gresource
+all-local: $(RESOURCES_ARCHIVE)
 
 
-resources.gresource:
-	$(LN_S) -f $(abs_top_builddir)/resources.gresource $(builddir)/resources.gresource
+$(RESOURCES_ARCHIVE):
+	$(LN_S) -f $(abs_top_builddir)/$(RESOURCES_ARCHIVE) $(builddir)/$(RESOURCES_ARCHIVE)
 
 
 .PHONY: company

@@ -4,12 +4,12 @@ ACLOCAL_AMFLAGS = -I m4
 
 
 EXTRA_DIST = \
+	@APPLICATION_ID@.desktop \
+	@APPLICATION_ID@_daemon.desktop \
+	@PACKAGE_NAME@.spec.in \
+	@PACKAGE_NAME@.xml \
 	bootstrap \
-	calibrate-joystick.spec.in \
-	none.calibrate_joystick.desktop \
-	none.calibrate_joystick-daemon.desktop \
 	po/README \
-	resources.xml \
 	ui
 
 
@@ -20,23 +20,26 @@ SUBDIRS = src po
 
 desktopdir = $(datadir)/applications
 desktop_DATA = \
-	none.calibrate_joystick.desktop \
-	none.calibrate_joystick-daemon.desktop
+	$(APPLICATION_ID).desktop \
+	$(APPLICATION_ID)_daemon.desktop
 
 
 # .gresource file
 
-resourcesdir = $(datadir)/calibrate-joystick
-resources_DATA = resources.gresource
+RESOURCES_XML = $(srcdir)/@PACKAGE_NAME@.xml
+RESOURCES_ARCHIVE = @PACKAGE_NAME@.gresource
 
-CLEANFILES = resources.gresource
+resourcesdir = $(datadir)/@PACKAGE_NAME@
+resources_DATA = $(RESOURCES_ARCHIVE)
+
+CLEANFILES = $(RESOURCES_ARCHIVE)
 
 resources_DEPS = $(shell $(GLIB_COMPILE_RESOURCES) \
 				--sourcedir=$(srcdir) \
 				--generate-dependencies \
-				$(srcdir)/resources.xml)
+				$(RESOURCES_XML))
 
-resources.gresource: $(srcdir)/resources.xml $(resources_DEPS)
+$(RESOURCES_ARCHIVE): $(RESOURCES_XML) $(resources_DEPS)
 	$(GLIB_COMPILE_RESOURCES) $< \
 		--target=$@ \
 		--sourcedir=$(srcdir) \
@@ -49,7 +52,7 @@ resources.gresource: $(srcdir)/resources.xml $(resources_DEPS)
 TARBALL_NAME = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz
 RPM_TARBALL_NAME = $(HOME)/rpmbuild/SOURCES/$(TARBALL_NAME)
 
-rpm: calibrate-joystick.spec dist-gzip
+rpm: @PACKAGE_NAME@.spec dist-gzip
 	[ -e $(RPM_TARBALL_NAME) ] || \
 		$(LN_S) $(PWD)/$(TARBALL_NAME) $(RPM_TARBALL_NAME)
 	rpmbuild -ba $<
