@@ -50,10 +50,14 @@ Dependencies
 
 This program requires a C++17 compiler. Additionally, it uses the following libraries:
 
-- gtkmm-3.0
-- libevdev
-- libgudev
+- [gtkmm-3.0](http://gtkmm.org)
+
+- [libevdev](http://www.freedesktop.org/wiki/Software/libevdev)
+
+- [libgudev](http://wiki.gnome.org/Projects/libgudev)
+
 - [libevdevxx](http://github.com/dkosmari/libevdevxx)
+
 - [libgudevxx](http://github.com/dkosmari/libgudevxx)
 
 
