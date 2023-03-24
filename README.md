@@ -24,8 +24,8 @@ Usage
     or when the system reboots.
 
 Note: input devices are enumerated through udev. Only devices with the property
-`ID_INPUT_JOYSTICK=1` are processed. If your joystick isn't shown in calibrate-joysticks,
-use this command to inspect it:
+`ID_INPUT_JOYSTICK=1` are processed. If your joystick isn't shown, use this command to
+inspect it:
 
     udevadm info /dev/input/eventN
 
