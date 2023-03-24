@@ -10,6 +10,7 @@ EXTRA_DIST = \
 	@PACKAGE_NAME@.xml \
 	bootstrap \
 	po/README \
+	README.md \
 	ui
 
 

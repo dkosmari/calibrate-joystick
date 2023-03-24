@@ -1,15 +1,12 @@
-calibrate-joystick - a tool to calibrate joysticks on Linux systems.
-
-
-Summary
-=======
+calibrate-joystick - a tool to calibrate joysticks on Linux systems
+===================================================================
 
 This is a graphical program to quickly calibrate range and deadzones
 of joysticks.
 
 
 Usage
-=====
+-----
 
 - Run the program.
 - On the application window, select the desired input device.
@@ -47,7 +44,7 @@ explicitly closed through the "Quit daemon" button.
 
 
 Dependencies
-============
+------------
 
 This program requires a C++17 compiler. Additionally, it uses the
 following libraries:
@@ -55,12 +52,12 @@ following libraries:
 - gtkmm-3.0
 - libevdev
 - libgudev
-- libevdevxx
-- libgudevxx
+- [libevdevxx](http://github.com/dkosmari/libevdevxx)
+- [libgudevxx](http://github.com/dkosmari/libgudevxx)
 
 
 Build instructions
-==================
+------------------
 
 If building from the tarball, execute these commands:
 
@@ -68,9 +65,9 @@ If building from the tarball, execute these commands:
     make
     sudo make install
 
-If building from a cloned repository, you need to run the "bootstrap"
+If building from a cloned repository, you need to run the `./bootstrap`
 script once, before proceeding with the tarball steps.
 
 This software uses Automake, so the standard Automake build options
-apply. Check the "INSTALL" file and the "./configure --help" command
+apply. Check the [INSTALL](INSTALL) file and the `./configure --help` command
 for more details.
