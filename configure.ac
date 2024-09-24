@@ -28,7 +28,7 @@ AM_ICONV
 
 AC_LANG([C++])
 
-AX_APPEND_COMPILE_FLAGS([-std=c++20], [CXXFLAGS])
+AX_APPEND_COMPILE_FLAGS([-std=c++20], [CXX])
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
