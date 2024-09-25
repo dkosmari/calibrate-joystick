@@ -1,10 +1,10 @@
-Name:           @PACKAGE_TARNAME@
+Name:           @PACKAGE@
 Version:        @PACKAGE_VERSION@
 Release:        %mkrel 1
 Summary:        A joystick calibration program.
 
 License:        GPLv3
-Source0:        @PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz
+Source0:        @TARBALL_NAME@
 
 BuildRequires:  pkgconfig(libevdevxx)
 BuildRequires:  pkgconfig(libgudevxx)
@@ -35,6 +35,6 @@ rm -rf $RPM_BUILD_ROOT
 %license COPYING
 %doc ChangeLog NEWS README.md
 %{_bindir}/calibrate-joystick
-%{_datadir}/@PACKAGE_TARNAME@/@PACKAGE_TARNAME@.gresource
+%{_datadir}/@PACKAGE@/@PACKAGE@.gresource
 %{_datadir}/applications/*.desktop
 

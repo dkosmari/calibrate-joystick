@@ -93,8 +93,8 @@ App::App() :
                           "daemon", 'd',
                           _("Run in daemon mode."));
 
-    if (!load_resources(PACKAGE_NAME ".gresource") &&
-        !load_resources(RESOURCES_DIR "/" PACKAGE_NAME ".gresource"))
+    if (!load_resources(PACKAGE ".gresource") &&
+        !load_resources(RESOURCES_DIR "/" PACKAGE ".gresource"))
         throw std::runtime_error{_("Could not load resources file.")};
 }
 

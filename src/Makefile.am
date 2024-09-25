@@ -1,14 +1,14 @@
 # src/Makefile.am
 
 
-RESOURCES_ARCHIVE = @PACKAGE_TARNAME@.gresource
+RESOURCES_ARCHIVE = @PACKAGE@.gresource
 
 
 AM_CPPFLAGS = \
 	$(GTKMM_CFLAGS) \
 	$(LIBGUDEVXX_CFLAGS) \
 	$(LIBEVDEVXX_CFLAGS) \
-	-DRESOURCES_DIR=\"$(datadir)/$(PACKAGE_TARNAME)\" \
+	-DRESOURCES_DIR=\"$(datadir)/$(PACKAGE)\" \
 	-DLOCALEDIR=\"$(localedir)\"
 
 
