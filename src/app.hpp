@@ -29,7 +29,7 @@
 // system libraries
 #include <gtkmm.h>
 
-#include <gudevxx/client.hpp>
+#include <gudevxx/Client.hpp>
 
 
 class DevicePage;

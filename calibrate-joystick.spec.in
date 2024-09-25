@@ -1,4 +1,4 @@
-Name:           @PACKAGE_NAME@
+Name:           @PACKAGE_TARNAME@
 Version:        @PACKAGE_VERSION@
 Release:        %mkrel 1
 Summary:        A joystick calibration program.
@@ -33,8 +33,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 
 %license COPYING
-%doc ChangeLog NEWS README
+%doc ChangeLog NEWS README.md
 %{_bindir}/calibrate-joystick
-%{_datadir}/@PACKAGE_NAME@/@PACKAGE_NAME@.gresource
+%{_datadir}/@PACKAGE_TARNAME@/@PACKAGE_TARNAME@.gresource
 %{_datadir}/applications/*.desktop
 

@@ -26,8 +26,9 @@
 #include <map>
 
 #include <gtkmm.h>
-#include <libevdevxx/device.hpp>
-#include <libevdevxx/event.hpp>
+#include <libevdevxx/Device.hpp>
+#include <libevdevxx/Event.hpp>
+#include <libevdevxx/Code.hpp>
 
 
 class AxisInfo;
@@ -60,7 +61,7 @@ class DevicePage {
     uptr<Gtk::InfoBar> info_bar;
     uptr<Gtk::Label> error_label;
 
-    std::map<evdev::Event::Code, uptr<AxisInfo>> axes;
+    std::map<evdev::Code, uptr<AxisInfo>> axes;
 
     sigc::connection io_conn;
 
@@ -78,8 +79,8 @@ class DevicePage {
     void on_action_reset_axis(const Glib::VariantBase& arg);
 
 
-    void apply_axis(evdev::Event::Code code);
-    void reset_axis(evdev::Event::Code code);
+    void apply_axis(evdev::Code code);
+    void reset_axis(evdev::Code code);
 
     void disable();
 

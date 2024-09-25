@@ -23,7 +23,7 @@
 #include <gtkmm.h>
 #include <cairomm/cairomm.h>
 
-#include <libevdevxx/abs_info.hpp>
+#include <libevdevxx/AbsInfo.hpp>
 
 
 class AxisCanvas : public Gtk::DrawingArea {

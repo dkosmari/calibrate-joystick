@@ -44,8 +44,8 @@ using Gio::SimpleActionGroup;
 using Glib::VariantBase;
 using Glib::Variant;
 
-using Type = evdev::Event::Type;
-using Code = evdev::Event::Code;
+using Type = evdev::Type;
+using Code = evdev::Code;
 
 
 DevicePage::DevicePage(const std::filesystem::path& dev_path) :

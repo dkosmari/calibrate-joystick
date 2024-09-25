@@ -25,7 +25,7 @@
 #include <glib-unix.h>
 #endif
 
-#include <gudevxx/enumerator.hpp>
+#include <gudevxx/Enumerator.hpp>
 
 #include "app.hpp"
 

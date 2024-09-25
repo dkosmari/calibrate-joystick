@@ -6,8 +6,8 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 	@APPLICATION_ID@.desktop \
 	@APPLICATION_ID@_daemon.desktop \
-	@PACKAGE_NAME@.spec.in \
-	@PACKAGE_NAME@.xml \
+	@PACKAGE_TARNAME@.spec.in \
+	@PACKAGE_TARNAME@.xml \
 	bootstrap \
 	po/README \
 	README.md \
@@ -27,10 +27,10 @@ desktop_DATA = \
 
 # .gresource file
 
-RESOURCES_XML = $(srcdir)/@PACKAGE_NAME@.xml
-RESOURCES_ARCHIVE = @PACKAGE_NAME@.gresource
+RESOURCES_XML = $(srcdir)/@PACKAGE_TARNAME@.xml
+RESOURCES_ARCHIVE = @PACKAGE_TARNAME@.gresource
 
-resourcesdir = $(datadir)/@PACKAGE_NAME@
+resourcesdir = $(datadir)/@PACKAGE_TARNAME@
 resources_DATA = $(RESOURCES_ARCHIVE)
 
 CLEANFILES = $(RESOURCES_ARCHIVE)
@@ -50,10 +50,9 @@ $(RESOURCES_ARCHIVE): $(RESOURCES_XML) $(resources_DEPS)
 
 .PHONY: rpm
 
-TARBALL_NAME = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz
 RPM_TARBALL_NAME = $(HOME)/rpmbuild/SOURCES/$(TARBALL_NAME)
 
-rpm: @PACKAGE_NAME@.spec dist-gzip
+rpm: @PACKAGE_TARNAME@.spec dist-gzip
 	[ -e $(RPM_TARBALL_NAME) ] || \
 		$(LN_S) $(PWD)/$(TARBALL_NAME) $(RPM_TARBALL_NAME)
 	rpmbuild -ba $<

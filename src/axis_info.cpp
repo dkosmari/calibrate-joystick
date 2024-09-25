@@ -40,12 +40,12 @@ using Glib::Variant;
 using evdev::AbsInfo;
 
 
-AxisInfo::AxisInfo(evdev::Event::Code axis_code,
+AxisInfo::AxisInfo(evdev::Code axis_code,
                    const AbsInfo& info) :
     code{axis_code}
 {
     load_widgets();
-    name_label->set_label(evdev::to_string(evdev::Event::Type::abs, axis_code));
+    name_label->set_label(evdev::code_to_string(evdev::Type::abs, axis_code));
 
     actions = SimpleActionGroup::create();
     root().insert_action_group("axis", actions);

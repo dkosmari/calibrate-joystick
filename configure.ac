@@ -2,7 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.70])
-AC_INIT([calibrate-joystick],[0.5.2],[])
+AC_INIT([Calibrate Joystick],
+        [0.5.2+],
+        [https://github.com/dkosmari/calibrate-joystick/issues],
+        [calibrate-joystick],
+        [https://github.com/dkosmari/calibrate-joystick])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -45,6 +49,9 @@ AC_TYPE_UINT64_T
 
 AC_SUBST([APPLICATION_ID], [none.calibrate_joystick])
 AC_DEFINE([APPLICATION_ID], ["none.calibrate_joystick"], [GApplication id, must match .desktop file name])
+
+TARBALL_NAME="${PACKAGE_TARNAME}-${PACKAGE_VERSION}.tar.gz"
+AC_SUBST([TARBALL_NAME])
 
 AC_CONFIG_FILES([calibrate-joystick.spec
                  Makefile

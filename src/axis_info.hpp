@@ -25,8 +25,8 @@
 #include <string>
 
 #include <gtkmm.h>
-#include <libevdevxx/abs_info.hpp>
-#include <libevdevxx/event.hpp>
+#include <libevdevxx/AbsInfo.hpp>
+#include <libevdevxx/Event.hpp>
 
 
 class AxisCanvas;
@@ -74,7 +74,7 @@ class AxisInfo {
     sigc::connection flat_changed_conn;
     sigc::connection res_changed_conn;
 
-    evdev::Event::Code code;
+    evdev::Code code;
     evdev::AbsInfo orig;
     evdev::AbsInfo calc;
 
@@ -95,7 +95,7 @@ class AxisInfo {
 
 public:
 
-    AxisInfo(evdev::Event::Code axis_code,
+    AxisInfo(evdev::Code axis_code,
              const evdev::AbsInfo& info);
 
     // disable moving
