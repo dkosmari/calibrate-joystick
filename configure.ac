@@ -74,7 +74,7 @@ AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [no],
               AC_MSG_NOTICE([Using built-in libevdevxx.])
               EXTERNAL_SUBDIRS+=" external/libevdevxx"
               AX_SUBDIRS_CONFIGURE([external/libevdevxx],
-                                   [[--disable-shared],[--disable-examples]])
+                                   [[--disable-shared],[--disable-examples],[--disable-tools],[--disable-docs]])
           ])
 
 

@@ -1,11 +1,9 @@
-calibrate-joystick - a tool to calibrate joysticks on Linux systems
-===================================================================
+# calibrate-joystick - a tool to calibrate joysticks on Linux systems
 
 This is a graphical program to quickly calibrate range and deadzones of joysticks.
 
 
-Usage
------
+## Usage
 
 ![calibrate-joystick main window](screenshots/screenshot-1.png)
 
@@ -45,8 +43,7 @@ won't stop the daemon, it must be explicitly closed through the **Quit daemon** 
 
 
 
-Dependencies
-------------
+## Dependencies
 
 This program requires a C++20 compiler. Additionally, it uses the following libraries:
 
@@ -60,17 +57,22 @@ This program requires a C++20 compiler. Additionally, it uses the following libr
   your distro (you need the "devel" package.)
 
 
-Build instructions
-------------------
+## Build instructions
 
-If building from the tarball, execute these commands:
+If cloning the repository, make sure to enable submodules:
 
-    ./configure
-    make
-    sudo make install
+- with Mercurial:
+  - `hg clone https://github.com/dkosmari/calibrate-joystick.git`
 
-If building from a cloned repository, you need to run the `./bootstrap` script once,
-before proceeding with the tarball steps.
+- with git:
+  - `git clone --recurse-submodules --shallow-submodules https://github.com/dkosmari/calibrate-joystick.git`
+
+If you downloaded a release tarball, you can skip step 0. 
+
+0. `./bootstrap`
+1. `./configure`
+2. `make`
+3. `sudo make install`
 
 This software uses Automake, so the standard Automake build options apply. Check the
 [INSTALL](INSTALL) file and the `./configure --help` command for more details.
