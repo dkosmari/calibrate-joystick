@@ -16,7 +16,7 @@ AM_CXXFLAGS = \
 	-Wall -Wextra -Werror
 
 
-LDADD = \
+LIBS = \
 	$(GTKMM_LIBS) \
 	$(LIBGUDEVXX_LIBS) \
 	$(LIBEVDEVXX_LIBS) \

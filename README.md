@@ -48,17 +48,16 @@ won't stop the daemon, it must be explicitly closed through the **Quit daemon** 
 Dependencies
 ------------
 
-This program requires a C++17 compiler. Additionally, it uses the following libraries:
+This program requires a C++20 compiler. Additionally, it uses the following libraries:
 
-- [gtkmm-3.0](http://gtkmm.org)
+- [gtkmm-3.0](http://gtkmm.org): usually available as a package in your distro (you need
+  the "devel" package.)
 
-- [libevdev](http://www.freedesktop.org/wiki/Software/libevdev)
+- [libevdev](http://www.freedesktop.org/wiki/Software/libevdev): usually available as a
+  package in your distro (you need the "devel" package.)
 
-- [libgudev](http://wiki.gnome.org/Projects/libgudev)
-
-- [libevdevxx](http://github.com/dkosmari/libevdevxx)
-
-- [libgudevxx](http://github.com/dkosmari/libgudevxx)
+- [libgudev](http://wiki.gnome.org/Projects/libgudev): usually available as a package in
+  your distro (you need the "devel" package.)
 
 
 Build instructions

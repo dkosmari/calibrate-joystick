@@ -1,0 +1,6 @@
+[submodule "external/libevdevxx"]
+	path = external/libevdevxx
+	url = https://github.com/dkosmari/libevdevxx.git
+[submodule "external/libgudevxx"]
+	path = external/libgudevxx
+	url = https://github.com/dkosmari/libgudevxx.git

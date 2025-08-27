@@ -36,16 +36,27 @@ AX_APPEND_COMPILE_FLAGS([-std=c++20], [CXX])
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
-PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx])
-PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx])
 
-# Checks for header files.
+USE_SYSTEM_LIBEVDEVXX=yes
+AC_ARG_ENABLE([system-libevdevxx],
+              [AS_HELP_STRING([--disable-system-libevdevxx], [ignore libevdevxx from the system.])],
+              [USE_SYSTEM_LIBEVDEVXX=$enableval])
+AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [yes],
+          [PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx], [], [USE_SYSTEM_LIBEVDEVXX=no])])
+
+
+USE_SYSTEM_LIBGUDEVXX=yes
+AC_ARG_ENABLE([system-libgudevxx],
+              [AS_HELP_STRING([--disable-system-libgudevxx], [ignore libgudevxx from the system.])],
+              [USE_SYSTEM_LIBGUDEVXX=$enableval])
+AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [yes],
+          [PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx], [], [USE_SYSTEM_LIBGUDEVXX=no])])
+
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 AC_TYPE_UINT64_T
 
-# Checks for library functions.
 
 AC_SUBST([APPLICATION_ID], [none.calibrate_joystick])
 AC_DEFINE([APPLICATION_ID], ["none.calibrate_joystick"], [GApplication id, must match .desktop file name])
@@ -53,9 +64,39 @@ AC_DEFINE([APPLICATION_ID], ["none.calibrate_joystick"], [GApplication id, must 
 TARBALL_NAME="${PACKAGE_TARNAME}-${PACKAGE_VERSION}.tar.gz"
 AC_SUBST([TARBALL_NAME])
 
+
+EXTERNAL_SUBDIRS=
+AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [no],
+          [
+              PKG_CHECK_MODULES([LIBEVDEV], [libevdev])
+              LIBEVDEVXX_CFLAGS="${LIBEVDEV_CFLAGS} -I../external/libevdevxx/include"
+              LIBEVDEVXX_LIBS="-L../external/libevdevxx/src -levdevxx ${LIBEVDEV_LIBS}"
+              AC_MSG_NOTICE([Using built-in libevdevxx.])
+              EXTERNAL_SUBDIRS+=" external/libevdevxx"
+              AX_SUBDIRS_CONFIGURE([external/libevdevxx],
+                                   [[--disable-shared],[--disable-examples]])
+          ])
+
+
+AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [no],
+          [
+              PKG_CHECK_MODULES([LIBGUDEV], [gudev-1.0])
+              LIBGUDEVXX_CFLAGS="${LIBGUDEV_CFLAGS} -I../external/libgudevxx/include"
+              LIBGUDEVXX_LIBS="-L../external/libgudevxx/src -lgudevxx ${LIBGUDEV_LIBS}"
+              AC_MSG_NOTICE([Using built-in libgudevxx.])
+              EXTERNAL_SUBDIRS+=" external/libgudevxx"
+              AX_SUBDIRS_CONFIGURE([external/libgudevxx],
+                                   [[--disable-shared]])
+          ])
+
+
+AC_SUBST([EXTERNAL_SUBDIRS])
+
+
 AC_CONFIG_FILES([calibrate-joystick.spec
                  Makefile
                  src/Makefile
                  po/Makefile.in])
 
 AC_OUTPUT
+
