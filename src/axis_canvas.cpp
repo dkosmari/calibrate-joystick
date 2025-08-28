@@ -41,25 +41,22 @@ AxisCanvas::AxisCanvas(BaseObjectType* cobject,
 bool
 AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
-    const double padding = 18.5;
-
     const double width = get_allocated_width();
     const double height = get_allocated_height();
-
     auto style = get_style_context();
-
 
     style->render_background(cr, 0, 0, width, height);
 
+    const double padding = 18.5;
 
-    double range = orig.max - orig.min;
-    if (range < 1)
-        range = 1;
+    double orig_range = orig.max - orig.min;
+    if (orig_range < 1)
+        orig_range = 1;
 
     // transform values within [orig.min, orig.max] to [padding, width-padding]
-    auto transform = [this, width, range, padding](double x) -> double
+    auto axis2canvas = [this, width, orig_range, padding](double x) -> double
     {
-        return padding + std::round((x - orig.min) * double(width - 2 * padding) / range);
+        return padding + std::round((x - orig.min) * double(width - 2 * padding) / orig_range);
     };
 
     auto fg_color = style->get_color(get_state_flags());
@@ -74,10 +71,11 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         // draw orig min-max
         const double h = 10.5;
         const double w = 6.5;
-        const double left = transform(orig.min);
-        const double right = transform(orig.max);
+        const double left = axis2canvas(orig.min);
+        const double right = axis2canvas(orig.max);
 
         cr->save();
+
         cr->translate(0, height / 2.0);
 
         cr->set_line_width(3.0);
@@ -95,17 +93,18 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->line_to(right - w, +h);
 
         cr->stroke();
+
         cr->restore();
     }
-
 
     {
         // draw calc min-max
         const double r = 10.5;
-        const double left = transform(calc.min);
-        const double right = transform(calc.max);
+        const double left = axis2canvas(calc.min);
+        const double right = axis2canvas(calc.max);
 
         cr->save();
+
         cr->translate(0, height / 2.0);
 
         cr->set_line_width(1.0);
@@ -127,29 +126,29 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->restore();
     }
 
-
     {
-        // draw orig flat
-        const double h = 9.5;
-        const double left = transform(-orig.flat);
-        const double right = transform(orig.flat);
-        const double w = right - left;
+        // draw box representing orig.flat
+        const double box_height = 19;
+        const double box_left = axis2canvas(-orig.flat);
+        const double box_right = axis2canvas(orig.flat);
+        const double box_width = box_right - box_left;
         cr->save();
-        cr->translate(0, height / 2.0);
+
         cr->set_line_width(3.0);
-        cr->rectangle(left, -h,
-                      w, 2 * h);
+        cr->rectangle(box_left, (height - box_height)/2.0,
+                      box_width, box_height);
         cr->stroke();
+
         cr->restore();
     }
-
 
     {
         // draw calc flat
         const double r = 6.5;
-        const double left = transform(-calc.flat);
-        const double right = transform(calc.flat);
+        const double left = axis2canvas(-calc.flat);
+        const double right = axis2canvas(calc.flat);
         cr->save();
+
         cr->translate(0, height / 2.0);
         cr->set_line_width(1.0);
         cr->set_dash(valarray{2.0, 2.0}, 0.0);
@@ -161,15 +160,16 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
                 3*M_PI/2, M_PI/2);
         cr->close_path();
         cr->stroke();
+
         cr->restore();
     }
-
 
     {
         // draw value marker
         const double r = 2.5;
         cr->save();
-        cr->translate(transform(calc.val), height / 2.0);
+
+        cr->translate(axis2canvas(calc.val), height / 2.0);
 
         cr->move_to(+r,  0);
         cr->line_to( 0, -r);
@@ -181,7 +181,7 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         const double fs = 3.5;
         {
             // "<>" markers for orig fuzz
-            const double ow = transform(orig.fuzz) - transform(0);
+            const double ow = axis2canvas(orig.fuzz) - axis2canvas(0);
             const double oh = std::min<double>(fs, ow);
             // left
             cr->set_line_width(1.0);
@@ -195,10 +195,9 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             cr->stroke();
         }
 
-
         {
             // "<>" markers for calc fuzz
-            const double cw = transform(calc.fuzz) - transform(0);
+            const double cw = axis2canvas(calc.fuzz) - axis2canvas(0);
             const double ch = std::min<double>(fs, cw);
             // left
             cr->set_line_width(1.0);
@@ -213,10 +212,8 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             cr->stroke();
         }
 
-
         cr->restore();
     }
-
     return true;
 }
 
