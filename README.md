@@ -45,7 +45,8 @@ won't stop the daemon, it must be explicitly closed through the **Quit daemon** 
 
 ## Dependencies
 
-This program requires a C++20 compiler. Additionally, it uses the following libraries:
+- A C++20 compiler. This is often installed through a meta package like `task-c++` or `build-essential` in your package manager.
+  - Some distros also need manual installation of C development tools like `autoconf`, `automake`, `libtool`. and `pkg-config`.
 
 - [gtkmm-3.0](http://gtkmm.org): usually available as a package in your distro (you need
   the "devel" package.)
