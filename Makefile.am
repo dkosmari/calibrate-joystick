@@ -16,16 +16,6 @@ EXTRA_DIST = \
 
 SUBDIRS = $(EXTERNAL_SUBDIRS) src po
 
-# if ENABLE_INTERNAL_LIBEVDEVXX
-# SUBDIRS += external/libevdevxx
-# endif
-
-# if ENABLE_INTERNAL_LIBGUDEVXX
-# SUBDIRS += external/libgudevxx
-# endif
-
-# SUBDIRS += src po
-
 
 # .desktop entry
 

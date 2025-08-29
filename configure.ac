@@ -82,7 +82,7 @@ AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBGUDEV], [gudev-1.0])
               LIBGUDEVXX_CFLAGS="${LIBGUDEV_CFLAGS} -I../external/libgudevxx/include"
-              LIBGUDEVXX_LIBS="-L../external/libgudevxx/src -lgudevxx ${LIBGUDEV_LIBS}"
+              LIBGUDEVXX_LIBS="-L../external/libgudevxx -lgudevxx ${LIBGUDEV_LIBS}"
               AC_MSG_NOTICE([Using built-in libgudevxx.])
               EXTERNAL_SUBDIRS+=" external/libgudevxx"
               AX_SUBDIRS_CONFIGURE([external/libgudevxx],
