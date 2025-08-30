@@ -70,11 +70,11 @@ AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBEVDEV], [libevdev])
               LIBEVDEVXX_CFLAGS="${LIBEVDEV_CFLAGS} -I../external/libevdevxx/include"
-              LIBEVDEVXX_LIBS="-L../external/libevdevxx/src -levdevxx ${LIBEVDEV_LIBS}"
+              LIBEVDEVXX_LIBS="-L../external/libevdevxx -levdevxx ${LIBEVDEV_LIBS}"
               AC_MSG_NOTICE([Using built-in libevdevxx.])
               EXTERNAL_SUBDIRS+=" external/libevdevxx"
               AX_SUBDIRS_CONFIGURE([external/libevdevxx],
-                                   [[--disable-shared],[--disable-examples],[--disable-tools],[--disable-docs]])
+                                   [[--disable-shared]])
           ])
 
 
