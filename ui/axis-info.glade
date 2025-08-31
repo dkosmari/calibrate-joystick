@@ -329,7 +329,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">0</property>
+                <property name="text" translatable="no">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">min_adj</property>
@@ -345,7 +345,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">0</property>
+                <property name="text" translatable="no">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">max_adj</property>
@@ -361,8 +361,9 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">0</property>
+                <property name="text" translatable="no">0</property>
                 <property name="xalign">1</property>
+                <property name="input-purpose">number</property>
                 <property name="adjustment">fuzz_adj</property>
                 <property name="climb-rate">1</property>
                 <property name="numeric">True</property>
@@ -377,8 +378,9 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">0</property>
+                <property name="text" translatable="no">0</property>
                 <property name="xalign">1</property>
+                <property name="input-purpose">number</property>
                 <property name="adjustment">flat_adj</property>
                 <property name="climb-rate">1</property>
                 <property name="numeric">True</property>
@@ -393,8 +395,9 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">0</property>
+                <property name="text" translatable="no">0</property>
                 <property name="xalign">1</property>
+                <property name="input-purpose">number</property>
                 <property name="adjustment">res_adj</property>
                 <property name="climb-rate">1</property>
                 <property name="numeric">True</property>

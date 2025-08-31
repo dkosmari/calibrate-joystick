@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.2\n"
 "Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2024-09-25 08:15-0300\n"
-"PO-Revision-Date: 2021-07-15 02:21+0000\n"
-"Last-Translator: Daniel K. O. <dkosmari@gmail.com>\n"
+"POT-Creation-Date: 2025-08-31 02:37-0300\n"
+"PO-Revision-Date: 2025-08-31 02:44-0300\n"
+"Last-Translator: Daniel K. O.\n"
 "Language-Team: \n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
 
@@ -29,8 +29,6 @@ msgid "Run in daemon mode."
 msgstr "Eseguire in modalità demone."
 
 #: src/app.cpp:98
-#, fuzzy
-#| msgid "Could not load resource file."
 msgid "Could not load resources file."
 msgstr "Impossibile caricare il file delle risorse."
 
@@ -102,59 +100,61 @@ msgstr "Circ_a"
 msgid "_Quit"
 msgstr "Abbandona"
 
-#: ui/axis-info.glade:65
+#: ui/axis-info.glade:38
+msgid "Show flat region around zero."
+msgstr "Mostra la regione piatta attorno allo zero."
+
+#: ui/axis-info.glade:39
+msgid "Around zero"
+msgstr "Intorno allo zero"
+
+#: ui/axis-info.glade:48
+msgid "Show flat region centered in the min-max range."
+msgstr "Mostra la regione piatta centrata nell'intervallo min-max."
+
+#: ui/axis-info.glade:49
+msgid "Centered"
+msgstr "Centrata"
+
+#: ui/axis-info.glade:89
 msgid "Minimum value for this axis."
 msgstr "Valore minimo per questo asse."
 
 #. Abbreviation for "minimum value."
-#: ui/axis-info.glade:66
+#: ui/axis-info.glade:90
 msgctxt "axis min"
 msgid "Min:"
 msgstr "Min:"
 
-#: ui/axis-info.glade:82
+#: ui/axis-info.glade:106
 msgid "Maximum value for the axis."
 msgstr "Valore massimo per l'asse."
 
 #. Abbreviation for "maximum value."
-#: ui/axis-info.glade:83
+#: ui/axis-info.glade:107
 msgctxt "axis max"
 msgid "Max:"
 msgstr "Max:"
 
-#: ui/axis-info.glade:127
+#: ui/axis-info.glade:151
 msgid ""
 "Noise filter.\n"
 "Variations smaller than this will be ignored.\n"
-"When <i>fuzzy = N</i>, only when the value changes by more than <i>N</i>, "
-"the value will be sent to the application."
+"When <i>fuzz = N</i>, only when the value changes by more than <i>N</i>, the "
+"value will be sent to the application."
 msgstr ""
 "Filtro del rumore.\n"
 "Variazioni più piccole di questo saranno ignorate.\n"
-"Quando <i>fuzzy = N</i>, solo quando il valore cambia di più di <i>N</i>, il "
+"Quando <i>fuzz = N</i>, solo quando il valore cambia di più di <i>N</i>, il "
 "valore sarà inviato all'applicazione."
 
 #. Probably left untranslated.
-#: ui/axis-info.glade:130
-msgctxt "axis fuzzy"
-msgid "Fuzzy:"
-msgstr "Fuzzy:"
+#: ui/axis-info.glade:154
+msgctxt "axis fuzz"
+msgid "Fuzz:"
+msgstr "Fuzz:"
 
-#: ui/axis-info.glade:176
-msgid ""
-"Also known as \"<b>dead zone</b>.\"\n"
-"Values smaller than this will be interpreted as zero."
-msgstr ""
-"Conosciuto anche come \"<b>zona morta</b>\".\n"
-"I valori più piccoli di questo saranno interpretati come zero."
-
-#. Name for "near zero" field. Probably best left untranslated.
-#: ui/axis-info.glade:178
-msgctxt "axis flat"
-msgid "Flat:"
-msgstr "Flat:"
-
-#: ui/axis-info.glade:224
+#: ui/axis-info.glade:198
 msgid ""
 "Resolution of this axis.\n"
 "Most input devices ignore this field."
@@ -163,31 +163,45 @@ msgstr ""
 "La maggior parte dei dispositivi di input ignora questo campo."
 
 #. Abbreviation for "resolution."
-#: ui/axis-info.glade:226
+#: ui/axis-info.glade:200
 msgctxt "axis res"
 msgid "Res:"
 msgstr "Ris:"
 
-#: ui/axis-info.glade:272
+#: ui/axis-info.glade:230
 msgid "Raw value of this axis."
 msgstr "Valore grezzo di questo asse."
 
-#: ui/axis-info.glade:273
+#: ui/axis-info.glade:231
 msgctxt "axis value"
 msgid "Value:"
 msgstr "Valore:"
 
 #. Apply settings for a single axis.
-#: ui/axis-info.glade:331
+#: ui/axis-info.glade:259
 msgctxt "axis apply"
 msgid "Apply"
 msgstr "Applicare"
 
 #. Revert settings for a single axis.
-#: ui/axis-info.glade:346
+#: ui/axis-info.glade:274
 msgctxt "revert axis"
 msgid "Revert"
 msgstr "Revert"
+
+#: ui/axis-info.glade:299
+msgid ""
+"Also known as \"<b>dead zone</b>.\"\n"
+"Values smaller than this will be interpreted as zero."
+msgstr ""
+"Conosciuto anche come \"<b>zona morta</b>\".\n"
+"I valori più piccoli di questo saranno interpretati come zero."
+
+#. Name for "near zero" field. Probably best left untranslated.
+#: ui/axis-info.glade:301
+msgctxt "axis flat"
+msgid "Flat:"
+msgstr "Flat:"
 
 #: ui/device-page.glade:51
 msgid "Error:"
