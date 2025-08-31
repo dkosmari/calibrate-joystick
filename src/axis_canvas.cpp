@@ -11,6 +11,8 @@
 
 #include "axis_canvas.hpp"
 
+#include "app.hpp"
+
 
 using std::valarray;
 
@@ -58,14 +60,20 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     const double height = get_allocated_height();
     auto style = get_style_context();
 
-#if 1
-    style->render_background(cr, 0, 0, width, height);
-#else
-    // TODO: load a color palette.
-    cr->set_source_rgb(0.0, 0.0, 0.0);
+    auto app = Glib::RefPtr<App>::cast_static(App::get_default());
+
+    auto bg_color    = app->get_color_bg();
+    auto min_color   = app->get_color_min();
+    auto max_color   = app->get_color_max();
+    auto flat_color  = app->get_color_flat();
+    auto value_color = app->get_color_value();
+    auto fuzz_color  = app->get_color_fuzz();
+
+    cr->set_source_rgb(bg_color.get_red(),
+                       bg_color.get_green(),
+                       bg_color.get_blue());
     cr->rectangle(0, 0, width, height);
     cr->fill();
-#endif
 
     const double padding = 18.5;
 
@@ -79,13 +87,12 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         return padding + std::round((x - orig.min) * double(width - 2 * padding) / orig_range);
     };
 
-    auto fg_color = style->get_color(get_state_flags());
+    // auto fg_color = style->get_color(get_state_flags());
 
-    cr->set_source_rgba(fg_color.get_red(),
-                        fg_color.get_green(),
-                        fg_color.get_blue(),
-                        fg_color.get_alpha());
-
+    // cr->set_source_rgba(fg_color.get_red(),
+    //                     fg_color.get_green(),
+    //                     fg_color.get_blue(),
+    //                     fg_color.get_alpha());
 
     {
         // draw orig min-max
@@ -101,12 +108,20 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->set_line_width(3.0);
 
         // min
+        cr->set_source_rgba(min_color.get_red(),
+                            min_color.get_green(),
+                            min_color.get_blue(),
+                            min_color.get_alpha());
         cr->move_to(left + w, -h);
         cr->line_to(left, -h);
         cr->line_to(left, +h);
         cr->line_to(left + w, +h);
 
         // max
+        cr->set_source_rgba(max_color.get_red(),
+                            max_color.get_green(),
+                            max_color.get_blue(),
+                            max_color.get_alpha());
         cr->move_to(right - w, -h);
         cr->line_to(right, -h);
         cr->line_to(right, +h);
@@ -130,16 +145,19 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->set_dash(valarray{2.0, 2.0}, 0);
 
         // calc min
-        cr->arc(left + r, 0,
-                r,
-                M_PI/2,
-                3*M_PI/2);
+        cr->set_source_rgba(min_color.get_red(),
+                            min_color.get_green(),
+                            min_color.get_blue(),
+                            min_color.get_alpha());
+        cr->arc(left + r, 0, r, M_PI/2, 3*M_PI/2);
         cr->stroke();
 
-        cr->arc(right - r, 0,
-                r,
-                3*M_PI/2,
-                M_PI/2);
+        // calc max
+        cr->set_source_rgba(max_color.get_red(),
+                            max_color.get_green(),
+                            max_color.get_blue(),
+                            max_color.get_alpha());
+        cr->arc(right - r, 0, r, 3*M_PI/2, M_PI/2);
         cr->stroke();
     }
 
@@ -154,6 +172,10 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         CtxGuard guard{cr};
 
         cr->set_line_width(3.0);
+        cr->set_source_rgba(flat_color.get_red(),
+                            flat_color.get_green(),
+                            flat_color.get_blue(),
+                            flat_color.get_alpha());
         cr->rectangle(flat_left, (height - flat_height)/2.0,
                       flat_width, flat_height);
         cr->stroke();
@@ -171,6 +193,10 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->translate(0, height / 2.0);
         cr->set_line_width(1.0);
         cr->set_dash(valarray{2.0, 2.0}, 0.0);
+        cr->set_source_rgba(flat_color.get_red(),
+                            flat_color.get_green(),
+                            flat_color.get_blue(),
+                            flat_color.get_alpha());
         cr->arc(flat_left  + r, 0, r,   M_PI/2, 3*M_PI/2);
         cr->arc(flat_right - r, 0, r, 3*M_PI/2,   M_PI/2);
         cr->close_path();
@@ -179,12 +205,16 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
     {
         // draw value marker
-        const double r = 2.5;
+        const double r = 3.5;
 
         CtxGuard guard{cr};
 
         cr->translate(axis2canvas(calc.val), height / 2.0);
 
+        cr->set_source_rgba(value_color.get_red(),
+                            value_color.get_green(),
+                            value_color.get_blue(),
+                            value_color.get_alpha());
         cr->move_to(+r,  0);
         cr->line_to( 0, -r);
         cr->line_to(-r,  0);
@@ -192,37 +222,42 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->close_path();
         cr->fill();
 
-        const double fs = 3.5;
+        // draw fuzz
+        cr->set_source_rgba(fuzz_color.get_red(),
+                            fuzz_color.get_green(),
+                            fuzz_color.get_blue(),
+                            fuzz_color.get_alpha());
+        const double fuzz_size = 5.5;
         {
             // "<>" markers for orig fuzz
-            const double ow = axis2canvas(orig.fuzz) - axis2canvas(0);
-            const double oh = std::min<double>(fs, ow);
+            const double fuzz_width = axis2canvas(orig.fuzz) - axis2canvas(0);
+            const double fuzz_height = std::min<double>(fuzz_size, fuzz_width);
             // left
-            cr->set_line_width(1.0);
-            cr->move_to(-ow + oh, -oh);
-            cr->line_to(-ow, 0);
-            cr->line_to(-ow + oh, +oh);
+            cr->set_line_width(2.0);
+            cr->move_to(-fuzz_width + fuzz_height, -fuzz_height);
+            cr->line_to(-fuzz_width, 0);
+            cr->line_to(-fuzz_width + fuzz_height, +fuzz_height);
             // right
-            cr->move_to(ow - oh, -oh);
-            cr->line_to(ow, 0);
-            cr->line_to(ow - oh, +oh);
+            cr->move_to(fuzz_width - fuzz_height,  -fuzz_height);
+            cr->line_to(fuzz_width, 0);
+            cr->line_to(fuzz_width - fuzz_height,  +fuzz_height);
             cr->stroke();
         }
 
         {
             // "<>" markers for calc fuzz
-            const double cw = axis2canvas(calc.fuzz) - axis2canvas(0);
-            const double ch = std::min<double>(fs, cw);
+            const double fuzz_width = axis2canvas(calc.fuzz) - axis2canvas(0);
+            const double fuzz_height = std::min<double>(fuzz_size, fuzz_width);
             // left
-            cr->set_line_width(1.0);
+            cr->set_line_width(2.0);
             cr->set_dash(valarray{1.0, 1.0}, 0.5);
-            cr->move_to(-cw + ch, -ch);
-            cr->line_to(-cw, 0);
-            cr->line_to(-cw + ch, +ch);
+            cr->move_to(-fuzz_width + fuzz_height, -fuzz_height);
+            cr->line_to(-fuzz_width, 0);
+            cr->line_to(-fuzz_width + fuzz_height, +fuzz_height);
             // right
-            cr->move_to(cw - ch, -ch);
-            cr->line_to(cw, 0);
-            cr->line_to(cw - ch, +ch);
+            cr->move_to(fuzz_width - fuzz_height,  -fuzz_height);
+            cr->line_to(fuzz_width, 0);
+            cr->line_to(fuzz_width - fuzz_height,  +fuzz_height);
             cr->stroke();
         }
     }

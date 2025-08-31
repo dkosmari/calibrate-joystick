@@ -1,21 +1,9 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #include <iostream>
 #include <vector>
@@ -425,4 +413,52 @@ void
 App::remove_device(const path& dev_path)
 {
     devices.erase(dev_path);
+}
+
+
+Gdk::RGBA
+App::get_color_bg()
+    const
+{
+    return Gdk::RGBA{"rgb(255, 255, 255)"};
+}
+
+
+Gdk::RGBA
+App::get_color_min()
+    const
+{
+    return Gdk::RGBA{"rgb(0, 0, 128)"};
+}
+
+
+Gdk::RGBA
+App::get_color_max()
+    const
+{
+    return Gdk::RGBA{"rgb(0, 128, 0)"};
+}
+
+
+Gdk::RGBA
+App::get_color_flat()
+    const
+{
+    return Gdk::RGBA{"rgb(128, 128, 0)"};
+}
+
+
+Gdk::RGBA
+App::get_color_value()
+    const
+{
+    return Gdk::RGBA{"rgb(128, 0, 0)"};
+}
+
+
+Gdk::RGBA
+App::get_color_fuzz()
+    const
+{
+    return Gdk::RGBA{"rgb(128, 0, 128)"};
 }

@@ -1,21 +1,9 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #ifndef APP_HPP
 #define APP_HPP
@@ -56,21 +44,49 @@ class App : public Gtk::Application {
     bool silent_start = false;
 
 
-    bool load_resources(const std::filesystem::path& res_path);
-    void present_gui();
-    void connect_uevent();
-    void send_daemon_notification();
+    bool
+    load_resources(const std::filesystem::path& res_path);
 
-    void on_action_about();
-    void on_action_open();
-    void on_action_quit();
-    void on_action_refresh();
-    void on_activate() override;
-    int  on_handle_local_options(const Glib::RefPtr<Glib::VariantDict>& options);
-    void on_open(const type_vec_files& files,
-                 const Glib::ustring& hint) override;
-    void on_startup() override;
-    void on_uevent(const std::string& action, const gudev::Device& device);
+    void
+    present_gui();
+
+    void
+    connect_uevent();
+
+    void
+    send_daemon_notification();
+
+    void
+    on_action_about();
+
+    void
+    on_action_open();
+
+    void
+    on_action_quit();
+
+    void
+    on_action_refresh();
+
+    void
+    on_activate()
+        override;
+
+    int
+    on_handle_local_options(const Glib::RefPtr<Glib::VariantDict>& options);
+
+    void
+    on_open(const type_vec_files& files,
+                 const Glib::ustring& hint)
+        override;
+
+    void
+    on_startup()
+        override;
+
+    void
+    on_uevent(const std::string& action,
+              const gudev::Device& device);
 
 public:
 
@@ -79,11 +95,39 @@ public:
     ~App();
 
 
-    void clear_devices();
+    void
+    clear_devices();
 
-    void add_device(const std::filesystem::path& dev_path);
+    void
+    add_device(const std::filesystem::path& dev_path);
 
-    void remove_device(const std::filesystem::path& dev_path);
+    void
+    remove_device(const std::filesystem::path& dev_path);
+
+
+    Gdk::RGBA
+    get_color_bg()
+        const;
+
+    Gdk::RGBA
+    get_color_min()
+        const;
+
+    Gdk::RGBA
+    get_color_max()
+        const;
+
+    Gdk::RGBA
+    get_color_flat()
+        const;
+
+    Gdk::RGBA
+    get_color_value()
+        const;
+
+    Gdk::RGBA
+    get_color_fuzz()
+        const;
 
 };
 
