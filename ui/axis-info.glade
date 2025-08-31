@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface domain="calibrate-joystick">
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkImage" id="apply_image">
@@ -17,7 +17,7 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="fuzzy_adj">
+  <object class="GtkAdjustment" id="fuzz_adj">
     <property name="upper">2147483647</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
@@ -27,6 +27,30 @@
     <property name="upper">2147483647</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
+  </object>
+  <object class="GtkMenu" id="menu1">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkRadioMenuItem" id="flat_menu_zero">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Show flat region around zero.</property>
+        <property name="label" translatable="yes">Around zero</property>
+        <property name="active">True</property>
+        <property name="draw-as-radio">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkRadioMenuItem" id="flat_menu_centered">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Show flat region centered in the min-max range.</property>
+        <property name="label" translatable="yes">Centered</property>
+        <property name="draw-as-radio">True</property>
+        <property name="group">flat_menu_zero</property>
+      </object>
+    </child>
   </object>
   <object class="GtkAdjustment" id="min_adj">
     <property name="lower">-2147483648</property>
@@ -50,7 +74,7 @@
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <!-- n-columns=7 n-rows=3 -->
+          <!-- n-columns=8 n-rows=3 -->
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -97,7 +121,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">0</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
               </object>
@@ -111,7 +135,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">0</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
               </object>
@@ -126,8 +150,8 @@
                 <property name="can-focus">False</property>
                 <property name="tooltip-markup" translatable="yes">Noise filter.
 Variations smaller than this will be ignored.
-When &lt;i&gt;fuzzy = N&lt;/i&gt;, only when the value changes by more than &lt;i&gt;N&lt;/i&gt;, the value will be sent to the application.</property>
-                <property name="label" translatable="yes" context="axis fuzzy" comments="Probably left untranslated.">Fuzzy:</property>
+When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i&gt;N&lt;/i&gt;, the value will be sent to the application.</property>
+                <property name="label" translatable="yes" context="axis fuzz" comments="Probably left untranslated.">Fuzz:</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
                 <attributes>
@@ -135,7 +159,7 @@ When &lt;i&gt;fuzzy = N&lt;/i&gt;, only when the value changes by more than &lt;
                 </attributes>
               </object>
               <packing>
-                <property name="left-attach">3</property>
+                <property name="left-attach">4</property>
                 <property name="top-attach">0</property>
               </packing>
             </child>
@@ -144,25 +168,9 @@ When &lt;i&gt;fuzzy = N&lt;/i&gt;, only when the value changes by more than &lt;
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">0</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">4</property>
-                <property name="top-attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="calc_fuzz_spin">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="max-length">6</property>
-                <property name="width-chars">5</property>
-                <property name="xalign">1</property>
-                <property name="adjustment">fuzzy_adj</property>
-                <property name="climb-rate">1</property>
-                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left-attach">5</property>
@@ -170,47 +178,13 @@ When &lt;i&gt;fuzzy = N&lt;/i&gt;, only when the value changes by more than &lt;
               </packing>
             </child>
             <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="tooltip-markup" translatable="yes">Also known as "&lt;b&gt;dead zone&lt;/b&gt;."
-Values smaller than this will be interpreted as zero.</property>
-                <property name="label" translatable="yes" context="axis flat" comments="Name for &quot;near zero&quot; field. Probably best left untranslated.">Flat:</property>
-                <property name="single-line-mode">True</property>
-                <property name="xalign">1</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">1</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="orig_flat_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">0</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">4</property>
-                <property name="top-attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="calc_flat_spin">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="max-length">6</property>
-                <property name="width-chars">5</property>
-                <property name="xalign">1</property>
-                <property name="adjustment">flat_adj</property>
-                <property name="climb-rate">1</property>
-                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left-attach">5</property>
@@ -231,7 +205,7 @@ Most input devices ignore this field.</property>
                 </attributes>
               </object>
               <packing>
-                <property name="left-attach">3</property>
+                <property name="left-attach">4</property>
                 <property name="top-attach">2</property>
               </packing>
             </child>
@@ -240,25 +214,9 @@ Most input devices ignore this field.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">0</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">4</property>
-                <property name="top-attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="calc_res_spin">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="max-length">6</property>
-                <property name="width-chars">5</property>
-                <property name="xalign">1</property>
-                <property name="adjustment">res_adj</property>
-                <property name="climb-rate">1</property>
-                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left-attach">5</property>
@@ -283,41 +241,11 @@ Most input devices ignore this field.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="calc_min_spin">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="width-chars">5</property>
-                <property name="xalign">1</property>
-                <property name="input-purpose">number</property>
-                <property name="adjustment">min_adj</property>
-                <property name="numeric">True</property>
-              </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="calc_max_spin">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="width-chars">5</property>
-                <property name="xalign">1</property>
-                <property name="input-purpose">number</property>
-                <property name="adjustment">max_adj</property>
-                <property name="numeric">True</property>
-              </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="value_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">0</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
                 <property name="xalign">1</property>
               </object>
@@ -337,7 +265,7 @@ Most input devices ignore this field.</property>
                 <property name="always-show-image">True</property>
               </object>
               <packing>
-                <property name="left-attach">6</property>
+                <property name="left-attach">7</property>
                 <property name="top-attach">2</property>
               </packing>
             </child>
@@ -352,8 +280,128 @@ Most input devices ignore this field.</property>
                 <property name="always-show-image">True</property>
               </object>
               <packing>
+                <property name="left-attach">7</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="focus-on-click">False</property>
+                <property name="receives-default">True</property>
+                <property name="popup">menu1</property>
+                <property name="use-popover">False</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="tooltip-markup" translatable="yes">Also known as "&lt;b&gt;dead zone&lt;/b&gt;."
+Values smaller than this will be interpreted as zero.</property>
+                    <property name="label" translatable="yes" context="axis flat" comments="Name for &quot;near zero&quot; field. Probably best left untranslated.">Flat:</property>
+                    <property name="single-line-mode">True</property>
+                    <property name="xalign">1</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left-attach">4</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+              </object>
+              <packing>
+                <property name="left-attach">3</property>
+                <property name="top-attach">0</property>
+                <property name="height">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="calc_min_spin">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="width-chars">6</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="xalign">1</property>
+                <property name="input-purpose">number</property>
+                <property name="adjustment">min_adj</property>
+                <property name="numeric">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">2</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="calc_max_spin">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="width-chars">6</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="xalign">1</property>
+                <property name="input-purpose">number</property>
+                <property name="adjustment">max_adj</property>
+                <property name="numeric">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">2</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="calc_fuzz_spin">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="width-chars">6</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="xalign">1</property>
+                <property name="adjustment">fuzz_adj</property>
+                <property name="climb-rate">1</property>
+                <property name="numeric">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">6</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="calc_flat_spin">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="width-chars">6</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="xalign">1</property>
+                <property name="adjustment">flat_adj</property>
+                <property name="climb-rate">1</property>
+                <property name="numeric">True</property>
+              </object>
+              <packing>
                 <property name="left-attach">6</property>
                 <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="calc_res_spin">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="width-chars">6</property>
+                <property name="text" translatable="yes">0</property>
+                <property name="xalign">1</property>
+                <property name="adjustment">res_adj</property>
+                <property name="climb-rate">1</property>
+                <property name="numeric">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">6</property>
+                <property name="top-attach">2</property>
               </packing>
             </child>
             <child>

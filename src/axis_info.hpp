@@ -1,21 +1,9 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2021  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #ifndef AXIS_INFO_HPP
 #define AXIS_INFO_HPP
@@ -42,13 +30,14 @@ class AxisInfo {
 
 
     rptr<Gio::SimpleActionGroup> actions;
-    rptr<Gio::SimpleAction> apply_action;
-    rptr<Gio::SimpleAction> reset_action;
+    rptr<Gio::SimpleAction> action_apply;
+    rptr<Gio::SimpleAction> action_reset;
+    rptr<Gio::SimpleAction> action_flat_zero;
+    rptr<Gio::SimpleAction> action_flat_centered;
 
 
     using LabelPtr = uptr<Gtk::Label>;
     using SpinButtonPtr = uptr<Gtk::SpinButton>;
-
 
     uptr<Gtk::Frame> info_frame;
     LabelPtr name_label;
@@ -66,6 +55,9 @@ class AxisInfo {
     SpinButtonPtr calc_flat_spin;
     SpinButtonPtr calc_res_spin;
 
+    rptr<Gtk::RadioMenuItem> flat_menu_zero;
+    rptr<Gtk::RadioMenuItem> flat_menu_centered;
+
     AxisCanvas* axis_canvas;
 
     sigc::connection min_changed_conn;
@@ -80,18 +72,40 @@ class AxisInfo {
 
 
 
-    void load_widgets();
+    void
+    load_widgets();
 
-    void update_canvas();
+    void
+    update_canvas();
 
-    void update_min(int min);
-    void update_max(int max);
-    void update_fuzz(int fuzz);
-    void update_flat(int flat);
-    void update_res(int res);
+    void
+    update_min(int min);
 
-    void on_action_apply();
-    void on_action_reset();
+    void
+    update_max(int max);
+
+    void
+    update_fuzz(int fuzz);
+
+    void
+    update_flat(int flat);
+
+    void
+    update_res(int res);
+
+
+    void
+    on_action_apply();
+
+    void
+    on_action_reset();
+
+
+    void
+    on_change_flat_to_zero();
+
+    void
+    on_change_flat_to_centered();
 
 public:
 
@@ -101,15 +115,20 @@ public:
     // disable moving
     AxisInfo(AxisInfo&& other) = delete;
 
-    void update_value(int value);
+    void
+    update_value(int value);
 
-    Gtk::Widget& root();
+    Gtk::Widget&
+    root();
 
-    const evdev::AbsInfo& get_calc() const noexcept;
+    const evdev::AbsInfo&
+    get_calc() const noexcept;
 
-    void reset(const evdev::AbsInfo& new_orig);
+    void
+    reset(const evdev::AbsInfo& new_orig);
 
-    void disable();
+    void
+    disable();
 };
 
 

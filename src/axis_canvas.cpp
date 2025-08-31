@@ -1,21 +1,9 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #include <algorithm>
 #include <cmath>
@@ -29,12 +17,37 @@ using std::valarray;
 using evdev::AbsInfo;
 
 
+namespace {
+
+    // RAII class to call save/restore on the context.
+    struct CtxGuard {
+
+        const Cairo::RefPtr<Cairo::Context>& ctx;
+
+        CtxGuard(const Cairo::RefPtr<Cairo::Context>& ctx_) :
+            ctx(ctx_)
+        {
+            ctx->save();
+        }
+
+        ~CtxGuard()
+            noexcept
+        {
+            ctx->restore();
+        }
+
+    };
+
+} // namespace
+
+
 AxisCanvas::AxisCanvas(BaseObjectType* cobject,
                        const Glib::RefPtr<Gtk::Builder>& /* builder */,
                        const AbsInfo& orig) :
     Gtk::DrawingArea{cobject},
     orig{orig},
-    calc{orig}
+    calc{orig},
+    flat_centered{false}
 {}
 
 
@@ -45,7 +58,14 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     const double height = get_allocated_height();
     auto style = get_style_context();
 
+#if 1
     style->render_background(cr, 0, 0, width, height);
+#else
+    // TODO: load a color palette.
+    cr->set_source_rgb(0.0, 0.0, 0.0);
+    cr->rectangle(0, 0, width, height);
+    cr->fill();
+#endif
 
     const double padding = 18.5;
 
@@ -74,7 +94,7 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         const double left = axis2canvas(orig.min);
         const double right = axis2canvas(orig.max);
 
-        cr->save();
+        CtxGuard guard{cr};
 
         cr->translate(0, height / 2.0);
 
@@ -94,7 +114,6 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
         cr->stroke();
 
-        cr->restore();
     }
 
     {
@@ -103,7 +122,7 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         const double left = axis2canvas(calc.min);
         const double right = axis2canvas(calc.max);
 
-        cr->save();
+        CtxGuard guard{cr};
 
         cr->translate(0, height / 2.0);
 
@@ -122,52 +141,47 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
                 3*M_PI/2,
                 M_PI/2);
         cr->stroke();
-
-        cr->restore();
     }
 
     {
         // draw box representing orig.flat
-        const double box_height = 19;
-        const double box_left = axis2canvas(-orig.flat);
-        const double box_right = axis2canvas(orig.flat);
-        const double box_width = box_right - box_left;
-        cr->save();
+        const double flat_height = 19;
+        const double flat_anchor = flat_centered ? (orig.min + orig.max) / 2.0 : 0.0;
+        const double flat_left   = axis2canvas(flat_anchor - orig.flat);
+        const double flat_right  = axis2canvas(flat_anchor + orig.flat);
+        const double flat_width  = flat_right - flat_left;
+
+        CtxGuard guard{cr};
 
         cr->set_line_width(3.0);
-        cr->rectangle(box_left, (height - box_height)/2.0,
-                      box_width, box_height);
+        cr->rectangle(flat_left, (height - flat_height)/2.0,
+                      flat_width, flat_height);
         cr->stroke();
-
-        cr->restore();
     }
 
     {
         // draw calc flat
         const double r = 6.5;
-        const double left = axis2canvas(-calc.flat);
-        const double right = axis2canvas(calc.flat);
-        cr->save();
+        const double flat_anchor = flat_centered ? (calc.min + calc.max) / 2.0 : 0.0;
+        const double flat_left   = axis2canvas(flat_anchor - calc.flat);
+        const double flat_right  = axis2canvas(flat_anchor + calc.flat);
+
+        CtxGuard guard{cr};
 
         cr->translate(0, height / 2.0);
         cr->set_line_width(1.0);
         cr->set_dash(valarray{2.0, 2.0}, 0.0);
-        cr->arc(left + r, 0,
-                r,
-                M_PI/2, 3*M_PI/2);
-        cr->arc(right - r, 0,
-                r,
-                3*M_PI/2, M_PI/2);
+        cr->arc(flat_left  + r, 0, r,   M_PI/2, 3*M_PI/2);
+        cr->arc(flat_right - r, 0, r, 3*M_PI/2,   M_PI/2);
         cr->close_path();
         cr->stroke();
-
-        cr->restore();
     }
 
     {
         // draw value marker
         const double r = 2.5;
-        cr->save();
+
+        CtxGuard guard{cr};
 
         cr->translate(axis2canvas(calc.val), height / 2.0);
 
@@ -211,8 +225,6 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             cr->line_to(cw - ch, +ch);
             cr->stroke();
         }
-
-        cr->restore();
     }
     return true;
 }
@@ -231,5 +243,13 @@ void
 AxisCanvas::update(const AbsInfo& new_calc)
 {
     calc = new_calc;
+    queue_draw();
+}
+
+
+void
+AxisCanvas::set_flat_centered(bool is_centered)
+{
+    flat_centered = is_centered;
     queue_draw();
 }

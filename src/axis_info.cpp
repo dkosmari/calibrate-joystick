@@ -1,24 +1,13 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #include <cstdint>
 #include <stdexcept>
+#include <iostream>
 
 #include "axis_info.hpp"
 
@@ -32,6 +21,8 @@
 
 
 using std::string;
+using std::cout;
+using std::endl;
 
 using Glib::ustring;
 using Gio::SimpleActionGroup;
@@ -64,15 +55,13 @@ AxisInfo::AxisInfo(evdev::Code axis_code,
     CONN_SYNC_SPIN(flat);
     CONN_SYNC_SPIN(res);
 
-    apply_action =
-        actions->add_action("apply",
-                            sigc::mem_fun(this, &AxisInfo::on_action_apply));
-
-    reset_action =
-        actions->add_action("reset",
-                            sigc::mem_fun(this, &AxisInfo::on_action_reset));
-
 #undef CONN_SYNC_SPIN
+
+    action_apply = actions->add_action("apply",
+                                       sigc::mem_fun(this, &AxisInfo::on_action_apply));
+
+    action_reset = actions->add_action("reset",
+                                       sigc::mem_fun(this, &AxisInfo::on_action_reset));
 
     reset(info);
 }
@@ -104,9 +93,18 @@ AxisInfo::load_widgets()
     LOAD(SpinButton, calc_flat_spin);
     LOAD(SpinButton, calc_res_spin);
 
-    builder->get_widget_derived("axis_canvas",
-                                axis_canvas,
-                                orig);
+    builder->get_widget_derived("axis_canvas", axis_canvas, orig);
+
+
+    // Note: GtkRadioMenuItem does not support actions, so we use signals.
+    flat_menu_zero =
+        rptr<Gtk::RadioMenuItem>::cast_dynamic(builder->get_object("flat_menu_zero"));
+    flat_menu_zero->signal_toggled().connect([this]{ on_change_flat_to_zero(); });
+
+    flat_menu_centered =
+        rptr<Gtk::RadioMenuItem>::cast_dynamic(builder->get_object("flat_menu_centered"));
+    flat_menu_zero->signal_toggled().connect([this]{ on_change_flat_to_centered(); });
+
 }
 
 #undef LOAD
@@ -204,6 +202,26 @@ AxisInfo::on_action_reset()
 }
 
 
+void
+AxisInfo::on_change_flat_to_zero()
+{
+    if (!flat_menu_zero->get_active())
+        return;
+    if (axis_canvas)
+        axis_canvas->set_flat_centered(false);
+}
+
+
+void
+AxisInfo::on_change_flat_to_centered()
+{
+    if (!flat_menu_centered->get_active())
+        return;
+    if (axis_canvas)
+        axis_canvas->set_flat_centered(true);
+}
+
+
 const AbsInfo&
 AxisInfo::get_calc() const noexcept
 {
@@ -237,8 +255,8 @@ AxisInfo::reset(const AbsInfo& new_orig)
 void
 AxisInfo::disable()
 {
-    apply_action->set_enabled(false);
-    reset_action->set_enabled(false);
+    action_apply->set_enabled(false);
+    action_reset->set_enabled(false);
 
     calc_min_spin->set_sensitive(false);
     calc_max_spin->set_sensitive(false);

@@ -45,10 +45,8 @@ $(RESOURCES_ARCHIVE):
 
 
 .PHONY: company
-
 company: compile_flags.txt
 
 compile_flags.txt: Makefile
-	echo "$(AM_CPPFLAGS) $(CPPFLAGS) $(DEFS)" \
-		| xargs -n1 echo | sort -u \
-		> $(srcdir)/compile_flags.txt
+	printf "%s" "$(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS)" | xargs -n1 | sort -u > compile_flags.txt
+	$(CPP) -xc++ /dev/null -E -Wp,-v 2>&1 | sed -n 's,^ ,-I,p' >> compile_flags.txt
