@@ -1,0 +1,245 @@
+# Russian translations for calibrate-joystick package.
+# Copyright (C) 2025 Daniel K. O.
+# This file is distributed under the same license as the calibrate-joystick package.
+# streamdp <primak.aa@gmail.com>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: calibrate-joystick 0.5.2+\n"
+"Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
+"POT-Creation-Date: 2025-08-31 20:33+0300\n"
+"PO-Revision-Date: 2025-08-31 20:35+0300\n"
+"Last-Translator: streamdp <primak.aa@gmail.com>\n"
+"Language-Team: Russian <gnu@d07.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/app.cpp:90
+msgid "Show program version."
+msgstr "Показать версию программы."
+
+#: src/app.cpp:94
+msgid "Run in daemon mode."
+msgstr "Запустить в режиме демона."
+
+#: src/app.cpp:98
+msgid "Could not load resources file."
+msgstr "Не удалось загрузить файл ресурсов."
+
+#: src/app.cpp:182
+msgid "Daemon running."
+msgstr "Демон запущен."
+
+#: src/app.cpp:183 src/app.cpp:356
+msgid "Monitoring new joysticks..."
+msgstr "Мониторинг новых джойстиков..."
+
+#: src/app.cpp:185
+msgid "Quit daemon"
+msgstr "Остановить демон"
+
+#: src/app.cpp:197
+msgid "_Close"
+msgstr "_Закрыть"
+
+#: src/app.cpp:207
+msgid "Open device..."
+msgstr "Открыть устройство..."
+
+#: src/app.cpp:213
+msgid "_Cancel"
+msgstr "_Отмена"
+
+#: src/app.cpp:214 ui/actions.ui:11
+msgid "_Open"
+msgstr "_Открыть"
+
+#: src/app.cpp:217
+msgid "evdev devices"
+msgstr "устройства evdev"
+
+#: src/app.cpp:222
+msgid "all files"
+msgstr "все файлы"
+
+#: src/app.cpp:355 ui/main-window.glade:35
+msgid "Calibrate Joystick"
+msgstr "Калибровка джойстика"
+
+#: src/app.cpp:415
+msgid "Error opening file"
+msgstr "Ошибка открытия файла"
+
+#: src/device_page.cpp:163
+msgid "Device disconnected."
+msgstr "Устройство отключено."
+
+#: src/device_page.cpp:165
+msgid "Input/output error."
+msgstr "Ошибка ввода/вывода."
+
+#: ui/about-dialog.glade:10
+msgid "A utility to calibrate joysticks."
+msgstr "Утилита для калибровки джойстиков."
+
+#: ui/actions.ui:6
+msgid "_Refresh"
+msgstr "_Обновить"
+
+#: ui/actions.ui:18
+msgid "_About"
+msgstr "О _программе"
+
+#: ui/actions.ui:23
+msgid "_Quit"
+msgstr "_Выход"
+
+#: ui/axis-info.glade:38
+msgid "Show flat region around zero."
+msgstr "Показывать flat область вокруг нуля."
+
+#: ui/axis-info.glade:39
+msgid "Around zero"
+msgstr "Вокруг нуля"
+
+#: ui/axis-info.glade:48
+msgid "Show flat region centered in the min-max range."
+msgstr "Показать flat область с центром в диапазоне мин-макс."
+
+#: ui/axis-info.glade:49
+msgid "Centered"
+msgstr "Центрированная"
+
+#: ui/axis-info.glade:89
+msgid "Minimum value for this axis."
+msgstr "Минимальное значение для этой оси."
+
+#. Abbreviation for "minimum value."
+#: ui/axis-info.glade:90
+msgctxt "axis min"
+msgid "Min:"
+msgstr "Минимум:"
+
+#: ui/axis-info.glade:106
+msgid "Maximum value for the axis."
+msgstr "Максимальное значение для оси."
+
+#. Abbreviation for "maximum value."
+#: ui/axis-info.glade:107
+msgctxt "axis max"
+msgid "Max:"
+msgstr "Максимум:"
+
+#: ui/axis-info.glade:151
+msgid ""
+"Noise filter.\n"
+"Variations smaller than this will be ignored.\n"
+"When <i>fuzz = N</i>, only when the value changes by more than <i>N</i>, the "
+"value will be sent to the application."
+msgstr ""
+"Фильтр шума.\n"
+"Изменения меньше этого значения будут игнорироваться.\n"
+"Если <i>fuzz = N</i>, то значение будет отправлено в приложение только когда "
+"оно превысит <i>N</i>."
+
+#. Probably left untranslated.
+#: ui/axis-info.glade:154
+msgctxt "axis fuzz"
+msgid "Fuzz:"
+msgstr "Порог:"
+
+#: ui/axis-info.glade:198
+msgid ""
+"Resolution of this axis.\n"
+"Most input devices ignore this field."
+msgstr ""
+"Разрешение этой оси.\n"
+"Большинство устройств ввода игнорируют это поле."
+
+#. Abbreviation for "resolution."
+#: ui/axis-info.glade:200
+msgctxt "axis res"
+msgid "Res:"
+msgstr "Разрешение:"
+
+#: ui/axis-info.glade:230
+msgid "Raw value of this axis."
+msgstr "Исходное значение этой оси."
+
+#: ui/axis-info.glade:231
+msgctxt "axis value"
+msgid "Value:"
+msgstr "Значение:"
+
+#. Apply settings for a single axis.
+#: ui/axis-info.glade:259
+msgctxt "axis apply"
+msgid "Apply"
+msgstr "Применить"
+
+#. Revert settings for a single axis.
+#: ui/axis-info.glade:274
+msgctxt "revert axis"
+msgid "Revert"
+msgstr "Откатить"
+
+#: ui/axis-info.glade:299
+msgid ""
+"Also known as \"<b>dead zone</b>.\"\n"
+"Values smaller than this will be interpreted as zero."
+msgstr ""
+"Также известно как \"<b>flat</b>.\"\n"
+"Значения в этом диапазоне будут интерпретироваться как ноль."
+
+#. Name for "near zero" field. Probably best left untranslated.
+#: ui/axis-info.glade:301
+msgctxt "axis flat"
+msgid "Flat:"
+msgstr "Мертвая зона:"
+
+#: ui/device-page.glade:51
+msgid "Error:"
+msgstr "Ошибка:"
+
+#: ui/device-page.glade:101
+msgctxt "device name"
+msgid "Name:"
+msgstr "Имя:"
+
+#: ui/device-page.glade:116
+msgctxt "device path"
+msgid "Path:"
+msgstr "Путь:"
+
+#. Number of axes in a device.
+#: ui/device-page.glade:159
+msgctxt "num axes"
+msgid "Axes:"
+msgstr "Оси:"
+
+#: ui/device-page.glade:232
+msgid "_Reset"
+msgstr "_Сброс"
+
+#: ui/device-page.glade:249
+msgid "_Apply"
+msgstr "_Применить"
+
+#: ui/main-window.glade:64
+msgctxt "application name"
+msgid "Calibrate Joystick"
+msgstr "Калибровка джойстика"
+
+#. Button to refresh the list of devices.
+#: ui/main-window.glade:69
+msgctxt "refresh devices"
+msgid "_Refresh"
+msgstr "_Обновить"
+
+#: ui/main-window.glade:81
+msgid "_Quit daemon"
+msgstr "_Остановить демон"
