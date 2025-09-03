@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.5.2+\n"
 "Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2025-09-02 23:19-0300\n"
+"POT-Creation-Date: 2025-09-02 23:32-0300\n"
 "PO-Revision-Date: 2025-08-31 20:35+0300\n"
 "Last-Translator: streamdp <primak.aa@gmail.com>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
@@ -30,7 +30,7 @@ msgstr "Запустить в режиме демона."
 msgid "Could not load resources file."
 msgstr "Не удалось загрузить файл ресурсов."
 
-#: src/app.cpp:149 ui/application.glade:365
+#: src/app.cpp:149 ui/application.glade:366
 msgid "_Close"
 msgstr "_Закрыть"
 
@@ -86,7 +86,7 @@ msgstr "Ошибка ввода/вывода."
 msgid "_Refresh"
 msgstr "_Обновить"
 
-#: ui/actions.ui:18 ui/application.glade:451
+#: ui/actions.ui:18 ui/application.glade:452
 msgid "_Settings"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr "_Выход"
 msgid "A utility to calibrate joysticks."
 msgstr "Утилита для калибровки джойстиков."
 
-#: ui/application.glade:148
+#: ui/application.glade:149
 #, fuzzy
 #| msgctxt "axis value"
 #| msgid "Value:"
@@ -110,7 +110,7 @@ msgctxt "Color for the value indicator."
 msgid "Value:"
 msgstr "Значение:"
 
-#: ui/application.glade:177
+#: ui/application.glade:178
 #, fuzzy
 #| msgctxt "axis min"
 #| msgid "Min:"
@@ -118,7 +118,7 @@ msgctxt "Color for the minimum indicator."
 msgid "Min:"
 msgstr "Минимум:"
 
-#: ui/application.glade:193
+#: ui/application.glade:194
 #, fuzzy
 #| msgctxt "axis max"
 #| msgid "Max:"
@@ -126,7 +126,7 @@ msgctxt "Color for the maximum indicator."
 msgid "Max:"
 msgstr "Максимум:"
 
-#: ui/application.glade:245
+#: ui/application.glade:246
 #, fuzzy
 #| msgctxt "axis fuzz"
 #| msgid "Fuzz:"
@@ -134,7 +134,7 @@ msgctxt "Color for the fuzz indicator."
 msgid "Fuzz:"
 msgstr "Порог:"
 
-#: ui/application.glade:261
+#: ui/application.glade:262
 #, fuzzy
 #| msgctxt "axis flat"
 #| msgid "Flat:"
@@ -142,31 +142,31 @@ msgctxt "Color for the flat indicator."
 msgid "Flat:"
 msgstr "Мертвая зона:"
 
-#: ui/application.glade:300
+#: ui/application.glade:301
 msgctxt "The background color."
 msgid "Background:"
 msgstr ""
 
-#: ui/application.glade:348
+#: ui/application.glade:349
 msgid "Colors"
 msgstr ""
 
-#: ui/application.glade:383 ui/device-page.glade:267
+#: ui/application.glade:384 ui/device-page.glade:267
 msgid "_Reset"
 msgstr "_Сброс"
 
-#: ui/application.glade:418
+#: ui/application.glade:419
 msgctxt "application name"
 msgid "Calibrate Joystick"
 msgstr "Калибровка джойстика"
 
 #. Button to refresh the list of devices.
-#: ui/application.glade:423
+#: ui/application.glade:424
 msgctxt "refresh devices"
 msgid "_Refresh"
 msgstr "_Обновить"
 
-#: ui/application.glade:435
+#: ui/application.glade:436
 msgid "_Quit daemon"
 msgstr "_Остановить демон"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.5.2+\n"
 "Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2025-09-02 23:19-0300\n"
+"POT-Creation-Date: 2025-09-02 23:32-0300\n"
 "PO-Revision-Date: 2025-09-02 23:20-0300\n"
 "Last-Translator: Daniel K. O.\n"
 "Language-Team: \n"
@@ -32,7 +32,7 @@ msgstr "Ejecutar en modo daemon."
 msgid "Could not load resources file."
 msgstr "No se ha podido cargar el archivo de recursos."
 
-#: src/app.cpp:149 ui/application.glade:365
+#: src/app.cpp:149 ui/application.glade:366
 msgid "_Close"
 msgstr "_Cerrar"
 
@@ -88,7 +88,7 @@ msgstr "Error de entrada/salida."
 msgid "_Refresh"
 msgstr "Actualiza_r"
 
-#: ui/actions.ui:18 ui/application.glade:451
+#: ui/actions.ui:18 ui/application.glade:452
 msgid "_Settings"
 msgstr "_Ajustes"
 
@@ -104,56 +104,56 @@ msgstr "_Salir"
 msgid "A utility to calibrate joysticks."
 msgstr "Una utilidad para calibrar los joysticks."
 
-#: ui/application.glade:148
+#: ui/application.glade:149
 msgctxt "Color for the value indicator."
 msgid "Value:"
 msgstr "Valor:"
 
-#: ui/application.glade:177
+#: ui/application.glade:178
 msgctxt "Color for the minimum indicator."
 msgid "Min:"
 msgstr "Mín:"
 
-#: ui/application.glade:193
+#: ui/application.glade:194
 msgctxt "Color for the maximum indicator."
 msgid "Max:"
 msgstr "Máx:"
 
-#: ui/application.glade:245
+#: ui/application.glade:246
 msgctxt "Color for the fuzz indicator."
 msgid "Fuzz:"
 msgstr "Fuzz:"
 
-#: ui/application.glade:261
+#: ui/application.glade:262
 msgctxt "Color for the flat indicator."
 msgid "Flat:"
 msgstr "Flat:"
 
-#: ui/application.glade:300
+#: ui/application.glade:301
 msgctxt "The background color."
 msgid "Background:"
 msgstr "Fondo:"
 
-#: ui/application.glade:348
+#: ui/application.glade:349
 msgid "Colors"
 msgstr "Colores"
 
-#: ui/application.glade:383 ui/device-page.glade:267
+#: ui/application.glade:384 ui/device-page.glade:267
 msgid "_Reset"
 msgstr "_Reiniciar"
 
-#: ui/application.glade:418
+#: ui/application.glade:419
 msgctxt "application name"
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
 #. Button to refresh the list of devices.
-#: ui/application.glade:423
+#: ui/application.glade:424
 msgctxt "refresh devices"
 msgid "_Refresh"
 msgstr "Actualiza_r"
 
-#: ui/application.glade:435
+#: ui/application.glade:436
 msgid "_Quit daemon"
 msgstr "_Salir del daemon"
 
