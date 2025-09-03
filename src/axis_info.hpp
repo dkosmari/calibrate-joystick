@@ -17,6 +17,7 @@
 #include <libevdevxx/Event.hpp>
 
 
+class App;
 class AxisCanvas;
 
 
@@ -122,14 +123,19 @@ public:
     root();
 
     const evdev::AbsInfo&
-    get_calc() const noexcept;
+    get_calc()
+        const noexcept;
 
     void
     reset(const evdev::AbsInfo& new_orig);
 
     void
     disable();
-};
 
+
+    void
+    update_colors(const App* app);
+
+}; // class AxisInfo
 
 #endif

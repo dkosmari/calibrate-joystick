@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: calibrate-joystick 0.2\n"
+"Project-Id-Version: calibrate-joystick 0.5.2+\n"
 "Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2025-08-31 02:37-0300\n"
-"PO-Revision-Date: 2025-08-31 02:45-0300\n"
+"POT-Creation-Date: 2025-09-02 23:19-0300\n"
+"PO-Revision-Date: 2025-09-02 23:20-0300\n"
 "Last-Translator: Daniel K. O.\n"
 "Language-Team: \n"
 "Language: pt\n"
@@ -21,85 +21,142 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
 
-#: src/app.cpp:90
+#: src/app.cpp:84
 msgid "Show program version."
 msgstr "Mostra a versão do programa."
 
-#: src/app.cpp:94
+#: src/app.cpp:88
 msgid "Run in daemon mode."
 msgstr "Executar em modo daemon."
 
-#: src/app.cpp:98
+#: src/app.cpp:92
 msgid "Could not load resources file."
 msgstr "Não pode carregar o arquivo de recursos."
 
-#: src/app.cpp:182
-msgid "Daemon running."
-msgstr "Daemon em execução."
-
-#: src/app.cpp:183 src/app.cpp:356
-msgid "Monitoring new joysticks..."
-msgstr "Monitorando novos joysticks..."
-
-#: src/app.cpp:185
-msgid "Quit daemon"
-msgstr "Terminar daemon"
-
-#: src/app.cpp:197
+#: src/app.cpp:149 ui/application.glade:365
 msgid "_Close"
 msgstr "_Fechar"
 
-#: src/app.cpp:207
+#: src/app.cpp:183
+msgid "Daemon running."
+msgstr "Daemon em execução."
+
+#: src/app.cpp:184 src/app.cpp:365
+msgid "Monitoring new joysticks..."
+msgstr "Monitorando novos joysticks..."
+
+#: src/app.cpp:186
+msgid "Quit daemon"
+msgstr "Terminar daemon"
+
+#: src/app.cpp:205
 msgid "Open device..."
 msgstr "Abrir dispositivo..."
 
-#: src/app.cpp:213
+#: src/app.cpp:212
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/app.cpp:214 ui/actions.ui:11
+#: src/app.cpp:213 ui/actions.ui:11
 msgid "_Open"
 msgstr "_Abrir"
 
-#: src/app.cpp:217
+#: src/app.cpp:216
 msgid "evdev devices"
 msgstr "dispositivos evdev"
 
-#: src/app.cpp:222
+#: src/app.cpp:221
 msgid "all files"
 msgstr "todos os arquivos"
 
-#: src/app.cpp:355 ui/main-window.glade:35
+#: src/app.cpp:364 ui/application.glade:40
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
-#: src/app.cpp:415
+#: src/app.cpp:433
 msgid "Error opening file"
 msgstr "Error abrindo o arquivo"
 
-#: src/device_page.cpp:163
+#: src/device_page.cpp:159
 msgid "Device disconnected."
 msgstr "Dispositivo desconectado."
 
-#: src/device_page.cpp:165
+#: src/device_page.cpp:161
 msgid "Input/output error."
 msgstr "Erro de entrada/saída."
-
-#: ui/about-dialog.glade:10
-msgid "A utility to calibrate joysticks."
-msgstr "Um utilitário para calibrar joysticks."
 
 #: ui/actions.ui:6
 msgid "_Refresh"
 msgstr "Atualiza_r"
 
-#: ui/actions.ui:18
+#: ui/actions.ui:18 ui/application.glade:451
+msgid "_Settings"
+msgstr "_Configurações"
+
+#: ui/actions.ui:25
 msgid "_About"
 msgstr "_Sobre"
 
-#: ui/actions.ui:23
+#: ui/actions.ui:30
 msgid "_Quit"
 msgstr "Sa_ir"
+
+#: ui/application.glade:64
+msgid "A utility to calibrate joysticks."
+msgstr "Um utilitário para calibrar joysticks."
+
+#: ui/application.glade:148
+msgctxt "Color for the value indicator."
+msgid "Value:"
+msgstr "Valor:"
+
+#: ui/application.glade:177
+msgctxt "Color for the minimum indicator."
+msgid "Min:"
+msgstr "Mín:"
+
+#: ui/application.glade:193
+msgctxt "Color for the maximum indicator."
+msgid "Max:"
+msgstr "Máx:"
+
+#: ui/application.glade:245
+msgctxt "Color for the fuzz indicator."
+msgid "Fuzz:"
+msgstr "Fuzz:"
+
+#: ui/application.glade:261
+msgctxt "Color for the flat indicator."
+msgid "Flat:"
+msgstr "Flat:"
+
+#: ui/application.glade:300
+msgctxt "The background color."
+msgid "Background:"
+msgstr "Fundo:"
+
+#: ui/application.glade:348
+msgid "Colors"
+msgstr "Cores"
+
+#: ui/application.glade:383 ui/device-page.glade:267
+msgid "_Reset"
+msgstr "_Resetar"
+
+#: ui/application.glade:418
+msgctxt "application name"
+msgid "Calibrate Joystick"
+msgstr "Calibrar Joystick"
+
+#. Button to refresh the list of devices.
+#: ui/application.glade:423
+msgctxt "refresh devices"
+msgid "_Refresh"
+msgstr "Atualiza_r"
+
+#: ui/application.glade:435
+msgid "_Quit daemon"
+msgstr "_Terminar daemon"
 
 #: ui/axis-info.glade:38
 msgid "Show flat region around zero."
@@ -122,7 +179,7 @@ msgid "Minimum value for this axis."
 msgstr "Valor mínimo para este eixo."
 
 #. Abbreviation for "minimum value."
-#: ui/axis-info.glade:90
+#: ui/axis-info.glade:91
 msgctxt "axis min"
 msgid "Min:"
 msgstr "Mín:"
@@ -132,7 +189,7 @@ msgid "Maximum value for the axis."
 msgstr "Valor máximo para este eixo."
 
 #. Abbreviation for "maximum value."
-#: ui/axis-info.glade:107
+#: ui/axis-info.glade:108
 msgctxt "axis max"
 msgid "Max:"
 msgstr "Máx:"
@@ -150,7 +207,7 @@ msgstr ""
 "valor é enviado ao programa."
 
 #. Probably left untranslated.
-#: ui/axis-info.glade:154
+#: ui/axis-info.glade:155
 msgctxt "axis fuzz"
 msgid "Fuzz:"
 msgstr "Fuzz:"
@@ -164,7 +221,7 @@ msgstr ""
 "A maioria dos dispositivos ignoram este campo."
 
 #. Abbreviation for "resolution."
-#: ui/axis-info.glade:200
+#: ui/axis-info.glade:201
 msgctxt "axis res"
 msgid "Res:"
 msgstr "Res:"
@@ -173,7 +230,7 @@ msgstr "Res:"
 msgid "Raw value of this axis."
 msgstr "Valor bruto deste eixo."
 
-#: ui/axis-info.glade:231
+#: ui/axis-info.glade:232
 msgctxt "axis value"
 msgid "Value:"
 msgstr "Valor:"
@@ -190,7 +247,7 @@ msgctxt "revert axis"
 msgid "Revert"
 msgstr "Reverter"
 
-#: ui/axis-info.glade:299
+#: ui/axis-info.glade:300
 msgid ""
 "Also known as \"<b>dead zone</b>.\"\n"
 "Values smaller than this will be interpreted as zero."
@@ -199,53 +256,69 @@ msgstr ""
 "Valores menores que isot serão interpretados como zero."
 
 #. Name for "near zero" field. Probably best left untranslated.
-#: ui/axis-info.glade:301
+#: ui/axis-info.glade:303
 msgctxt "axis flat"
 msgid "Flat:"
 msgstr "Flat:"
 
-#: ui/device-page.glade:51
+#: ui/device-page.glade:56
 msgid "Error:"
 msgstr "Erro:"
 
-#: ui/device-page.glade:101
+#: ui/device-page.glade:107
 msgctxt "device name"
 msgid "Name:"
 msgstr "Nome:"
 
-#: ui/device-page.glade:116
+#: ui/device-page.glade:122
 msgctxt "device path"
 msgid "Path:"
 msgstr "Caminho:"
 
 #. Number of axes in a device.
-#: ui/device-page.glade:159
+#: ui/device-page.glade:167
 msgctxt "num axes"
 msgid "Axes:"
 msgstr "Eixos:"
 
-#: ui/device-page.glade:232
-msgid "_Reset"
-msgstr "_Resetar"
+#: ui/device-page.glade:195
+msgid "Vendor/Product:"
+msgstr "Vendedor/Produto:"
 
-#: ui/device-page.glade:249
+#: ui/device-page.glade:284
 msgid "_Apply"
 msgstr "_Aplicar"
 
-#: ui/main-window.glade:64
-msgctxt "application name"
-msgid "Calibrate Joystick"
-msgstr "Calibrar Joystick"
+#: ui/device-page.glade:302
+msgid "_Save & Apply"
+msgstr "_Salvar e Aplicar"
 
-#. Button to refresh the list of devices.
-#: ui/main-window.glade:69
-msgctxt "refresh devices"
-msgid "_Refresh"
-msgstr "Atualiza_r"
+#: calibrate-joystick.gschema.xml.in:7
+msgid "The background color."
+msgstr "A cor de fundo."
 
-#: ui/main-window.glade:81
-msgid "_Quit daemon"
-msgstr "_Terminar daemon"
+#: calibrate-joystick.gschema.xml.in:11
+msgid "The color for the current value indicator."
+msgstr "A cor para o indicador to valor atual."
+
+#: calibrate-joystick.gschema.xml.in:15
+msgid "The color for the minimum indicator."
+msgstr "A cor para o indicador de mínimo."
+
+#: calibrate-joystick.gschema.xml.in:19
+msgid "The color for the maximum indicator."
+msgstr "A cor para o indicador de máximo."
+
+#: calibrate-joystick.gschema.xml.in:23
+msgid "The color for the fuzz indicator."
+msgstr "A cor para o indicador de fuzz."
+
+#: calibrate-joystick.gschema.xml.in:27
+msgid "The color for the flat indicator."
+msgstr "A cor para o indicador de flat."
+
+#~ msgid "Apply & _Save"
+#~ msgstr "Aplicar & Salvar"
 
 #~ msgid "Failed to load root widget."
 #~ msgstr "Falhou ao carregar o componente raiz."

@@ -1,21 +1,9 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #include <algorithm>
 #include <iostream>
@@ -23,6 +11,7 @@
 
 #include "device_page.hpp"
 
+#include "app.hpp"
 #include "axis_info.hpp"
 #include "utils.hpp"
 
@@ -52,7 +41,6 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     dev_path{dev_path},
     device{dev_path}
 {
-
     load_widgets();
 
     actions = SimpleActionGroup::create();
@@ -60,6 +48,11 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
 
     name_label->set_label(device.name());
     path_label->set_label(dev_path.string());
+
+    vid_pid_label->set_label(ustring::sprintf("%04x:%04x (%04x)",
+                                              device.vendor(),
+                                              device.product(),
+                                              device.version()));
 
     auto abs_codes = device.codes(Type::abs);
     unsigned num_axes = abs_codes.size();
@@ -118,9 +111,10 @@ DevicePage::load_widgets()
 
     device_box = get_widget<Gtk::Box>(builder, "device_box");
 
-    name_label = get_widget<Gtk::Label>(builder, "name_label");
-    path_label = get_widget<Gtk::Label>(builder, "path_label");
-    axes_label = get_widget<Gtk::Label>(builder, "axes_label");
+    name_label    = get_widget<Gtk::Label>(builder, "name_label");
+    path_label    = get_widget<Gtk::Label>(builder, "path_label");
+    vid_pid_label = get_widget<Gtk::Label>(builder, "vid_pid_label");
+    axes_label    = get_widget<Gtk::Label>(builder, "axes_label");
 
     axes_box = get_widget<Gtk::Box>(builder, "axes_box");
 
@@ -139,14 +133,16 @@ DevicePage::root()
 
 
 string
-DevicePage::name() const
+DevicePage::name()
+    const
 {
     return device.name();
 }
 
 
 const path&
-DevicePage::path() const
+DevicePage::path()
+    const
 {
     return dev_path;
 }
@@ -255,4 +251,12 @@ DevicePage::disable()
 
     for (auto& [_, axis] : axes)
         axis->disable();
+}
+
+
+void
+DevicePage::update_colors(const App* app)
+{
+    for (auto& [key, val] : axes)
+        val->update_colors(app);
 }

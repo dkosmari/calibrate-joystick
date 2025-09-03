@@ -1,21 +1,9 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
- *  Copyright (C) 2021  Daniel K. O.
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
 
 #ifndef UTILS_HPP
 #define UTILS_HPP
@@ -23,19 +11,13 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include <gtkmm.h>
 
 
-extern const std::string ui_about_dialog_path;
 extern const std::string ui_axis_info_path;
 extern const std::string ui_device_page_path;
-extern const std::string ui_main_window_path;
-
-
-bool
-starts_with(const std::string& haystack,
-            const std::string& prefix);
 
 
 template<typename T>
@@ -47,9 +29,26 @@ get_widget(Glib::RefPtr<Gtk::Builder>& builder,
     builder->get_widget(name, ptr);
     if (!ptr)
         throw std::runtime_error{"widget \"" + name + "\" not found."};
-    ptr->reference();
+    ptr->reference(); // keep the widget alive after the builder is destroyed
     return std::unique_ptr<T>{ptr};
 }
+
+
+template<typename T,
+         typename... Args>
+std::unique_ptr<T>
+get_widget_derived(Glib::RefPtr<Gtk::Builder>& builder,
+                   const std::string& name,
+                   Args&&... args)
+{
+    T* ptr = nullptr;
+    builder->get_widget_derived(name, ptr, std::forward<Args>(args)...);
+    if (!ptr)
+        throw std::runtime_error{"widget \"" + name + "\" not found."};
+    ptr->reference(); // keep the widget alive after the builder is destroyed
+    return std::unique_ptr<T>{ptr};
+}
+
 
 
 template<typename T>

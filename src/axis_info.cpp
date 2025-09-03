@@ -11,6 +11,7 @@
 
 #include "axis_info.hpp"
 
+#include "app.hpp"
 #include "axis_canvas.hpp"
 #include "utils.hpp"
 
@@ -94,7 +95,7 @@ AxisInfo::load_widgets()
     LOAD(SpinButton, calc_res_spin);
 
     builder->get_widget_derived("axis_canvas", axis_canvas, orig);
-
+    update_canvas();
 
     // Note: GtkRadioMenuItem does not support actions, so we use signals.
     flat_menu_zero =
@@ -263,4 +264,17 @@ AxisInfo::disable()
     calc_fuzz_spin->set_sensitive(false);
     calc_flat_spin->set_sensitive(false);
     calc_res_spin->set_sensitive(false);
+}
+
+
+void
+AxisInfo::update_colors(const App* app)
+{
+    axis_canvas->set_background_color(app->get_background_color());
+    axis_canvas->set_value_color(app->get_value_color());
+    axis_canvas->set_min_color(app->get_min_color());
+    axis_canvas->set_max_color(app->get_max_color());
+    axis_canvas->set_fuzz_color(app->get_fuzz_color());
+    axis_canvas->set_flat_color(app->get_flat_color());
+    update_canvas();
 }

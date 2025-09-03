@@ -15,6 +15,13 @@
     </section>
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Settings</attribute>
+        <attribute name="action">app.settings</attribute>
+        <attribute name="accel">&lt;Control&gt;p</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_About</attribute>
         <attribute name="action">app.about</attribute>
         <attribute name="accel">&lt;Control&gt;a</attribute>

@@ -12,7 +12,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 
 # Checks for programs.
@@ -58,44 +58,57 @@ AC_TYPE_SIZE_T
 AC_TYPE_UINT64_T
 
 
-AC_SUBST([APPLICATION_ID], [none.calibrate_joystick])
-AC_DEFINE([APPLICATION_ID], ["none.calibrate_joystick"], [GApplication id, must match .desktop file name])
+APPLICATION_ID="none.calibrate_joystick"
+AC_SUBST([APPLICATION_ID])
+AC_DEFINE_UNQUOTED([APPLICATION_ID],
+                   ["$APPLICATION_ID"],
+                   [GApplication id, must match .desktop file name])
+
+RESOURCE_PREFIX="/none/calibrate_joystick"
+AC_SUBST([RESOURCE_PREFIX])
+AC_DEFINE_UNQUOTED([RESOURCE_PREFIX],
+                   ["$RESOURCE_PREFIX"],
+                   [Prefix used in the .gresource file.])
+
 
 TARBALL_NAME="${PACKAGE_TARNAME}-${PACKAGE_VERSION}.tar.gz"
 AC_SUBST([TARBALL_NAME])
 
 
 EXTERNAL_SUBDIRS=
+
 AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBEVDEV], [libevdev])
-              LIBEVDEVXX_CFLAGS="${LIBEVDEV_CFLAGS} -I../external/libevdevxx/include"
-              LIBEVDEVXX_LIBS="-L../external/libevdevxx -levdevxx ${LIBEVDEV_LIBS}"
+              LIBEVDEVXX_CFLAGS="${LIBEVDEV_CFLAGS} -Iexternal/libevdevxx/include"
+              LIBEVDEVXX_LIBS="-Lexternal/libevdevxx -levdevxx ${LIBEVDEV_LIBS}"
               AC_MSG_NOTICE([Using built-in libevdevxx.])
               EXTERNAL_SUBDIRS+=" external/libevdevxx"
               AX_SUBDIRS_CONFIGURE([external/libevdevxx],
                                    [[--disable-shared]])
           ])
 
-
 AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBGUDEV], [gudev-1.0])
-              LIBGUDEVXX_CFLAGS="${LIBGUDEV_CFLAGS} -I../external/libgudevxx/include"
-              LIBGUDEVXX_LIBS="-L../external/libgudevxx -lgudevxx ${LIBGUDEV_LIBS}"
+              LIBGUDEVXX_CFLAGS="${LIBGUDEV_CFLAGS} -Iexternal/libgudevxx/include"
+              LIBGUDEVXX_LIBS="-Lexternal/libgudevxx -lgudevxx ${LIBGUDEV_LIBS}"
               AC_MSG_NOTICE([Using built-in libgudevxx.])
               EXTERNAL_SUBDIRS+=" external/libgudevxx"
               AX_SUBDIRS_CONFIGURE([external/libgudevxx],
                                    [[--disable-shared]])
           ])
 
-
 AC_SUBST([EXTERNAL_SUBDIRS])
 
 
+GLIB_GSETTINGS
+
+
 AC_CONFIG_FILES([calibrate-joystick.spec
+                 calibrate-joystick.xml
+                 calibrate-joystick.gschema.xml
                  Makefile
-                 src/Makefile
                  po/Makefile.in])
 
 AC_OUTPUT

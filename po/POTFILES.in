@@ -4,9 +4,8 @@ src/axis_info.cpp
 src/device_page.cpp
 src/main.cpp
 src/utils.cpp
-
-ui/about-dialog.glade
 ui/actions.ui
+ui/application.glade
 ui/axis-info.glade
 ui/device-page.glade
-ui/main-window.glade
+calibrate-joystick.gschema.xml.in

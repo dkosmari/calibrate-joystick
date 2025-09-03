@@ -1,6 +1,8 @@
 syntax: glob
 
 *.gresource
+*.gschema.valid
+*.gschema.xml
 *.la
 *.lo
 *.o
@@ -10,11 +12,13 @@ syntax: glob
 *.tar.gz
 *~
 .deps
+.dirstamp
 .libs
 aclocal.m4
 autom4te.cache
 autoscan.log
 build-aux
+calibrate-joystick
 compile_flags.txt
 config.h
 config.h.in
@@ -22,6 +26,7 @@ config.log
 config.status
 configure
 configure.scan
+gschemas.compiled
 libtool
 Makefile
 Makefile.in
@@ -42,5 +47,4 @@ po/remove-potcdate.sed
 po/remove-potcdate.sin
 po/Rules-quot
 po/stamp-po
-src/calibrate-joystick
 stamp-h1

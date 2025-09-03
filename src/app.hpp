@@ -8,19 +8,18 @@
 #ifndef APP_HPP
 #define APP_HPP
 
-// standard libraries
 #include <filesystem>
 #include <map>
 #include <memory>
 #include <string>
 
-// system libraries
 #include <gtkmm.h>
 
 #include <gudevxx/Client.hpp>
 
 
 class DevicePage;
+class Settings;
 
 
 class App : public Gtk::Application {
@@ -29,6 +28,8 @@ class App : public Gtk::Application {
 
     std::unique_ptr<Gtk::ApplicationWindow> main_window;
     std::unique_ptr<Gtk::HeaderBar> header_bar;
+    std::unique_ptr<Gtk::AboutDialog> about_window;
+    std::unique_ptr<Settings> settings_window;
 
     Gtk::Notebook* device_notebook = nullptr;
     Gtk::Button* quit_button = nullptr;
@@ -36,25 +37,36 @@ class App : public Gtk::Application {
     std::map<std::filesystem::path,
              std::unique_ptr<DevicePage>> devices;
 
-    std::unique_ptr<gudev::Client> uclient;
+    gudev::Client uclient = nullptr;
 
     Glib::RefPtr<Gtk::StatusIcon> status_icon;
 
     bool opt_daemon = false;
     bool silent_start = false;
 
+    Gdk::RGBA background_color;
+    Gdk::RGBA value_color;
+    Gdk::RGBA min_color;
+    Gdk::RGBA max_color;
+    Gdk::RGBA fuzz_color;
+    Gdk::RGBA flat_color;
+
 
     bool
     load_resources(const std::filesystem::path& res_path);
 
     void
-    present_gui();
+    load_gui();
+
+    void
+    present_main_window();
 
     void
     connect_uevent();
 
     void
     send_daemon_notification();
+
 
     void
     on_action_about();
@@ -67,6 +79,10 @@ class App : public Gtk::Application {
 
     void
     on_action_refresh();
+
+    void
+    on_action_settings();
+
 
     void
     on_activate()
@@ -88,6 +104,10 @@ class App : public Gtk::Application {
     on_uevent(const std::string& action,
               const gudev::Device& device);
 
+
+    void
+    update_colors();
+
 public:
 
     App();
@@ -105,29 +125,48 @@ public:
     remove_device(const std::filesystem::path& dev_path);
 
 
-    Gdk::RGBA
-    get_color_bg()
-        const;
+    const Gdk::RGBA&
+    get_background_color()
+        const noexcept;
 
-    Gdk::RGBA
-    get_color_min()
-        const;
+    const Gdk::RGBA&
+    get_value_color()
+        const noexcept;
 
-    Gdk::RGBA
-    get_color_max()
-        const;
+    const Gdk::RGBA&
+    get_min_color()
+        const noexcept;
 
-    Gdk::RGBA
-    get_color_flat()
-        const;
+    const Gdk::RGBA&
+    get_max_color()
+        const noexcept;
 
-    Gdk::RGBA
-    get_color_value()
-        const;
+    const Gdk::RGBA&
+    get_fuzz_color()
+        const noexcept;
 
-    Gdk::RGBA
-    get_color_fuzz()
-        const;
+    const Gdk::RGBA&
+    get_flat_color()
+        const noexcept;
+
+
+    void
+    set_background_color(const Gdk::RGBA& color);
+
+    void
+    set_value_color(const Gdk::RGBA& color);
+
+    void
+    set_min_color(const Gdk::RGBA& color);
+
+    void
+    set_max_color(const Gdk::RGBA& color);
+
+    void
+    set_fuzz_color(const Gdk::RGBA& color);
+
+    void
+    set_flat_color(const Gdk::RGBA& color);
 
 };
 

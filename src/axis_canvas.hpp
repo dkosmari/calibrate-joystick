@@ -1,8 +1,8 @@
 /*
- *  calibrate-joystick - a program to calibrate joysticks on Linux
+ * calibrate-joystick - a program to calibrate joysticks on Linux
  *
- *  Copyright (C) 2025  Daniel K. O.
- *  SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright (C) 2025  Daniel K. O.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #ifndef AXIS_CANVAS_HPP
@@ -19,6 +19,14 @@ class AxisCanvas : public Gtk::DrawingArea {
     evdev::AbsInfo orig;
     evdev::AbsInfo calc;
     bool flat_centered;
+
+    Gdk::RGBA background_color;
+    Gdk::RGBA value_color;
+    Gdk::RGBA min_color;
+    Gdk::RGBA max_color;
+    Gdk::RGBA fuzz_color;
+    Gdk::RGBA flat_color;
+
 
     bool
     on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
@@ -42,7 +50,25 @@ public:
     void
     set_flat_centered(bool is_centered);
 
-};
 
+    void
+    set_background_color(const Gdk::RGBA& color);
+
+    void
+    set_value_color(const Gdk::RGBA& color);
+
+    void
+    set_min_color(const Gdk::RGBA& color);
+
+    void
+    set_max_color(const Gdk::RGBA& color);
+
+    void
+    set_fuzz_color(const Gdk::RGBA& color);
+
+    void
+    set_flat_color(const Gdk::RGBA& color);
+
+};
 
 #endif

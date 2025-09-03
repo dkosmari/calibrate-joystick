@@ -2,12 +2,12 @@
 <!-- Generated with glade 3.40.0 -->
 <interface domain="calibrate-joystick">
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="apply_image">
+  <object class="GtkImage" id="apply_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">dialog-ok</property>
   </object>
-  <object class="GtkImage" id="clear_image">
+  <object class="GtkImage" id="clear_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">edit-clear</property>
@@ -78,7 +78,7 @@
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="hexpand">True</property>
+            <property name="halign">center</property>
             <property name="border-width">12</property>
             <property name="row-spacing">6</property>
             <property name="column-spacing">12</property>
@@ -87,9 +87,9 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="tooltip-text" translatable="yes">Minimum value for this axis.</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis min" comments="Abbreviation for &quot;minimum value.&quot;">Min:</property>
                 <property name="single-line-mode">True</property>
-                <property name="xalign">1</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -104,9 +104,9 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="tooltip-text" translatable="yes">Maximum value for the axis.</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis max" comments="Abbreviation for &quot;maximum value.&quot;">Max:</property>
                 <property name="single-line-mode">True</property>
-                <property name="xalign">1</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -151,9 +151,9 @@
                 <property name="tooltip-markup" translatable="yes">Noise filter.
 Variations smaller than this will be ignored.
 When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i&gt;N&lt;/i&gt;, the value will be sent to the application.</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis fuzz" comments="Probably left untranslated.">Fuzz:</property>
                 <property name="single-line-mode">True</property>
-                <property name="xalign">1</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -197,9 +197,9 @@ When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i
                 <property name="can-focus">False</property>
                 <property name="tooltip-text" translatable="yes">Resolution of this axis.
 Most input devices ignore this field.</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis res" comments="Abbreviation for &quot;resolution.&quot;">Res:</property>
                 <property name="single-line-mode">True</property>
-                <property name="xalign">1</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -228,9 +228,9 @@ Most input devices ignore this field.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="tooltip-text" translatable="yes">Raw value of this axis.</property>
+                <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis value">Value:</property>
                 <property name="single-line-mode">True</property>
-                <property name="xalign">1</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -261,7 +261,7 @@ Most input devices ignore this field.</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="action-name">axis.apply</property>
-                <property name="image">apply_image</property>
+                <property name="image">apply_icon</property>
                 <property name="always-show-image">True</property>
               </object>
               <packing>
@@ -276,7 +276,7 @@ Most input devices ignore this field.</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="action-name">axis.reset</property>
-                <property name="image">clear_image</property>
+                <property name="image">clear_icon</property>
                 <property name="always-show-image">True</property>
               </object>
               <packing>
@@ -290,6 +290,7 @@ Most input devices ignore this field.</property>
                 <property name="can-focus">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
+                <property name="halign">end</property>
                 <property name="popup">menu1</property>
                 <property name="use-popover">False</property>
                 <child>
@@ -298,9 +299,9 @@ Most input devices ignore this field.</property>
                     <property name="can-focus">False</property>
                     <property name="tooltip-markup" translatable="yes">Also known as "&lt;b&gt;dead zone&lt;/b&gt;."
 Values smaller than this will be interpreted as zero.</property>
+                    <property name="halign">end</property>
                     <property name="label" translatable="yes" context="axis flat" comments="Name for &quot;near zero&quot; field. Probably best left untranslated.">Flat:</property>
                     <property name="single-line-mode">True</property>
-                    <property name="xalign">1</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -329,7 +330,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="no">0</property>
+                <property name="text">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">min_adj</property>
@@ -345,7 +346,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="no">0</property>
+                <property name="text">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">max_adj</property>
@@ -361,7 +362,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="no">0</property>
+                <property name="text">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">fuzz_adj</property>
@@ -378,7 +379,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="no">0</property>
+                <property name="text">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">flat_adj</property>
@@ -395,7 +396,7 @@ Values smaller than this will be interpreted as zero.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="no">0</property>
+                <property name="text">0</property>
                 <property name="xalign">1</property>
                 <property name="input-purpose">number</property>
                 <property name="adjustment">res_adj</property>

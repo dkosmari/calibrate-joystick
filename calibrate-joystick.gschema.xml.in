@@ -1,0 +1,30 @@
+<schemalist>
+  <schema id="@APPLICATION_ID@"
+          path="@RESOURCE_PREFIX@/"
+          gettext-domain="@PACKAGE@">
+    <key name="background-color" type="s">
+      <default>'white'</default>
+      <summary>The background color.</summary>
+    </key>
+    <key name="value-color" type="s">
+      <default>'rgb(38,162,105)'</default>
+      <summary>The color for the current value indicator.</summary>
+    </key>
+    <key name="min-color" type="s">
+      <default>'rgb(0,0,170)'</default>
+      <summary>The color for the minimum indicator.</summary>
+    </key>
+    <key name="max-color" type="s">
+      <default>'rgb(170,0,0)'</default>
+      <summary>The color for the maximum indicator.</summary>
+    </key>
+    <key name="fuzz-color" type="s">
+      <default>'rgb(6,208,0)'</default>
+      <summary>The color for the fuzz indicator.</summary>
+    </key>
+    <key name="flat-color" type="s">
+      <default>'rgb(134,94,60)'</default>
+      <summary>The color for the flat indicator.</summary>
+    </key>
+  </schema>
+</schemalist>

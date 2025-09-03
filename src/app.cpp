@@ -19,6 +19,7 @@
 
 #include "device_page.hpp"
 #include "utils.hpp"
+#include "settings.hpp"
 
 
 #ifdef HAVE_CONFIG_H
@@ -52,8 +53,13 @@ using Glib::VariantType;
 #endif
 
 
-static const auto app_flags =
-    ApplicationFlags::APPLICATION_HANDLES_OPEN;
+namespace {
+
+    const auto app_flags = ApplicationFlags::APPLICATION_HANDLES_OPEN;
+
+    const std::string application_glade = RESOURCE_PREFIX "/ui/application.glade";
+
+} // namespace
 
 
 #ifdef G_OS_UNIX
@@ -109,41 +115,48 @@ App::load_resources(const std::filesystem::path& res_path)
 
 
 void
-App::present_gui()
+App::load_gui()
+{
+    if (main_window)
+        return;
+
+    auto builder = Gtk::Builder::create_from_resource(application_glade);
+
+    main_window = get_widget<Gtk::ApplicationWindow>(builder, "main_window");
+
+    header_bar = get_widget<Gtk::HeaderBar>(builder, "header_bar");
+    main_window->set_titlebar(*header_bar);
+
+    builder->get_widget("device_notebook", device_notebook);
+
+    builder->get_widget("quit_button", quit_button);
+    if (opt_daemon) {
+        quit_button->show();
+
+        // every time the window is hidden, send a new notification
+        main_window->signal_delete_event().connect([this](GdkEventAny*) -> bool
+        {
+            if (!status_icon->is_embedded())
+                send_daemon_notification();
+            return false;
+        });
+    }
+
+    about_window = get_widget<Gtk::AboutDialog>(builder, "about_dialog");
+    about_window->set_program_name(PACKAGE_NAME);
+    about_window->set_website(PACKAGE_URL);
+    about_window->set_version(PACKAGE_VERSION);
+    about_window->add_button(_("_Close"), Gtk::ResponseType::RESPONSE_CLOSE);
+
+    settings_window = get_widget_derived<Settings>(builder, "settings_window", this);
+}
+
+
+void
+App::present_main_window()
 {
     TRACE;
 
-    if (!main_window) {
-        //cout << "building window" << endl;
-
-        auto builder = Gtk::Builder::create_from_resource(ui_main_window_path);
-
-        main_window = get_widget<Gtk::ApplicationWindow>(builder,
-                                                         "main_window");
-        add_window(*main_window);
-
-        header_bar = get_widget<Gtk::HeaderBar>(builder,
-                                                "header_bar");
-        main_window->set_titlebar(*header_bar);
-
-        builder->get_widget("device_notebook", device_notebook);
-
-        builder->get_widget("quit_button", quit_button);
-        if (opt_daemon) {
-            quit_button->show();
-
-            // every time the window is hidden, send a new notification
-            main_window->signal_delete_event().connect([this](GdkEventAny*) -> bool
-            {
-                if (!status_icon->is_embedded())
-                    send_daemon_notification();
-                return false;
-            });
-        }
-    }
-
-    // every time the window gets hidden, it's removed from the application
-    // so we need to manually add it again
     add_window(*main_window);
     main_window->present();
 }
@@ -153,8 +166,8 @@ void
 App::connect_uevent()
 {
     if (!uclient) {
-        uclient = make_unique<gudev::Client>(vector<string>{"input"});
-        uclient->uevent_callback =
+        uclient = gudev::Client{vector<string>{"input"}};
+        uclient.uevent_callback =
             [this](const string& action,
                    const gudev::Device& device)
             {
@@ -178,12 +191,9 @@ App::send_daemon_notification()
 void
 App::on_action_about()
 {
-    auto builder = Gtk::Builder::create_from_resource(ui_about_dialog_path);
-    auto diag = get_widget<Gtk::AboutDialog>(builder, "about_dialog");
-    diag->set_application(main_window->get_application());
-    diag->set_version(PACKAGE_VERSION);
-    diag->add_button(_("_Close"), Gtk::ResponseType::RESPONSE_CLOSE);
-    diag->run();
+    add_window(*about_window);
+    about_window->run();
+    about_window->hide();
 }
 
 
@@ -193,6 +203,7 @@ App::on_action_open()
     TRACE;
 
     Gtk::FileChooserDialog diag{*main_window, _("Open device...")};
+    add_window(diag);
     diag.set_select_multiple();
 
     diag.set_current_folder("/dev/input");
@@ -226,7 +237,6 @@ App::on_action_quit()
         withdraw_notification("daemon");
         release();
     }
-
     quit();
 }
 
@@ -240,7 +250,7 @@ App::on_action_refresh()
 
     connect_uevent();
 
-    gudev::Enumerator e{*uclient};
+    gudev::Enumerator e{uclient};
 
     e.match_subsystem("input");
     e.match_property("ID_INPUT_JOYSTICK", "1");
@@ -260,16 +270,27 @@ App::on_action_refresh()
 
 
 void
+App::on_action_settings()
+{
+    add_window(*settings_window);
+    // TODO: connect settings.* actions
+    settings_window->present();
+}
+
+
+void
 App::on_activate()
 {
     TRACE;
+
+    load_gui();
 
     if (opt_daemon && silent_start) {
         silent_start = false;
         return;
     }
 
-    present_gui();
+    present_main_window();
     activate_action("refresh");
 }
 
@@ -301,12 +322,12 @@ App::on_open(const type_vec_files& files,
 
     silent_start = false;
 
-    present_gui();
+    present_main_window();
     clear_devices();
 
     // if not running as daemon, stop auto-refreshing
     if (!opt_daemon)
-        uclient.reset();
+        uclient.destroy();
 
     for (auto& f : files) {
         path dev_path = f->get_path();
@@ -327,11 +348,11 @@ App::on_startup()
     g_unix_signal_add(SIGTERM, G_SOURCE_FUNC(stop_application), this);
 #endif
 
-    add_action("about",   sigc::mem_fun(this, &App::on_action_about));
-    add_action("open",    sigc::mem_fun(this, &App::on_action_open));
-    add_action("quit",    sigc::mem_fun(this, &App::on_action_quit));
-    add_action("refresh", sigc::mem_fun(this, &App::on_action_refresh));
-
+    add_action("about",    sigc::mem_fun(this, &App::on_action_about));
+    add_action("open",     sigc::mem_fun(this, &App::on_action_open));
+    add_action("quit",     sigc::mem_fun(this, &App::on_action_quit));
+    add_action("refresh",  sigc::mem_fun(this, &App::on_action_refresh));
+    add_action("settings", sigc::mem_fun(this, &App::on_action_settings));
 
     if (opt_daemon) {
         //cout << "running as daemon" << endl;
@@ -359,7 +380,7 @@ App::on_uevent(const string& action,
     TRACE;
 
     if (auto name = device.name();
-        !name || !starts_with(*name, "event"))
+        !name || !name->starts_with("event"))
         return;
 
     if (!device.property_as<bool>("ID_INPUT_JOYSTICK"))
@@ -377,6 +398,14 @@ App::on_uevent(const string& action,
 
 
 void
+App::update_colors()
+{
+    for (auto& [key, val] : devices)
+        val->update_colors(this);
+}
+
+
+void
 App::clear_devices()
 {
     devices.clear();
@@ -386,7 +415,7 @@ App::clear_devices()
 void
 App::add_device(const path& dev_path)
 {
-    present_gui();
+    present_main_window();
 
     try {
         auto [iter, inserted] =
@@ -396,6 +425,7 @@ App::add_device(const path& dev_path)
 
         auto& page = iter->second;
         device_notebook->append_page(page->root(), page->name());
+        page->update_colors(this);
     }
     catch (std::exception& e) {
         Gtk::MessageDialog dialog{
@@ -416,49 +446,97 @@ App::remove_device(const path& dev_path)
 }
 
 
-Gdk::RGBA
-App::get_color_bg()
-    const
+const Gdk::RGBA&
+App::get_background_color()
+    const noexcept
 {
-    return Gdk::RGBA{"rgb(255, 255, 255)"};
+    return background_color;
 }
 
 
-Gdk::RGBA
-App::get_color_min()
-    const
+const Gdk::RGBA&
+App::get_value_color()
+    const noexcept
 {
-    return Gdk::RGBA{"rgb(0, 0, 128)"};
+    return value_color;
 }
 
 
-Gdk::RGBA
-App::get_color_max()
-    const
+const Gdk::RGBA&
+App::get_min_color()
+    const noexcept
 {
-    return Gdk::RGBA{"rgb(0, 128, 0)"};
+    return min_color;
 }
 
 
-Gdk::RGBA
-App::get_color_flat()
-    const
+const Gdk::RGBA&
+App::get_max_color()
+    const noexcept
 {
-    return Gdk::RGBA{"rgb(128, 128, 0)"};
+    return max_color;
 }
 
 
-Gdk::RGBA
-App::get_color_value()
-    const
+const Gdk::RGBA&
+App::get_fuzz_color()
+    const noexcept
 {
-    return Gdk::RGBA{"rgb(128, 0, 0)"};
+    return fuzz_color;
 }
 
 
-Gdk::RGBA
-App::get_color_fuzz()
-    const
+const Gdk::RGBA&
+App::get_flat_color()
+    const noexcept
 {
-    return Gdk::RGBA{"rgb(128, 0, 128)"};
+    return flat_color;
+}
+
+
+void
+App::set_background_color(const Gdk::RGBA& color)
+{
+    background_color = color;
+    update_colors();
+}
+
+
+void
+App::set_value_color(const Gdk::RGBA& color)
+{
+    value_color = color;
+    update_colors();
+}
+
+
+void
+App::set_min_color(const Gdk::RGBA& color)
+{
+    min_color = color;
+    update_colors();
+}
+
+
+void
+App::set_max_color(const Gdk::RGBA& color)
+{
+    max_color = color;
+    update_colors();
+}
+
+
+void
+App::set_fuzz_color(const Gdk::RGBA& color)
+{
+    fuzz_color = color;
+    update_colors();
+}
+
+
+void
+App::set_flat_color(const Gdk::RGBA& color)
+{
+    flat_color = color;
+    update_colors();
 }
