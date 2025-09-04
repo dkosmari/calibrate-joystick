@@ -327,7 +327,7 @@ Author: Daniel K. O.
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkDrawingArea" id="sample_axis_info">
+                  <object class="GtkDrawingArea" id="sample_axis_canvas">
                     <property name="height-request">32</property>
                     <property name="visible">True</property>
                     <property name="app-paintable">True</property>

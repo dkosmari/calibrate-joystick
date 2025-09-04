@@ -10,7 +10,11 @@
 
 #include <gtkmm.h>
 
+#include <libevdevxx/AbsInfo.hpp>
+
+
 class App;
+class AxisCanvas;
 
 class Settings : public Gtk::ApplicationWindow {
 
@@ -23,7 +27,22 @@ class Settings : public Gtk::ApplicationWindow {
     Gtk::ColorButton* fuzz_color_button       = nullptr;
     Gtk::ColorButton* flat_color_button       = nullptr;
 
+    AxisCanvas* sample_axis_canvas = nullptr;
+    evdev::AbsInfo sample_info_orig;
+    evdev::AbsInfo sample_info_calc;
+    double sample_time = 0;
+    sigc::connection sample_timeout_handle;
+
     Glib::RefPtr<Gio::Settings> settings;
+
+
+    void
+    on_show()
+        override;
+
+    void
+    on_hide()
+        override;
 
 
 public:

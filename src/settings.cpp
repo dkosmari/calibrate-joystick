@@ -5,11 +5,13 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <cmath>
 #include <iostream>
 
 #include "settings.hpp"
 
 #include "app.hpp"
+#include "axis_canvas.hpp"
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -53,6 +55,49 @@ namespace {
 } // namespace
 
 
+void
+Settings::on_show()
+{
+    Gtk::ApplicationWindow::on_show();
+
+    sample_time = 0;
+    sample_info_orig.val = 0;
+    sample_info_orig.min = -1024;
+    sample_info_orig.max = 1024;
+    sample_info_orig.fuzz = 32;
+    sample_info_orig.flat = 128;
+    sample_info_calc = sample_info_orig;
+    sample_info_calc.min = -800;
+    sample_info_calc.max = 800;
+    sample_info_calc.fuzz = 80;
+    sample_info_calc.flat = 150;
+
+    sample_axis_canvas->reset(sample_info_orig, sample_info_calc);
+
+    sample_timeout_handle = Glib::signal_timeout().connect(
+        [this]
+        {
+            auto range = sample_info_calc.max - sample_info_calc.min;
+            sample_info_calc.val = sample_info_calc.min +
+                range * (0.5 + 0.5 * std::sin(sample_time));
+            sample_time += 0.005 * M_PI;
+            if (sample_time >= M_PI)
+                sample_time = -M_PI;
+            sample_axis_canvas->update(sample_info_calc);
+            return true;
+        },
+        33);
+}
+
+
+void
+Settings::on_hide()
+{
+    sample_timeout_handle.disconnect();
+    Gtk::ApplicationWindow::on_hide();
+}
+
+
 Settings::Settings(BaseObjectType* cobject,
                    const Glib::RefPtr<Gtk::Builder>& builder,
                    App* app_) :
@@ -66,23 +111,47 @@ Settings::Settings(BaseObjectType* cobject,
     builder->get_widget("fuzz_color_button", fuzz_color_button);
     builder->get_widget("flat_color_button", flat_color_button);
 
+    builder->get_widget_derived("sample_axis_canvas",
+                                sample_axis_canvas,
+                                sample_info_orig);
+    g_assert(sample_axis_canvas);
+
     settings = Gio::Settings::create(APPLICATION_ID);
 
-    settings->signal_changed().connect([this](const Glib::ustring& key)
-    {
-        if (key == "background-color")
-            app->set_background_color(Gdk::RGBA{settings->get_string(key)});
-        if (key == "value-color")
-            app->set_value_color(Gdk::RGBA{settings->get_string(key)});
-        if (key == "min-color")
-            app->set_min_color(Gdk::RGBA{settings->get_string(key)});
-        if (key == "max-color")
-            app->set_max_color(Gdk::RGBA{settings->get_string(key)});
-        if (key == "fuzz-color")
-            app->set_fuzz_color(Gdk::RGBA{settings->get_string(key)});
-        if (key == "flat-color")
-            app->set_flat_color(Gdk::RGBA{settings->get_string(key)});
-    });
+    settings->signal_changed().connect(
+        [this](const Glib::ustring& key)
+        {
+            if (key == "background-color") {
+                auto val = Gdk::RGBA{settings->get_string(key)};
+                app->set_background_color(val);
+                sample_axis_canvas->set_background_color(val);
+            }
+            if (key == "value-color") {
+                auto val = Gdk::RGBA{settings->get_string(key)};
+                app->set_value_color(val);
+                sample_axis_canvas->set_value_color(val);
+            }
+            if (key == "min-color") {
+                auto val = Gdk::RGBA{settings->get_string(key)};
+                app->set_min_color(val);
+                sample_axis_canvas->set_min_color(val);
+            }
+            if (key == "max-color") {
+                auto val = Gdk::RGBA{settings->get_string(key)};
+                app->set_max_color(val);
+                sample_axis_canvas->set_max_color(val);
+            }
+            if (key == "fuzz-color") {
+                auto val = Gdk::RGBA{settings->get_string(key)};
+                app->set_fuzz_color(val);
+                sample_axis_canvas->set_fuzz_color(val);
+            }
+            if (key == "flat-color") {
+                auto val = Gdk::RGBA{settings->get_string(key)};
+                app->set_flat_color(val);
+                sample_axis_canvas->set_flat_color(val);
+            }
+        });
 
     g_settings_bind_with_mapping(settings->gobj(), "background-color",
                                  background_color_button->gobj(), "rgba",
@@ -115,13 +184,20 @@ Settings::Settings(BaseObjectType* cobject,
                                  string_to_rgba, rgba_to_string,
                                  nullptr, nullptr);
 
+    auto initialize_colors = [](auto target,
+                                const Glib::RefPtr<Gio::Settings>& settings)
+    {
+        target->set_background_color(Gdk::RGBA{settings->get_string("background-color")});
+        target->set_value_color(Gdk::RGBA{settings->get_string("value-color")});
+        target->set_min_color(Gdk::RGBA{settings->get_string("min-color")});
+        target->set_max_color(Gdk::RGBA{settings->get_string("max-color")});
+        target->set_fuzz_color(Gdk::RGBA{settings->get_string("fuzz-color")});
+        target->set_flat_color(Gdk::RGBA{settings->get_string("flat-color")});
+    };
     // Set the initial values into the App class
-    app->set_background_color(Gdk::RGBA{settings->get_string("background-color")});
-    app->set_value_color(Gdk::RGBA{settings->get_string("value-color")});
-    app->set_min_color(Gdk::RGBA{settings->get_string("min-color")});
-    app->set_max_color(Gdk::RGBA{settings->get_string("max-color")});
-    app->set_fuzz_color(Gdk::RGBA{settings->get_string("fuzz-color")});
-    app->set_flat_color(Gdk::RGBA{settings->get_string("flat-color")});
+    initialize_colors(app, settings);
+    // Do the same with sample_axis_canvas
+    initialize_colors(sample_axis_canvas, settings);
 
 
     add_action("close", sigc::mem_fun(this, &Settings::on_action_close));
