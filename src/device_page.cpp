@@ -46,21 +46,21 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     actions = SimpleActionGroup::create();
     root().insert_action_group("dev", actions);
 
-    name_label->set_label(device.name());
+    name_label->set_label(device.get_name());
     path_label->set_label(dev_path.string());
 
     vid_pid_label->set_label(ustring::sprintf("%04x:%04x (%04x)",
-                                              device.vendor(),
-                                              device.product(),
-                                              device.version()));
+                                              device.get_vendor(),
+                                              device.get_product(),
+                                              device.get_version()));
 
-    auto abs_codes = device.codes(Type::abs);
+    auto abs_codes = device.get_codes(Type::abs);
     unsigned num_axes = abs_codes.size();
 
     axes_label->set_label(ustring::compose("%1", num_axes));
 
     for (auto code : abs_codes) {
-        auto info = device.abs_info(code);
+        auto info = device.get_abs_info(code);
         auto [iter, inserted] = axes.emplace(code, make_unique<AxisInfo>(code, info));
         if (inserted)
             axes_box->pack_start(iter->second->root(),
@@ -68,7 +68,7 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     }
 
     io_conn = Glib::signal_io().connect(sigc::mem_fun(this, &DevicePage::on_io),
-                                        device.fd(),
+                                        device.get_fd(),
                                         IOCondition::IO_IN |
                                         IOCondition::IO_ERR |
                                         IOCondition::IO_HUP);
@@ -136,7 +136,7 @@ string
 DevicePage::name()
     const
 {
-    return device.name();
+    return device.get_name();
 }
 
 
@@ -152,7 +152,6 @@ bool
 DevicePage::on_io(IOCondition cond)
 {
     if (cond & (IOCondition::IO_HUP | IOCondition::IO_ERR)) {
-        device.close();
         disable();
 
         if (cond & IOCondition::IO_HUP)
@@ -168,7 +167,6 @@ DevicePage::on_io(IOCondition cond)
     if (cond & IOCondition::IO_IN)
         handle_read();
 
-
     return true;
 }
 
@@ -176,7 +174,7 @@ DevicePage::on_io(IOCondition cond)
 void
 DevicePage::handle_read()
 {
-    while (device.pending()) {
+    while (device.has_pending()) {
         auto event = device.read();
         if (event.type != Type::abs)
             continue;
@@ -224,8 +222,8 @@ DevicePage::apply_axis(Code code)
     if (!device.is_open())
         return;
 
-    device.kernel_abs_info(code,
-                           axes.at(code)->get_calc());
+    device.set_kernel_abs_info(code,
+                               axes.at(code)->get_calc());
     reset_axis(code);
 }
 
@@ -236,7 +234,7 @@ DevicePage::reset_axis(Code code)
     if (!device.is_open())
         return;
 
-    auto new_abs = device.abs_info(code);
+    auto new_abs = device.get_abs_info(code);
     axes.at(code)->reset(new_abs);
 }
 
