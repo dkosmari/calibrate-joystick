@@ -31,25 +31,35 @@ class DevicePage {
     template<typename T>
     using rptr = Glib::RefPtr<T>;
 
-    std::filesystem::path dev_path; // TODO: should be in evdev::Device
+    std::filesystem::path dev_path;
 
     evdev::Device device;
 
     rptr<Gio::SimpleActionGroup> actions;
-    rptr<Gio::SimpleAction> apply_action;
-    rptr<Gio::SimpleAction> reset_action;
+    rptr<Gio::SimpleAction> save_action;
+    rptr<Gio::SimpleAction> delete_action;
+    rptr<Gio::SimpleAction> apply_all_action;
+    rptr<Gio::SimpleAction> revert_all_action;
     rptr<Gio::SimpleAction> apply_axis_action;
-    rptr<Gio::SimpleAction> reset_axis_action;
-
+    rptr<Gio::SimpleAction> revert_axis_action;
 
     uptr<Gtk::Box> device_box;
-    uptr<Gtk::Label> name_label;
-    uptr<Gtk::Label> path_label;
-    uptr<Gtk::Label> vid_pid_label;
-    uptr<Gtk::Label> axes_label;
-    uptr<Gtk::Box> axes_box;
-    uptr<Gtk::InfoBar> info_bar;
-    uptr<Gtk::Label> error_label;
+
+    Gtk::Label* path_label    = nullptr;
+    Gtk::Label* name_label    = nullptr;
+    Gtk::Label* vendor_label  = nullptr;
+    Gtk::Label* product_label = nullptr;
+    Gtk::Label* version_label = nullptr;
+
+    Gtk::CheckButton* name_check    = nullptr;
+    Gtk::CheckButton* vendor_check  = nullptr;
+    Gtk::CheckButton* product_check = nullptr;
+    Gtk::CheckButton* version_check = nullptr;
+
+    Gtk::Box* axes_box = nullptr;
+
+    Gtk::InfoBar* info_bar    = nullptr;
+    Gtk::Label*   error_label = nullptr;
 
     std::map<evdev::Code, uptr<AxisInfo>> axes;
 
@@ -59,33 +69,49 @@ class DevicePage {
     void
     load_widgets();
 
+    void
+    setup_actions();
+
     bool
     on_io(Glib::IOCondition cond);
 
     void
     handle_read();
 
-    void
-    on_action_apply();
 
     void
-    on_action_reset();
+    on_action_save();
+
+    void
+    on_action_delete();
+
+    void
+    on_action_apply_all();
+
+    void
+    on_action_revert_all();
 
     void
     on_action_apply_axis(const Glib::VariantBase& arg);
 
     void
-    on_action_reset_axis(const Glib::VariantBase& arg);
+    on_action_revert_axis(const Glib::VariantBase& arg);
 
 
     void
     apply_axis(evdev::Code code);
 
     void
-    reset_axis(evdev::Code code);
+    revert_axis(evdev::Code code);
 
     void
     disable();
+
+    void
+    try_load_config();
+
+    // Disallow moving.
+    DevicePage(DevicePage&& other) = delete;
 
 public:
 

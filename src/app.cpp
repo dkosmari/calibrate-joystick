@@ -17,6 +17,7 @@
 
 #include "app.hpp"
 
+#include "controller_db.hpp"
 #include "device_page.hpp"
 #include "utils.hpp"
 #include "settings.hpp"
@@ -76,6 +77,8 @@ stop_application(App* app)
 App::App() :
     Gtk::Application{APPLICATION_ID, app_flags}
 {
+    ControllerDB::initialize();
+
     signal_handle_local_options()
         .connect(sigc::mem_fun(this, &App::on_handle_local_options));
 
@@ -93,7 +96,10 @@ App::App() :
 }
 
 
-App::~App() = default;
+App::~App()
+{
+    ControllerDB::finalize();
+}
 
 
 bool

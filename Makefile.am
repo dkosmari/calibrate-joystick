@@ -77,6 +77,8 @@ calibrate_joystick_SOURCES = \
 	src/axis_canvas.hpp \
 	src/axis_info.cpp \
 	src/axis_info.hpp \
+	src/controller_db.cpp \
+	src/controller_db.hpp \
 	src/device_page.cpp \
 	src/device_page.hpp \
 	src/main.cpp \
@@ -84,6 +86,13 @@ calibrate_joystick_SOURCES = \
 	src/settings.hpp \
 	src/utils.cpp \
 	src/utils.hpp
+
+
+dist-hook:
+	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
+	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
+
+
 
 .PHONY: run rpm company
 

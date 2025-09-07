@@ -61,54 +61,45 @@ AxisInfo::AxisInfo(evdev::Code axis_code,
     action_apply = actions->add_action("apply",
                                        sigc::mem_fun(this, &AxisInfo::on_action_apply));
 
-    action_reset = actions->add_action("reset",
-                                       sigc::mem_fun(this, &AxisInfo::on_action_reset));
+    action_revert = actions->add_action("revert",
+                                        sigc::mem_fun(this, &AxisInfo::on_action_revert));
 
     reset(info);
 }
 
-
-#define LOAD(t, n) \
-    n = get_widget<Gtk:: t>(builder, #n)
 
 void
 AxisInfo::load_widgets()
 {
     auto builder = Gtk::Builder::create_from_resource(ui_axis_info_path);
 
-    LOAD(Frame, info_frame);
+    info_frame = get_widget<Gtk::Frame>(builder, "info_frame");
 
-    LOAD(Label, name_label);
+    builder->get_widget("name_label", name_label);
 
-    LOAD(Label, value_label);
+    builder->get_widget("value_label", value_label);
 
-    LOAD(Label, orig_min_label);
-    LOAD(Label, orig_max_label);
-    LOAD(Label, orig_fuzz_label);
-    LOAD(Label, orig_flat_label);
-    LOAD(Label, orig_res_label);
+    builder->get_widget("orig_min_label",  orig_min_label);
+    builder->get_widget("orig_max_label",  orig_max_label);
+    builder->get_widget("orig_fuzz_label", orig_fuzz_label);
+    builder->get_widget("orig_flat_label", orig_flat_label);
+    builder->get_widget("orig_res_label",  orig_res_label);
 
-    LOAD(SpinButton, calc_min_spin);
-    LOAD(SpinButton, calc_max_spin);
-    LOAD(SpinButton, calc_fuzz_spin);
-    LOAD(SpinButton, calc_flat_spin);
-    LOAD(SpinButton, calc_res_spin);
+    builder->get_widget("calc_min_spin",  calc_min_spin);
+    builder->get_widget("calc_max_spin",  calc_max_spin);
+    builder->get_widget("calc_fuzz_spin", calc_fuzz_spin);
+    builder->get_widget("calc_flat_spin", calc_flat_spin);
+    builder->get_widget("calc_res_spin",  calc_res_spin);
 
     builder->get_widget_derived("axis_canvas", axis_canvas, orig);
     update_canvas();
 
+    builder->get_widget("flat_item_zero", flat_item_zero);
+    builder->get_widget("flat_item_centered", flat_item_centered);
     // Note: GtkRadioMenuItem does not support actions, so we use signals.
-    flat_menu_zero =
-        rptr<Gtk::RadioMenuItem>::cast_dynamic(builder->get_object("flat_menu_zero"));
-    flat_menu_zero->signal_toggled().connect([this]{ on_change_flat_to_zero(); });
-
-    flat_menu_centered =
-        rptr<Gtk::RadioMenuItem>::cast_dynamic(builder->get_object("flat_menu_centered"));
-    flat_menu_zero->signal_toggled().connect([this]{ on_change_flat_to_centered(); });
-
+    flat_item_zero    ->signal_toggled().connect([this]{ on_changed_flat_to_zero(); });
+    flat_item_centered->signal_toggled().connect([this]{ on_changed_flat_to_centered(); });
 }
-
-#undef LOAD
 
 
 Gtk::Widget&
@@ -196,17 +187,17 @@ AxisInfo::on_action_apply()
 
 
 void
-AxisInfo::on_action_reset()
+AxisInfo::on_action_revert()
 {
     root().get_action_group("dev")
-        ->activate_action("reset_axis", Variant<guint16>::create(code));
+        ->activate_action("revert_axis", Variant<guint16>::create(code));
 }
 
 
 void
-AxisInfo::on_change_flat_to_zero()
+AxisInfo::on_changed_flat_to_zero()
 {
-    if (!flat_menu_zero->get_active())
+    if (!flat_item_zero->get_active())
         return;
     if (axis_canvas)
         axis_canvas->set_flat_centered(false);
@@ -214,9 +205,9 @@ AxisInfo::on_change_flat_to_zero()
 
 
 void
-AxisInfo::on_change_flat_to_centered()
+AxisInfo::on_changed_flat_to_centered()
 {
-    if (!flat_menu_centered->get_active())
+    if (!flat_item_centered->get_active())
         return;
     if (axis_canvas)
         axis_canvas->set_flat_centered(true);
@@ -236,15 +227,15 @@ AxisInfo::reset(const AbsInfo& new_orig)
     calc = orig = new_orig;
     calc.min = calc.max = orig.val;
 
-    orig_min_label->set_label(ustring::format(orig.min));
-    orig_max_label->set_label(ustring::format(orig.max));
+    orig_min_label ->set_label(ustring::format(orig.min));
+    orig_max_label ->set_label(ustring::format(orig.max));
     orig_fuzz_label->set_label(ustring::format(orig.fuzz));
     orig_flat_label->set_label(ustring::format(orig.flat));
-    orig_res_label->set_label(ustring::format(orig.res));
+    orig_res_label ->set_label(ustring::format(orig.res));
 
     calc_fuzz_spin->set_value(calc.fuzz);
     calc_flat_spin->set_value(calc.flat);
-    calc_res_spin->set_value(calc.res);
+    calc_res_spin ->set_value(calc.res);
 
     update_value(calc.val);
 
@@ -257,7 +248,7 @@ void
 AxisInfo::disable()
 {
     action_apply->set_enabled(false);
-    action_reset->set_enabled(false);
+    action_revert->set_enabled(false);
 
     calc_min_spin->set_sensitive(false);
     calc_max_spin->set_sensitive(false);

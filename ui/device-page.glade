@@ -2,21 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface domain="calibrate-joystick">
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="apply_icon">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-ok</property>
-  </object>
-  <object class="GtkImage" id="clear_icon">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-clear</property>
-  </object>
-  <object class="GtkImage" id="save_icon">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-save</property>
-  </object>
   <object class="GtkBox" id="device_box">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -93,10 +78,11 @@
       </packing>
     </child>
     <child>
-      <!-- n-columns=2 n-rows=4 -->
+      <!-- n-columns=4 n-rows=5 -->
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="vexpand">False</property>
         <property name="row-spacing">6</property>
         <property name="column-spacing">12</property>
         <child>
@@ -111,7 +97,7 @@
           </object>
           <packing>
             <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
@@ -126,7 +112,7 @@
           </object>
           <packing>
             <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
@@ -134,24 +120,10 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
+            <property name="hexpand">True</property>
             <property name="label">name</property>
             <property name="selectable">True</property>
             <property name="ellipsize">end</property>
-            <property name="single-line-mode">True</property>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="path_label">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="label">path</property>
-            <property name="selectable">True</property>
-            <property name="ellipsize">start</property>
             <property name="single-line-mode">True</property>
           </object>
           <packing>
@@ -160,31 +132,20 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">end</property>
-            <property name="label" translatable="yes" context="num axes" comments="Number of axes in a device.">Axes:</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="axes_label">
+          <object class="GtkLabel" id="path_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
-            <property name="label">0</property>
+            <property name="hexpand">True</property>
+            <property name="label">/dev/input/event123</property>
+            <property name="selectable">True</property>
+            <property name="ellipsize">start</property>
             <property name="single-line-mode">True</property>
           </object>
           <packing>
             <property name="left-attach">1</property>
-            <property name="top-attach">3</property>
+            <property name="top-attach">0</property>
+            <property name="width">2</property>
           </packing>
         </child>
         <child>
@@ -192,7 +153,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">end</property>
-            <property name="label" translatable="yes">Vendor/Product:</property>
+            <property name="label" translatable="yes" context="device vendor">Vendor:</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -203,11 +164,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="vid_pid_label">
+          <object class="GtkLabel" id="vendor_label">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
-            <property name="label">vid:pid</property>
+            <property name="hexpand">True</property>
+            <property name="label">0123</property>
             <property name="selectable">True</property>
           </object>
           <packing>
@@ -215,10 +177,350 @@
             <property name="top-attach">2</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">end</property>
+            <property name="label" translatable="yes">Product:</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">end</property>
+            <property name="label" translatable="yes" context="device version">Version:</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="product_label">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes" context="product version">4567</property>
+            <property name="selectable">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="version_label">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="hexpand">True</property>
+            <property name="label">8ABC</property>
+            <property name="selectable">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="name_check">
+            <property name="label" translatable="yes">match</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="tooltip-text" translatable="yes">Match device name when storing calibration.</property>
+            <property name="hexpand">False</property>
+            <property name="active">True</property>
+            <property name="draw-indicator">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="vendor_check">
+            <property name="label" translatable="yes">match</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="tooltip-text" translatable="yes">Match device vendor when storing calibration.</property>
+            <property name="hexpand">False</property>
+            <property name="active">True</property>
+            <property name="draw-indicator">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="product_check">
+            <property name="label" translatable="yes">match</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="tooltip-text" translatable="yes">Match device product when storing calibration.</property>
+            <property name="hexpand">False</property>
+            <property name="active">True</property>
+            <property name="draw-indicator">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="version_check">
+            <property name="label" translatable="yes">match</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="tooltip-text" translatable="yes">Match device version when storing calibraiton.</property>
+            <property name="hexpand">False</property>
+            <property name="active">True</property>
+            <property name="draw-indicator">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="vexpand">True</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkButton" id="save_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Save this calibration to a file.</property>
+                <property name="action-name">dev.save</property>
+                <property name="use-underline">True</property>
+                <property name="always-show-image">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">document-save</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">_Save</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="delete_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Delete the calibration file.</property>
+                <property name="action-name">dev.delete</property>
+                <property name="use-underline">True</property>
+                <property name="always-show-image">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">edit-delete</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">_Delete</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="revert_all_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="tooltip-text" translatable="yes">Reset calibration settings back to the current active settings.</property>
+                <property name="action-name">dev.revert_all</property>
+                <property name="use-underline">True</property>
+                <property name="always-show-image">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">edit-clear</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">_Revert</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="apply_all_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="can-default">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Apply all calibration settings to the device.</property>
+                <property name="action-name">dev.apply_all</property>
+                <property name="use-underline">True</property>
+                <property name="always-show-image">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">dialog-ok</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">_Apply</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="left-attach">3</property>
+            <property name="top-attach">0</property>
+            <property name="height">5</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="fill">True</property>
+        <property name="fill">False</property>
         <property name="position">1</property>
       </packing>
     </child>
@@ -241,7 +543,7 @@
                 <property name="can-focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">18</property>
+                <property name="spacing">24</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -254,70 +556,6 @@
         <property name="expand">True</property>
         <property name="fill">True</property>
         <property name="position">2</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="spacing">18</property>
-        <property name="homogeneous">True</property>
-        <child>
-          <object class="GtkButton" id="clear_button">
-            <property name="label" translatable="yes">_Reset</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="receives-default">False</property>
-            <property name="action-name">dev.reset</property>
-            <property name="image">clear_icon</property>
-            <property name="use-underline">True</property>
-            <property name="always-show-image">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="apply_button">
-            <property name="label" translatable="yes">_Apply</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="can-default">True</property>
-            <property name="receives-default">True</property>
-            <property name="action-name">dev.apply</property>
-            <property name="image">apply_icon</property>
-            <property name="use-underline">True</property>
-            <property name="always-show-image">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="save_apply_button">
-            <property name="label" translatable="yes">_Save &amp; Apply</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="image">save_icon</property>
-            <property name="use-underline">True</property>
-            <property name="always-show-image">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">3</property>
       </packing>
     </child>
   </object>

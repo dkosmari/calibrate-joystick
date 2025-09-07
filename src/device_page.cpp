@@ -6,6 +6,7 @@
  */
 
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <utility>
 
@@ -13,6 +14,7 @@
 
 #include "app.hpp"
 #include "axis_info.hpp"
+#include "controller_db.hpp"
 #include "utils.hpp"
 
 #ifdef HAVE_CONFIG_H
@@ -22,10 +24,13 @@
 
 
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::string;
 using std::make_unique;
 using std::filesystem::path;
+
+using namespace std::literals;
 
 using Glib::ustring;
 using Glib::IOCondition;
@@ -43,22 +48,18 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
 {
     load_widgets();
 
-    actions = SimpleActionGroup::create();
-    root().insert_action_group("dev", actions);
+    setup_actions();
 
     name_label->set_label(device.get_name());
     path_label->set_label(dev_path.string());
 
-    vid_pid_label->set_label(ustring::sprintf("%04x:%04x (%04x)",
-                                              device.get_vendor(),
-                                              device.get_product(),
-                                              device.get_version()));
+    vendor_label->set_label(ustring::sprintf("%04x", device.get_vendor()));
+    product_label->set_label(ustring::sprintf("%04x", device.get_product()));
+    version_label->set_label(ustring::sprintf("%04x", device.get_version()));
+
+    try_load_config();
 
     auto abs_codes = device.get_codes(Type::abs);
-    unsigned num_axes = abs_codes.size();
-
-    axes_label->set_label(ustring::compose("%1", num_axes));
-
     for (auto code : abs_codes) {
         auto info = device.get_abs_info(code);
         auto [iter, inserted] = axes.emplace(code, make_unique<AxisInfo>(code, info));
@@ -72,29 +73,6 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
                                         IOCondition::IO_IN |
                                         IOCondition::IO_ERR |
                                         IOCondition::IO_HUP);
-
-    apply_action =
-        actions->add_action("apply",
-                            sigc::mem_fun(this, &DevicePage::on_action_apply));
-
-    reset_action =
-        actions->add_action("reset",
-                            sigc::mem_fun(this, &DevicePage::on_action_reset));
-
-
-    auto arg_type = Glib::VariantType{G_VARIANT_TYPE_UINT16};
-
-    apply_axis_action =
-        actions->add_action_with_parameter("apply_axis",
-                                           arg_type,
-                                           sigc::mem_fun(this,
-                                                         &DevicePage::on_action_apply_axis));
-
-    reset_axis_action =
-        actions->add_action_with_parameter("reset_axis",
-                                           arg_type,
-                                           sigc::mem_fun(this,
-                                                         &DevicePage::on_action_reset_axis));
 }
 
 
@@ -111,15 +89,57 @@ DevicePage::load_widgets()
 
     device_box = get_widget<Gtk::Box>(builder, "device_box");
 
-    name_label    = get_widget<Gtk::Label>(builder, "name_label");
-    path_label    = get_widget<Gtk::Label>(builder, "path_label");
-    vid_pid_label = get_widget<Gtk::Label>(builder, "vid_pid_label");
-    axes_label    = get_widget<Gtk::Label>(builder, "axes_label");
+    builder->get_widget("path_label", path_label);
+    builder->get_widget("name_label", name_label);
+    builder->get_widget("vendor_label", vendor_label);
+    builder->get_widget("product_label", product_label);
+    builder->get_widget("version_label", version_label);
 
-    axes_box = get_widget<Gtk::Box>(builder, "axes_box");
+    builder->get_widget("name_check", name_check);
+    builder->get_widget("vendor_check", vendor_check);
+    builder->get_widget("product_check", product_check);
+    builder->get_widget("version_check", version_check);
 
-    info_bar = get_widget<Gtk::InfoBar>(builder, "info_bar");
-    error_label = get_widget<Gtk::Label>(builder, "error_label");
+    builder->get_widget("axes_box", axes_box);
+    builder->get_widget("info_bar", info_bar);
+    builder->get_widget("error_label", error_label);
+}
+
+
+void
+DevicePage::setup_actions()
+{
+    actions = SimpleActionGroup::create();
+    root().insert_action_group("dev", actions);
+
+    save_action =
+        actions->add_action("save",
+                            sigc::mem_fun(this, &DevicePage::on_action_save));
+
+    delete_action =
+        actions->add_action("delete",
+                            sigc::mem_fun(this, &DevicePage::on_action_delete));
+
+    apply_all_action =
+        actions->add_action("apply_all",
+                            sigc::mem_fun(this, &DevicePage::on_action_apply_all));
+
+    revert_all_action =
+        actions->add_action("revert_all",
+                            sigc::mem_fun(this, &DevicePage::on_action_revert_all));
+
+
+    apply_axis_action =
+        actions->add_action_with_parameter("apply_axis",
+                                           Glib::VariantType{G_VARIANT_TYPE_UINT16},
+                                           sigc::mem_fun(this,
+                                                         &DevicePage::on_action_apply_axis));
+
+    revert_axis_action =
+        actions->add_action_with_parameter("revert_axis",
+                                           Glib::VariantType{G_VARIANT_TYPE_UINT16},
+                                           sigc::mem_fun(this,
+                                                         &DevicePage::on_action_revert_axis));
 }
 
 
@@ -185,7 +205,37 @@ DevicePage::handle_read()
 
 
 void
-DevicePage::on_action_apply()
+DevicePage::on_action_save()
+{
+    try {
+        auto vendor = vendor_check->get_active() ? device.get_vendor() : 0;
+        auto product = product_check->get_active() ? device.get_product() : 0;
+        auto version = version_check->get_active() ? device.get_version() : 0;
+        auto name = name_check->get_active() ? device.get_name() : ""s;
+
+        ControllerDB::DevConf conf;
+
+        for  (const auto& [axis, _] : axes)
+            conf[code_to_string(evdev::Type::abs, axis)] = device.get_abs_info(axis);
+
+        ControllerDB::save(vendor, product, version, name, std::move(conf));
+    }
+    catch (std::exception& e) {
+        cerr << "Failed to save: " << e.what() << endl;
+    }
+}
+
+
+void
+DevicePage::on_action_delete()
+{
+    cout << "DevicePage::on_action_delete()" << endl;
+    // TODO
+}
+
+
+void
+DevicePage::on_action_apply_all()
 {
     for (auto& [code, _] : axes)
         apply_axis(code);
@@ -193,10 +243,10 @@ DevicePage::on_action_apply()
 
 
 void
-DevicePage::on_action_reset()
+DevicePage::on_action_revert_all()
 {
     for (auto& [code, _] : axes)
-        reset_axis(code);
+        revert_axis(code);
 }
 
 
@@ -209,10 +259,10 @@ DevicePage::on_action_apply_axis(const Glib::VariantBase& arg)
 
 
 void
-DevicePage::on_action_reset_axis(const Glib::VariantBase& arg)
+DevicePage::on_action_revert_axis(const Glib::VariantBase& arg)
 {
     Code code{variant_cast<guint16>(arg)};
-    reset_axis(code);
+    revert_axis(code);
 }
 
 
@@ -224,12 +274,12 @@ DevicePage::apply_axis(Code code)
 
     device.set_kernel_abs_info(code,
                                axes.at(code)->get_calc());
-    reset_axis(code);
+    revert_axis(code);
 }
 
 
 void
-DevicePage::reset_axis(Code code)
+DevicePage::revert_axis(Code code)
 {
     if (!device.is_open())
         return;
@@ -242,13 +292,34 @@ DevicePage::reset_axis(Code code)
 void
 DevicePage::disable()
 {
-    apply_action->set_enabled(false);
-    reset_action->set_enabled(false);
+    save_action->set_enabled(false);
+    delete_action->set_enabled(false);
+    apply_all_action->set_enabled(false);
+    revert_all_action->set_enabled(false);
     apply_axis_action->set_enabled(false);
-    reset_axis_action->set_enabled(false);
+    revert_axis_action->set_enabled(false);
 
     for (auto& [_, axis] : axes)
         axis->disable();
+}
+
+
+void
+DevicePage::try_load_config()
+{
+    auto conf = ControllerDB::find(device.get_vendor(),
+                                   device.get_product(),
+                                   device.get_version(),
+                                   device.get_name());
+    if (!conf)
+        return;
+
+    for (const auto& [code_name, info] : *conf) {
+        auto [type, code] = evdev::Code::parse(code_name);
+        device.set_kernel_abs_info(code, info);
+    }
+
+    cout << "Set config for " << device.get_name() << endl;
 }
 
 

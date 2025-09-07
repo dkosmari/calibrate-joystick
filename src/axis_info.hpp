@@ -24,42 +24,35 @@ class AxisCanvas;
 class AxisInfo {
 
     template<typename T>
-    using uptr = std::unique_ptr<T>;
-
-    template<typename T>
     using rptr = Glib::RefPtr<T>;
-
 
     rptr<Gio::SimpleActionGroup> actions;
     rptr<Gio::SimpleAction> action_apply;
-    rptr<Gio::SimpleAction> action_reset;
+    rptr<Gio::SimpleAction> action_revert;
     rptr<Gio::SimpleAction> action_flat_zero;
     rptr<Gio::SimpleAction> action_flat_centered;
 
+    std::unique_ptr<Gtk::Frame> info_frame;
 
-    using LabelPtr = uptr<Gtk::Label>;
-    using SpinButtonPtr = uptr<Gtk::SpinButton>;
+    Gtk::Label* name_label = nullptr;
 
-    uptr<Gtk::Frame> info_frame;
-    LabelPtr name_label;
+    Gtk::Label* value_label     = nullptr;
+    Gtk::Label* orig_min_label  = nullptr;
+    Gtk::Label* orig_max_label  = nullptr;
+    Gtk::Label* orig_fuzz_label = nullptr;
+    Gtk::Label* orig_flat_label = nullptr;
+    Gtk::Label* orig_res_label  = nullptr;
 
-    LabelPtr value_label;
-    LabelPtr orig_min_label;
-    LabelPtr orig_max_label;
-    LabelPtr orig_fuzz_label;
-    LabelPtr orig_flat_label;
-    LabelPtr orig_res_label;
+    Gtk::SpinButton* calc_min_spin  = nullptr;
+    Gtk::SpinButton* calc_max_spin  = nullptr;
+    Gtk::SpinButton* calc_fuzz_spin = nullptr;
+    Gtk::SpinButton* calc_flat_spin = nullptr;
+    Gtk::SpinButton* calc_res_spin  = nullptr;
 
-    SpinButtonPtr calc_min_spin;
-    SpinButtonPtr calc_max_spin;
-    SpinButtonPtr calc_fuzz_spin;
-    SpinButtonPtr calc_flat_spin;
-    SpinButtonPtr calc_res_spin;
+    Gtk::RadioMenuItem* flat_item_zero     = nullptr;
+    Gtk::RadioMenuItem* flat_item_centered = nullptr;
 
-    rptr<Gtk::RadioMenuItem> flat_menu_zero;
-    rptr<Gtk::RadioMenuItem> flat_menu_centered;
-
-    AxisCanvas* axis_canvas;
+    AxisCanvas* axis_canvas = nullptr;
 
     sigc::connection min_changed_conn;
     sigc::connection max_changed_conn;
@@ -99,22 +92,22 @@ class AxisInfo {
     on_action_apply();
 
     void
-    on_action_reset();
+    on_action_revert();
 
 
     void
-    on_change_flat_to_zero();
+    on_changed_flat_to_zero();
 
     void
-    on_change_flat_to_centered();
+    on_changed_flat_to_centered();
+
+    // Disallow moving.
+    AxisInfo(AxisInfo&& other) = delete;
 
 public:
 
     AxisInfo(evdev::Code axis_code,
              const evdev::AbsInfo& info);
-
-    // disable moving
-    AxisInfo(AxisInfo&& other) = delete;
 
     void
     update_value(int value);
