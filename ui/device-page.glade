@@ -8,7 +8,7 @@
     <property name="hexpand">True</property>
     <property name="border-width">12</property>
     <property name="orientation">vertical</property>
-    <property name="spacing">18</property>
+    <property name="spacing">12</property>
     <child>
       <object class="GtkInfoBar" id="info_bar">
         <property name="can-focus">False</property>
@@ -84,7 +84,7 @@
         <property name="can-focus">False</property>
         <property name="vexpand">False</property>
         <property name="row-spacing">6</property>
-        <property name="column-spacing">12</property>
+        <property name="column-spacing">6</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
@@ -141,6 +141,9 @@
             <property name="selectable">True</property>
             <property name="ellipsize">start</property>
             <property name="single-line-mode">True</property>
+            <style>
+              <class name="monospace"/>
+            </style>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -171,6 +174,9 @@
             <property name="hexpand">True</property>
             <property name="label">0123</property>
             <property name="selectable">True</property>
+            <style>
+              <class name="monospace"/>
+            </style>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -215,6 +221,9 @@
             <property name="hexpand">True</property>
             <property name="label" translatable="yes" context="product version">4567</property>
             <property name="selectable">True</property>
+            <style>
+              <class name="monospace"/>
+            </style>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -229,6 +238,9 @@
             <property name="hexpand">True</property>
             <property name="label">8ABC</property>
             <property name="selectable">True</property>
+            <style>
+              <class name="monospace"/>
+            </style>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -528,9 +540,9 @@
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="hexpand">True</property>
         <property name="hscrollbar-policy">never</property>
-        <property name="overlay-scrolling">False</property>
+        <property name="shadow-type">etched-in</property>
+        <property name="propagate-natural-width">True</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
@@ -541,7 +553,7 @@
               <object class="GtkBox" id="axes_box">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="hexpand">True</property>
+                <property name="border-width">12</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">24</property>
                 <child>
