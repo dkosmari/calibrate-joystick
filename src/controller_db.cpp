@@ -16,6 +16,9 @@
 
 #include <wordexp.h>
 
+#include <gio/gio.h>
+
+#include <giomm.h>
 #include <glibmm.h>
 
 #include "controller_db.hpp"
@@ -78,8 +81,22 @@ namespace ControllerDB {
     };
 
 
-    std::map<Key, DevConf> configs;
-    std::map<std::filesystem::path, Key> file_to_key;
+    struct Entry {
+        DevConf conf;
+        std::filesystem::path filename;
+    };
+
+
+    std::map<Key, Entry> configs;
+
+
+#define GLIBMM_FILE_MONITOR_IS_BROKEN
+
+#ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
+    Glib::RefPtr<Gio::FileMonitor> db_dir_monitor;
+#else
+    GFileMonitor* db_dir_monitor = nullptr;
+#endif
 
 
     std::filesystem::path
@@ -123,24 +140,125 @@ namespace ControllerDB {
         if (kf.has_key("match", "name"))
             key.name = kf.get_string("match", "name");
 
-        DevConf conf;
+        Entry entry;
         auto groups = kf.get_groups();
         for (const auto& grp : groups) {
             if (grp == "match")
                 continue;
-            auto& info = conf[grp];
+            auto& info = entry.conf[grp];
             info.min  = kf.get_integer(grp, "min");
             info.max  = kf.get_integer(grp, "max");
             info.fuzz = kf.get_integer(grp, "fuzz");
             info.flat = kf.get_integer(grp, "flat");
         }
+        entry.filename = filename;
 
-        auto [position, inserted] = configs.emplace(key, std::move(conf));
-        if (inserted)
-            file_to_key[filename] = key;
-        else
+        auto [position, inserted] = configs.emplace(key, std::move(entry));
+        if (!inserted)
             cerr << "Duplicated config in " << filename << endl;
+        else
+            cout << "Loaded " << filename << endl;
     }
+
+
+    void
+    reload_all_configs()
+    {
+        configs.clear();
+
+        // Parse every .conf file
+        using std::filesystem::directory_options;
+        using std::filesystem::directory_iterator;
+        directory_iterator iter{db_dir,
+                                directory_options::follow_directory_symlink
+                                | directory_options::skip_permission_denied};
+        for (const auto& entry : iter) {
+            if (entry.path().extension() != ".conf")
+                continue;
+            try {
+                load_config(entry.path());
+            }
+            catch (std::exception& e) {
+                cerr << "Failed to load " << entry.path() << ": " << e.what() << endl;
+            }
+        }
+        cout << "Loaded " << configs.size() << " configuration(s)." << endl;
+
+    }
+
+
+    void
+    reload_config(const std::filesystem::path& filename)
+    try {
+        for (auto& [key, entry] : configs)
+            if (entry.filename == filename) {
+                cout << "Unloaded " << filename << endl;
+                configs.erase(key);
+                break;
+            }
+
+        if (exists(filename))
+            load_config(filename);
+    }
+    catch (std::exception& e) {
+        cerr << "Error reloading " << filename << ": " << e.what() << endl;
+    }
+
+
+#ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
+    void
+    on_db_dir_changed(const Glib::RefPtr<Gio::File>& file1,
+                      const Glib::RefPtr<Gio::File>& file2,
+                      Gio::FileMonitorEvent event_type)
+    {
+        cout << "file1: " << file1->get_path() << endl;
+        if (file2)
+            cout << "file2: " << file2->get_path() << endl;
+
+        switch (event_type) {
+            case Gio::FILE_MONITOR_EVENT_CREATED:
+                cout << "FILE_MONITOR_EVENT_CREATED"  << endl;
+                break;
+            case Gio::FILE_MONITOR_EVENT_DELETED:
+                cout << "FILE_MONITOR_EVENT_DELETED" << endl;
+                break;
+            case Gio::FILE_MONITOR_EVENT_CHANGED:
+                cout << "FILE_MONITOR_EVENT_CHANGED" << endl;
+                break;
+            case Gio::FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
+                cout << "FILE_MONITOR_EVENT_CHANGES_DONE_HINT" << endl;
+                break;
+            default:
+                cout << "other change" << endl;
+        }
+    }
+#else
+    void
+    on_db_dir_changed(GFileMonitor* /*monitor*/,
+                      GFile* file1,
+                      GFile* /*file2*/,
+                      GFileMonitorEvent event_type,
+                      gpointer /*user_data*/)
+    {
+        char* filename1 = g_file_get_path(file1);
+        std::filesystem::path filename = filename1;
+        g_free(filename1);
+
+        if (filename.extension() != ".conf")
+            return;
+
+        // cout << "[" << event_type << "] " << filename << endl;
+        switch (event_type) {
+            case G_FILE_MONITOR_EVENT_CHANGED: // 0
+            case G_FILE_MONITOR_EVENT_DELETED: // 2
+            case G_FILE_MONITOR_EVENT_CREATED: // 3
+                reload_config(filename);
+                break;
+            default:
+                ;
+        }
+    }
+#endif
 
 
     void
@@ -152,24 +270,28 @@ namespace ControllerDB {
             if (!exists(db_dir))
                 create_directories(db_dir);
 
-            // Parse every .conf file
-            using std::filesystem::directory_options;
-            using std::filesystem::directory_iterator;
-            directory_iterator iter{db_dir,
-                                    directory_options::follow_directory_symlink
-                                    | directory_options::skip_permission_denied};
-            for (const auto& entry : iter) {
-                if (entry.path().extension() != ".conf")
-                    continue;
-                try {
-                    load_config(entry.path());
-                }
-                catch (std::exception& e) {
-                    cerr << "Failed to load " << entry.path() << ": " << e.what() << endl;
-                }
-            }
-            cout << "Loaded " << configs.size() << " configuration(s)." << endl;
-            // TODO: monitor db_dir for file changes
+            reload_all_configs();
+
+            auto db_dir_file = Gio::File::create_for_path(db_dir);
+#ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
+            // This doesn't compile with glibmm 2.66.6
+            db_dir_monitor = db_dir_file->monitor_directory();
+            if (db_dir_monitor)
+                db_dir_monitor->signal_changed().connect(on_db_dir_changed);
+#else
+            // Use glib directly to workaround broken wrapper.
+            GFile* gfile = g_file_new_for_path(db_dir.c_str());
+            db_dir_monitor = g_file_monitor_directory(gfile,
+                                                      G_FILE_MONITOR_NONE,
+                                                      nullptr,
+                                                      nullptr);
+            if (db_dir_monitor)
+                g_signal_connect(db_dir_monitor,
+                                 "changed",
+                                 G_CALLBACK(on_db_dir_changed),
+                                 nullptr);
+            g_object_unref(gfile);
+#endif
         }
         catch (std::exception& e) {
             cerr << "Failed to load database: " << e.what() << endl;
@@ -180,7 +302,16 @@ namespace ControllerDB {
     void
     finalize()
         noexcept
-    {}
+    {
+#ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
+        db_dir_monitor.reset();
+#else
+        if (db_dir_monitor) {
+            g_object_unref(db_dir_monitor);
+            db_dir_monitor = nullptr;
+        }
+#endif
+    }
 
 
     std::string
@@ -222,7 +353,7 @@ namespace ControllerDB {
         if (result.empty())
             result = safe_name;
         else
-            result += "(" + safe_name + ")";
+            result += " (" + safe_name + ")";
 
         if (result.empty())
             throw std::runtime_error{"Cannot create config file with no match rules."};
@@ -290,6 +421,32 @@ namespace ControllerDB {
     }
 
 
+    void
+    remove(std::uint16_t vendor,
+           std::uint16_t product,
+           std::uint16_t version,
+           const std::string& name)
+    {
+        const Key key{ vendor, product, version, name };
+        // Fast path: find an exact match.
+        if (auto it = configs.find(key); it != configs.end()) {
+            auto filename = it->second.filename;
+            remove(filename);
+            return;
+        }
+
+        // Slow path: search every key using the match() function.
+        for (auto it = configs.begin(); it != configs.end(); ++it) {
+            const auto& [k, v] = *it;
+            if (match(key, k)) {
+                auto filename = v.filename;
+                remove(filename);
+                return;
+            }
+        }
+    }
+
+
     const DevConf*
     find(std::uint16_t vendor,
          std::uint16_t product,
@@ -299,14 +456,13 @@ namespace ControllerDB {
     {
         const Key key{ vendor, product, version, name };
         // Fast path: find an exact match.
-        auto it = configs.find(key);
-        if (it != configs.end())
-            return &it->second;
+        if (auto it = configs.find(key); it != configs.end())
+            return &it->second.conf;
 
         // Slow path: search every key using the match() function.
         for (const auto& [k, v] : configs)
             if (match(key, k))
-                return &v;
+                return &v.conf;
 
         return nullptr;
     }

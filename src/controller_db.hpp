@@ -35,6 +35,11 @@ namespace ControllerDB {
          const std::string& name,
          const DevConf& configs);
 
+    void
+    remove(std::uint16_t vendor,
+           std::uint16_t product,
+           std::uint16_t version,
+           const std::string& name);
 
     const DevConf*
     find(std::uint16_t vendor,

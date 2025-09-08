@@ -212,12 +212,9 @@ DevicePage::on_action_save()
         auto product = product_check->get_active() ? device.get_product() : 0;
         auto version = version_check->get_active() ? device.get_version() : 0;
         auto name = name_check->get_active() ? device.get_name() : ""s;
-
         ControllerDB::DevConf conf;
-
         for  (const auto& [axis, _] : axes)
             conf[code_to_string(evdev::Type::abs, axis)] = device.get_abs_info(axis);
-
         ControllerDB::save(vendor, product, version, name, std::move(conf));
     }
     catch (std::exception& e) {
@@ -229,8 +226,16 @@ DevicePage::on_action_save()
 void
 DevicePage::on_action_delete()
 {
-    cout << "DevicePage::on_action_delete()" << endl;
-    // TODO
+    try {
+        auto vendor = vendor_check->get_active() ? device.get_vendor() : 0;
+        auto product = product_check->get_active() ? device.get_product() : 0;
+        auto version = version_check->get_active() ? device.get_version() : 0;
+        auto name = name_check->get_active() ? device.get_name() : ""s;
+        ControllerDB::remove(vendor, product, version, name);
+    }
+    catch (std::exception& e) {
+        cerr << "Failed to remove: " << e.what() << endl;
+    }
 }
 
 
