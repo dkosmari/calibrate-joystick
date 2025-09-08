@@ -1,1 +1,1 @@
-* Save device settings.
+* Save flat option (zero or centered) in the calibration.
