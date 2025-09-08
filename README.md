@@ -11,15 +11,19 @@ This is a graphical program to quickly calibrate range and deadzones of joystick
 
   - On the application window, select the desired input device.
 
-  - Move the sticks to their maximum range. This will be detected as the new minimum and
-    maximum ranges.
-  
-  - If needed, manually adjust the **Flat** parameter; that is the *dead zone*.
-  
-  - Click **Apply**.
+  - Move the sticks to their extreme positions, press the analog triggers all the way and
+    release. The application will detect what the real range is..
 
-  - Customization of joysticks is not permanent; it's lost when the device is unplugged,
-    or when the system reboots.
+  - If needed, manually adjust the **Flat** parameter; that is the *dead zone*. You can
+    change how the **Flat** region is displayed (around zero, or centered in the min-max
+    range) by clicking on the **Flat** button.
+
+  - Click **Apply** on the top to apply the calibration to all axes. Or you can use the
+    **Apply** for each button individually.
+
+  - Optional: click **Save** to permanently store this calibration to
+    `~/.config/calibrate-joysticks/db/`. Only the values that were actually applied to the
+    device will be saved.
 
 Note: input devices are enumerated through udev. Only devices with the property
 `ID_INPUT_JOYSTICK=1` are processed. If your joystick isn't shown, use this command to
@@ -76,12 +80,23 @@ If cloning the repository, make sure to enable submodules:
 - with git:
   - `git clone --recurse-submodules --shallow-submodules https://github.com/dkosmari/calibrate-joystick.git`
 
-If you downloaded a release tarball, you can skip step 0. 
+If you downloaded a release tarball, you can skip step 0.
 
 0. `./bootstrap`
 1. `./configure`
 2. `make`
-3. `sudo make install`
+3. (Optional) `sudo make install`
 
 This software uses Automake, so the standard Automake build options apply. Check the
 [INSTALL](INSTALL) file and the `./configure --help` command for more details.
+
+To run without installing, use either:
+
+- `make run` 
+- `make run-daemon`
+
+Note that installation is necessary for languages and desktop notifications to work.
+
+To uninstall, run:
+
+- `sudo make uninstall`

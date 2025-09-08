@@ -94,15 +94,19 @@ dist-hook:
 
 
 
-.PHONY: run rpm company
+.PHONY: run run-daemon rpm company
 
 
 # todo: find the name of the compiled schema file, write a rule
 gschemas.compiled: $(gsettings_SCHEMAS)
 	$(GLIB_COMPILE_SCHEMAS) --targetdir=$(builddir) $(srcdir)
 
+
 run: all gschemas.compiled
 	GSETTINGS_SCHEMA_DIR=. ./calibrate-joystick
+
+run-daemon: all gschemas.compiled
+	GSETTINGS_SCHEMA_DIR=. ./calibrate-joystick -d
 
 
 RPM_TARBALL_NAME = $(HOME)/rpmbuild/SOURCES/$(TARBALL_NAME)
