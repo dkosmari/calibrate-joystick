@@ -5,14 +5,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <compare>
 #include <filesystem>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
-#include <utility>
-#include <vector>
-#include <set>
 
 #include <wordexp.h>
 
@@ -50,35 +46,20 @@ namespace ControllerDB {
       max=250
       fuzz=5
       flat=20
+      flat_type=center
 
       [ABS_Y]
       min=10
       max=250
       fuzz=5
       flat=20
+      flat_type=zero
 
       ...
      */
 
     std::filesystem::path db_dir;
 
-
-    struct Key {
-        std::uint16_t vendor;
-        std::uint16_t product;
-        std::uint16_t version;
-        std::string name;
-
-        constexpr
-        bool
-        operator ==(const Key& other)
-            const noexcept = default;
-
-        constexpr
-        std::strong_ordering
-        operator <=>(const Key& other)
-            const noexcept = default;
-    };
 
 
     struct Entry {
@@ -145,11 +126,17 @@ namespace ControllerDB {
         for (const auto& grp : groups) {
             if (grp == "match")
                 continue;
-            auto& info = entry.conf[grp];
+            auto& data = entry.conf[grp];
+            auto& info = data.info;
             info.min  = kf.get_integer(grp, "min");
             info.max  = kf.get_integer(grp, "max");
             info.fuzz = kf.get_integer(grp, "fuzz");
             info.flat = kf.get_integer(grp, "flat");
+            data.flat_centered = false;
+            if (kf.has_key(grp, "flat_type")) {
+                auto val = kf.get_string(grp, "flat_type");
+                data.flat_centered = (val == "center") || (val == "centered");
+            }
         }
         entry.filename = filename;
 
@@ -213,28 +200,22 @@ namespace ControllerDB {
 #ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
     void
     on_db_dir_changed(const Glib::RefPtr<Gio::File>& file1,
-                      const Glib::RefPtr<Gio::File>& file2,
+                      const Glib::RefPtr<Gio::File>& /*file2*/,
                       Gio::FileMonitorEvent event_type)
     {
-        cout << "file1: " << file1->get_path() << endl;
-        if (file2)
-            cout << "file2: " << file2->get_path() << endl;
+        std::filesystem::path filename = file1->get_path();
+
+        if (filename.extension() != ".conf")
+            return;
 
         switch (event_type) {
-            case Gio::FILE_MONITOR_EVENT_CREATED:
-                cout << "FILE_MONITOR_EVENT_CREATED"  << endl;
-                break;
-            case Gio::FILE_MONITOR_EVENT_DELETED:
-                cout << "FILE_MONITOR_EVENT_DELETED" << endl;
-                break;
-            case Gio::FILE_MONITOR_EVENT_CHANGED:
-                cout << "FILE_MONITOR_EVENT_CHANGED" << endl;
-                break;
-            case Gio::FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
-                cout << "FILE_MONITOR_EVENT_CHANGES_DONE_HINT" << endl;
+            case Gio::FILE_MONITOR_EVENT_CHANGED: // 0
+            case Gio::FILE_MONITOR_EVENT_DELETED: // 2
+            case Gio::FILE_MONITOR_EVENT_CREATED: // 3
+                reload_config(filename);
                 break;
             default:
-                cout << "other change" << endl;
+                ;
         }
     }
 #else
@@ -252,7 +233,6 @@ namespace ControllerDB {
         if (filename.extension() != ".conf")
             return;
 
-        // cout << "[" << event_type << "] " << filename << endl;
         switch (event_type) {
             case G_FILE_MONITOR_EVENT_CHANGED: // 0
             case G_FILE_MONITOR_EVENT_DELETED: // 2
@@ -388,12 +368,15 @@ namespace ControllerDB {
             kf.set_string("match", "name", name);
 
 
-        for (const auto& [axis, info] : configs) {
+        for (const auto& [axis, data] : configs) {
+            const auto& info = data.info;
             kf.set_integer(axis, "min", info.min);
             kf.set_integer(axis, "max", info.max);
             kf.set_integer(axis, "fuzz", info.fuzz);
             kf.set_integer(axis, "flat", info.flat);
             kf.set_integer(axis, "res", info.res);
+            kf.set_string(axis, "flat_type",
+                          data.flat_centered ? "center" : "zero");
         }
 
         kf.save_to_file(filename);
@@ -443,7 +426,7 @@ namespace ControllerDB {
     }
 
 
-    const DevConf*
+    std::pair<const Key*, const DevConf*>
     find(std::uint16_t vendor,
          std::uint16_t product,
          std::uint16_t version,
@@ -453,14 +436,14 @@ namespace ControllerDB {
         const Key key{ vendor, product, version, name };
         // Fast path: find an exact match.
         if (auto it = configs.find(key); it != configs.end())
-            return &it->second.conf;
+            return {&it->first, &it->second.conf};
 
         // Slow path: search every key using the match() function.
         for (const auto& [k, v] : configs)
             if (match(key, k))
-                return &v.conf;
+                return {&k, &v.conf};
 
-        return nullptr;
+        return {nullptr, nullptr};
     }
 
 

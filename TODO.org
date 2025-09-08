@@ -1,1 +1,1 @@
-* Save flat option (zero or centered) in the calibration.
+* Show some status in the UI about loading/saving configs.

@@ -64,6 +64,7 @@ class AxisInfo {
     evdev::AbsInfo orig;
     evdev::AbsInfo calc;
 
+    bool flat_centered = false;
 
 
     void
@@ -128,6 +129,14 @@ public:
 
     void
     update_colors(const App* app);
+
+
+    void
+    set_flat_centered(bool centered);
+
+    bool
+    is_flat_centered()
+        const;
 
 }; // class AxisInfo
 

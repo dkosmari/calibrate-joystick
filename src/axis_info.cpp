@@ -199,6 +199,7 @@ AxisInfo::on_changed_flat_to_zero()
 {
     if (!flat_item_zero->get_active())
         return;
+    flat_centered = false;
     if (axis_canvas)
         axis_canvas->set_flat_centered(false);
 }
@@ -209,6 +210,7 @@ AxisInfo::on_changed_flat_to_centered()
 {
     if (!flat_item_centered->get_active())
         return;
+    flat_centered = true;
     if (axis_canvas)
         axis_canvas->set_flat_centered(true);
 }
@@ -268,4 +270,23 @@ AxisInfo::update_colors(const App* app)
     axis_canvas->set_fuzz_color(app->get_fuzz_color());
     axis_canvas->set_flat_color(app->get_flat_color());
     update_canvas();
+}
+
+
+void
+AxisInfo::set_flat_centered(bool centered)
+{
+    // dispatch this to the action handlers
+    if (centered)
+        flat_item_centered->set_active(true);
+    else
+        flat_item_zero->set_active(true);
+}
+
+
+bool
+AxisInfo::is_flat_centered()
+    const
+{
+    return flat_centered;
 }

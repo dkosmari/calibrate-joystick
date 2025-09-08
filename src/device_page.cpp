@@ -57,8 +57,6 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
     product_label->set_label(ustring::sprintf("%04x", device.get_product()));
     version_label->set_label(ustring::sprintf("%04x", device.get_version()));
 
-    try_load_config();
-
     auto abs_codes = device.get_codes(Type::abs);
     for (auto code : abs_codes) {
         auto info = device.get_abs_info(code);
@@ -67,6 +65,8 @@ DevicePage::DevicePage(const std::filesystem::path& dev_path) :
             axes_box->pack_start(iter->second->root(),
                                  Gtk::PackOptions::PACK_SHRINK);
     }
+
+    try_load_config();
 
     io_conn = Glib::signal_io().connect(sigc::mem_fun(this, &DevicePage::on_io),
                                         device.get_fd(),
@@ -213,8 +213,11 @@ DevicePage::on_action_save()
         auto version = version_check->get_active() ? device.get_version() : 0;
         auto name = name_check->get_active() ? device.get_name() : ""s;
         ControllerDB::DevConf conf;
-        for  (const auto& [axis, _] : axes)
-            conf[code_to_string(evdev::Type::abs, axis)] = device.get_abs_info(axis);
+        for  (const auto& [axis, ainfo] : axes) {
+            auto& data = conf[code_to_string(evdev::Type::abs, axis)];
+            data.info = device.get_abs_info(axis);
+            data.flat_centered = ainfo->is_flat_centered();
+        }
         ControllerDB::save(vendor, product, version, name, std::move(conf));
     }
     catch (std::exception& e) {
@@ -312,19 +315,26 @@ DevicePage::disable()
 void
 DevicePage::try_load_config()
 {
-    auto conf = ControllerDB::find(device.get_vendor(),
-                                   device.get_product(),
-                                   device.get_version(),
-                                   device.get_name());
-    if (!conf)
+    auto [key, conf] = ControllerDB::find(device.get_vendor(),
+                                          device.get_product(),
+                                          device.get_version(),
+                                          device.get_name());
+    if (!key || !conf)
         return;
 
-    for (const auto& [code_name, info] : *conf) {
+    for (const auto& [code_name, data] : *conf) {
         auto [type, code] = evdev::Code::parse(code_name);
-        device.set_kernel_abs_info(code, info);
+        device.set_kernel_abs_info(code, data.info);
+        axes.at(code)->set_flat_centered(data.flat_centered);
     }
 
-    cout << "Set config for " << device.get_name() << endl;
+    // Activate checkbuttons based on what the matching key has.
+    vendor_check->set_active(!!key->vendor);
+    product_check->set_active(!!key->product);
+    version_check->set_active(!!key->version);
+    name_check->set_active(!key->name.empty());
+
+    cout << "Applied config file for " << device.get_name() << endl;
 }
 
 

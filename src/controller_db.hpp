@@ -8,16 +8,41 @@
 #ifndef CONTROLLER_DB_HPP
 #define CONTROLLER_DB_HPP
 
+#include <compare>
 #include <cstdint>
 #include <map>
 #include <string>
+#include <utility>
 
 #include <libevdevxx/AbsInfo.hpp>
 
 
 namespace ControllerDB {
 
-    using DevConf = std::map<std::string, evdev::AbsInfo>;
+    struct Key {
+        std::uint16_t vendor;
+        std::uint16_t product;
+        std::uint16_t version;
+        std::string name;
+
+        constexpr
+        bool
+        operator ==(const Key& other)
+            const noexcept = default;
+
+        constexpr
+        std::strong_ordering
+        operator <=>(const Key& other)
+            const noexcept = default;
+    };
+
+
+    struct AxisData {
+        evdev::AbsInfo info;
+        bool flat_centered = false;
+    };
+
+    using DevConf = std::map<std::string, AxisData>;
 
 
     void
@@ -41,7 +66,7 @@ namespace ControllerDB {
            std::uint16_t version,
            const std::string& name);
 
-    const DevConf*
+    std::pair<const Key*, const DevConf*>
     find(std::uint16_t vendor,
          std::uint16_t product,
          std::uint16_t version,
