@@ -190,6 +190,8 @@ namespace ControllerDB {
     void
     reload_config(const std::filesystem::path& filename)
     try {
+#if 0
+        // Note: this logic doesn't work well when making a copy, then deleting the original.
         for (auto& [key, entry] : configs)
             if (entry.filename == filename) {
                 cout << "Unloaded " << filename << endl;
@@ -199,6 +201,9 @@ namespace ControllerDB {
 
         if (exists(filename))
             load_config(filename);
+#else
+        reload_all_configs();
+#endif
     }
     catch (std::exception& e) {
         cerr << "Error reloading " << filename << ": " << e.what() << endl;
@@ -335,24 +340,15 @@ namespace ControllerDB {
     {
         using Glib::ustring;
         std::string result;
-        const char* sep = "";
 
-        if (vendor) {
-            result += ustring::sprintf("%04x", vendor);
-            sep = "-";
-        }
-        if (product) {
-            result += ustring::sprintf("%s%04x", sep, product);
-            sep = "-";
-        }
-        if (version)
-            result += ustring::sprintf("%s%04x", sep, version);
+        if (vendor || product || version)
+            result += ustring::sprintf("%04x-%04x-%04x", vendor, product, version);
 
         auto safe_name = replace_invalid_fs_chars(name);
 
         if (result.empty())
             result = safe_name;
-        else
+        else if (!safe_name.empty())
             result += " (" + safe_name + ")";
 
         if (result.empty())
