@@ -324,8 +324,13 @@ DevicePage::try_load_config()
 
     for (const auto& [code_name, data] : *conf) {
         auto [type, code] = evdev::Code::parse(code_name);
-        device.set_kernel_abs_info(code, data.info);
         axes.at(code)->set_flat_centered(data.flat_centered);
+        // Note: don't feed a fake zero .val to the kernel nor to the axis_info children.
+        evdev::AbsInfo new_info = data.info;
+        new_info.val = device.get_abs_info(code).val;
+        device.set_kernel_abs_info(code, new_info);
+        // cout << "Resetting axis " << code_to_string(type, code) << " to " << new_info << endl;
+        axes.at(code)->reset(new_info);
     }
 
     // Activate checkbuttons based on what the matching key has.
