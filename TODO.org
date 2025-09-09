@@ -1,4 +1,4 @@
-* Pending for 0.6.0 [0%]
+* Pending for 0.6.0 [20%]
 :PROPERTIES:
 :COOKIE_DATA: recursive
 :END:
@@ -7,3 +7,4 @@
     calibration was successful loaded.
   - [ ] Update translations.
   - [ ] Update screenshot.
+  - [X] Render fuzz better.

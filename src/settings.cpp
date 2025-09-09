@@ -64,29 +64,18 @@ Settings::on_show()
     sample_info_orig.val = 0;
     sample_info_orig.min = -1024;
     sample_info_orig.max = 1024;
-    sample_info_orig.fuzz = 32;
+    sample_info_orig.fuzz = 128;
     sample_info_orig.flat = 128;
     sample_info_calc = sample_info_orig;
     sample_info_calc.min = -800;
     sample_info_calc.max = 800;
-    sample_info_calc.fuzz = 80;
-    sample_info_calc.flat = 150;
+    sample_info_calc.fuzz = 200;
+    sample_info_calc.flat = 250;
 
     sample_axis_canvas->reset(sample_info_orig, sample_info_calc);
 
-    sample_timeout_handle = Glib::signal_timeout().connect(
-        [this]
-        {
-            auto range = sample_info_calc.max - sample_info_calc.min;
-            sample_info_calc.val = sample_info_calc.min +
-                range * (0.5 + 0.5 * std::sin(sample_time));
-            sample_time += 0.005 * M_PI;
-            if (sample_time >= M_PI)
-                sample_time = -M_PI;
-            sample_axis_canvas->update(sample_info_calc);
-            return true;
-        },
-        33);
+    sample_timeout_handle = Glib::signal_timeout()
+        .connect(sigc::mem_fun(this, &Settings::animate_axis_sample), 33);
 }
 
 
@@ -95,6 +84,43 @@ Settings::on_hide()
 {
     sample_timeout_handle.disconnect();
     Gtk::ApplicationWindow::on_hide();
+}
+
+
+namespace {
+
+    template<typename T,
+             typename U>
+    T
+    lerp(T low,
+         T high,
+         U ratio)
+    {
+        return static_cast<T>((1 - ratio) * low + ratio * high);
+    }
+
+    template<typename T>
+    T
+    square(T x)
+    {
+        return x*x;
+    }
+
+} // namespace
+
+
+bool
+Settings::animate_axis_sample()
+{
+    double x = std::cos(10 * sample_time) * square(std::sin(sample_time));
+    sample_info_calc.val = lerp(sample_info_calc.min,
+                                sample_info_calc.max,
+                                0.5 + x / 2.0);
+    sample_time += 0.002 * M_PI;
+    if (sample_time >= M_PI)
+        sample_time = -M_PI;
+    sample_axis_canvas->update(sample_info_calc);
+    return true;
 }
 
 

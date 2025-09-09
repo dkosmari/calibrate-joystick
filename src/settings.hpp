@@ -45,6 +45,9 @@ class Settings : public Gtk::ApplicationWindow {
         override;
 
 
+    bool
+    animate_axis_sample();
+
 public:
 
     Settings(BaseObjectType* cobject,

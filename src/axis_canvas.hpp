@@ -19,6 +19,8 @@ class AxisCanvas : public Gtk::DrawingArea {
     evdev::AbsInfo orig;
     evdev::AbsInfo calc;
     bool flat_centered;
+    int orig_fuzz_center;
+    int calc_fuzz_center;
 
     Gdk::RGBA background_color;
     Gdk::RGBA value_color;

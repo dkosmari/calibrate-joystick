@@ -7,14 +7,10 @@
 
 #include <algorithm>
 #include <cmath>
-#include <valarray>
+#include <vector>
 
 #include "axis_canvas.hpp"
 
-#include "app.hpp"
-
-
-using std::valarray;
 
 using evdev::AbsInfo;
 
@@ -60,7 +56,9 @@ AxisCanvas::AxisCanvas(BaseObjectType* cobject,
     Gtk::DrawingArea{cobject},
     orig{orig},
     calc{orig},
-    flat_centered{false}
+    flat_centered{false},
+    orig_fuzz_center{orig.val},
+    calc_fuzz_center{orig.val}
 {}
 
 
@@ -70,8 +68,6 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     const double width = get_allocated_width();
     const double height = get_allocated_height();
     auto style = get_style_context();
-
-    auto app = Glib::RefPtr<App>::cast_static(App::get_default());
 
     set_src_color(cr, background_color);
     cr->rectangle(0, 0, width, height);
@@ -131,7 +127,7 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->translate(0, height / 2.0);
 
         cr->set_line_width(1.5);
-        cr->set_dash(valarray{2.0, 2.0}, 0);
+        cr->set_dash(std::vector{2.0, 2.0}, 0);
 
         // calc min
         set_src_color(cr, min_color);
@@ -172,7 +168,7 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
         cr->translate(0, height / 2.0);
         cr->set_line_width(1.0);
-        cr->set_dash(valarray{2.0, 2.0}, 0.0);
+        cr->set_dash(std::vector{2.0, 2.0}, 0.0);
         set_src_color(cr, flat_color);
         cr->arc(flat_left  + r, 0, r,   M_PI/2, 3*M_PI/2);
         cr->arc(flat_right - r, 0, r, 3*M_PI/2,   M_PI/2);
@@ -180,58 +176,68 @@ AxisCanvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         cr->stroke();
     }
 
-    {
-        // draw value marker
-        const double r = 3.5;
-
+    const double fuzz_size = 6.5;
+    if (orig.fuzz) {
+        // "<>" markers for orig fuzz
+        const double half_fuzz_width = axis2canvas(orig.fuzz/2) - axis2canvas(0);
+        const double half_fuzz_height = fuzz_size;
+        const double fuzz_center = axis2canvas(orig_fuzz_center);
         CtxGuard guard{cr};
-
-        cr->translate(axis2canvas(calc.val), height / 2.0);
-
-        set_src_color(cr, value_color);
-        cr->move_to(+r,  0);
-        cr->line_to( 0, -r);
-        cr->line_to(-r,  0);
-        cr->line_to( 0, +r);
-        cr->close_path();
-        cr->fill();
-
-        // draw fuzz
         set_src_color(cr, fuzz_color);
-        const double fuzz_size = 5.5;
-        {
-            // "<>" markers for orig fuzz
-            const double fuzz_width = axis2canvas(orig.fuzz) - axis2canvas(0);
-            const double fuzz_height = std::min<double>(fuzz_size, fuzz_width);
-            // left
-            cr->set_line_width(2.0);
-            cr->move_to(-fuzz_width + fuzz_height, -fuzz_height);
-            cr->line_to(-fuzz_width, 0);
-            cr->line_to(-fuzz_width + fuzz_height, +fuzz_height);
-            // right
-            cr->move_to(fuzz_width - fuzz_height,  -fuzz_height);
-            cr->line_to(fuzz_width, 0);
-            cr->line_to(fuzz_width - fuzz_height,  +fuzz_height);
-            cr->stroke();
-        }
-
-        {
-            // "<>" markers for calc fuzz
-            const double fuzz_width = axis2canvas(calc.fuzz) - axis2canvas(0);
-            const double fuzz_height = std::min<double>(fuzz_size, fuzz_width);
-            // left
-            cr->set_line_width(1.5);
-            cr->set_dash(valarray{1.0, 1.0}, 0.5);
-            cr->move_to(-fuzz_width + fuzz_height, -fuzz_height);
-            cr->line_to(-fuzz_width, 0);
-            cr->line_to(-fuzz_width + fuzz_height, +fuzz_height);
-            // right
-            cr->move_to(fuzz_width - fuzz_height,  -fuzz_height);
-            cr->line_to(fuzz_width, 0);
-            cr->line_to(fuzz_width - fuzz_height,  +fuzz_height);
-            cr->stroke();
-        }
+        cr->set_line_width(2.0);
+        cr->translate(0, height / 2.0);
+        // left
+        cr->move_to(fuzz_center - half_fuzz_width, 0);
+        cr->line_to(fuzz_center - half_fuzz_width + half_fuzz_height, -half_fuzz_height);
+        cr->move_to(fuzz_center - half_fuzz_width, 0);
+        cr->line_to(fuzz_center - half_fuzz_width + half_fuzz_height, +half_fuzz_height);
+        cr->stroke();
+        // right
+        cr->move_to(fuzz_center + half_fuzz_width, 0);
+        cr->line_to(fuzz_center + half_fuzz_width - half_fuzz_height, -half_fuzz_height);
+        cr->move_to(fuzz_center + half_fuzz_width, 0);
+        cr->line_to(fuzz_center + half_fuzz_width - half_fuzz_height, +half_fuzz_height);
+        cr->stroke();
     }
+
+    if (calc.fuzz) {
+        // "<>" markers for calc fuzz
+        const double half_fuzz_width = axis2canvas(calc.fuzz/2) - axis2canvas(0);
+        const double half_fuzz_height = fuzz_size;
+        const double fuzz_center = axis2canvas(calc_fuzz_center);
+        CtxGuard guard{cr};
+        set_src_color(cr, fuzz_color);
+        cr->set_line_width(1.5);
+        cr->set_dash(std::vector{1.5, 1.5}, 0.0);
+        cr->translate(0, height / 2.0);
+        // left
+        cr->move_to(fuzz_center - half_fuzz_width, 0);
+        cr->line_to(fuzz_center - half_fuzz_width + half_fuzz_height, -half_fuzz_height);
+        cr->move_to(fuzz_center - half_fuzz_width, 0);
+        cr->line_to(fuzz_center - half_fuzz_width + half_fuzz_height, +half_fuzz_height);
+        cr->stroke();
+        // right
+        cr->move_to(fuzz_center + half_fuzz_width, 0);
+        cr->line_to(fuzz_center + half_fuzz_width - half_fuzz_height, -half_fuzz_height);
+        cr->move_to(fuzz_center + half_fuzz_width, 0);
+        cr->line_to(fuzz_center + half_fuzz_width - half_fuzz_height, +half_fuzz_height);
+        cr->stroke();
+    }
+
+    {
+        // draw value marker as a cross
+        const double marker_radius = 4.5;
+        CtxGuard guard{cr};
+        set_src_color(cr, value_color);
+        cr->set_line_width(1.5);
+        cr->translate(axis2canvas(calc.val), height / 2.0);
+        cr->move_to(-marker_radius, 0);
+        cr->line_to(+marker_radius, 0);
+        cr->move_to(0, -marker_radius);
+        cr->line_to(0, +marker_radius);
+        cr->stroke();
+    }
+
     return true;
 }
 
@@ -242,13 +248,62 @@ AxisCanvas::reset(const AbsInfo& new_orig,
 {
     orig = new_orig;
     update(new_calc);
+    orig_fuzz_center = orig.val;
+    calc_fuzz_center = orig.val;
 }
+
+
+namespace {
+
+    int
+    update_fuzz_center(int center,
+                       int fuzz,
+                       int value)
+    {
+        /*
+         * Note: the kernel's defuzzing does this:
+         *
+         * Assume:
+         * - real_value: the real value read from the axis this instant.
+         * - user_value: the last value sent to userspace.
+         * - delta = real_value - user_value
+         * Then:
+         * - if -fuzz/2 < delta < +fuzz/2: do not change user_value
+         * - if -fuzz < delta < +fuzz: user_value = lerp(user_value, real_value, 0.25)
+         * - if -2*fuzz < delta < +2*fuzz: user_value = lerp(user_value, real_value, 0.5)
+         * - otherwise: user_value = real_value
+         *
+         * (The freedesktop folks hate this; libinput always forces the fuzz to zero, and
+         * applies its own defuzzing).
+         *
+         * The code below corresponds to the first case, to show the region where the
+         * value doesn't change at all. The real value change must be at least twice the
+         * value of fuzz, in order to be free from kernel defuzzing.
+         */
+        int half_fuzz = fuzz / 2;
+        int min = center - half_fuzz;
+        int max = center + half_fuzz;
+        if (value < min)
+            center = value + half_fuzz;
+        if (value > max)
+            center = value - half_fuzz;
+        return center;
+    }
+
+} // namespace
 
 
 void
 AxisCanvas::update(const AbsInfo& new_calc)
 {
     calc = new_calc;
+
+    // calculate fuzz centers
+    int value = calc.val;
+
+    orig_fuzz_center = update_fuzz_center(orig_fuzz_center, orig.fuzz, value);
+    calc_fuzz_center = update_fuzz_center(calc_fuzz_center, calc.fuzz, value);
+
     queue_draw();
 }
 
