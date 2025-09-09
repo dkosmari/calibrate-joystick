@@ -42,7 +42,6 @@ Author: Daniel K. O.
     <property name="default-width">700</property>
     <property name="default-height">700</property>
     <property name="icon-name">input-gaming</property>
-    <property name="show-menubar">False</property>
     <child>
       <object class="GtkNotebook" id="device_notebook">
         <property name="visible">True</property>
@@ -64,11 +63,11 @@ Author: Daniel K. O.
     <property name="comments" translatable="yes">A utility to calibrate joysticks.</property>
     <property name="website">set-at-runtime</property>
     <property name="authors">Daniel K. O. &lt;dkosmari&gt;</property>
-    <property name="translator-credits">French: nobody
-Italian: nobody
-Portuguese: nobody
-Spanish: nobody
-Russian: Alexandr Primak &lt;streamdp&gt;</property>
+    <property name="translator-credits">French (fr): nobody
+Italian (fr): nobody
+Portuguese (pt): nobody
+Spanish (es): nobody
+Russian (ru): Alexandr Primak &lt;streamdp&gt;</property>
     <property name="logo-icon-name">input-gaming</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
@@ -117,7 +116,10 @@ Russian: Alexandr Primak &lt;streamdp&gt;</property>
   <object class="GtkApplicationWindow" id="settings_window">
     <property name="can-focus">False</property>
     <property name="border-width">12</property>
+    <property name="title" translatable="yes">Settings for Calibrate Joystick</property>
     <property name="default-width">700</property>
+    <property name="icon-name">input-gaming</property>
+    <property name="transient-for">main_window</property>
     <property name="show-menubar">False</property>
     <child>
       <object class="GtkBox">
@@ -390,6 +392,7 @@ Russian: Alexandr Primak &lt;streamdp&gt;</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Reset settings back to defaults.</property>
                 <property name="action-name">win.reset</property>
                 <property name="image">reset_icon</property>
                 <property name="use-underline">True</property>

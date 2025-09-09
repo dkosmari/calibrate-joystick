@@ -271,7 +271,6 @@ App::on_action_refresh()
             continue;
         add_device(*path);
     }
-
 }
 
 
