@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <libevdevxx/AbsInfo.hpp>
+#include <libevdevxx/Code.hpp>
 
 
 namespace ControllerDB {
@@ -42,7 +43,7 @@ namespace ControllerDB {
         bool flat_centered = false;
     };
 
-    using DevConf = std::map<std::string, AxisData>;
+    using DevConf = std::map<evdev::Code, AxisData>;
 
 
     void

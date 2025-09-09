@@ -96,8 +96,8 @@ namespace ControllerDB {
 
     std::uint16_t
     get_hex(const Glib::KeyFile& kf,
-            const Glib::ustring& group,
-            const Glib::ustring& key)
+            const std::string& group,
+            const std::string& key)
     {
         if (!kf.has_key(group, key))
             return 0;
@@ -113,8 +113,8 @@ namespace ControllerDB {
 
     int
     get_int(const Glib::KeyFile& kf,
-            const Glib::ustring& group,
-            const Glib::ustring& key)
+            const std::string& group,
+            const std::string& key)
     {
         if (!kf.has_key(group, key))
             return 0;
@@ -122,10 +122,10 @@ namespace ControllerDB {
     }
 
 
-    Glib::ustring
+    std::string
     get_str(const Glib::KeyFile& kf,
-            const Glib::ustring& group,
-            const Glib::ustring& key)
+            const std::string& group,
+            const std::string& key)
     {
         if (!kf.has_key(group, key))
             return {};
@@ -151,18 +151,21 @@ namespace ControllerDB {
 
         Entry entry;
         auto groups = kf.get_groups();
-        for (const auto& grp : groups) {
-            if (grp == "match")
+        for (std::string group : groups) {
+            if (group == "match")
                 continue;
-            auto& data = entry.conf[grp];
+            auto [type, code] = evdev::Code::parse(group);
+            if (type != evdev::Type::abs)
+                throw std::runtime_error{"Invalid axis: \"" + group + "\""};
+            auto& data = entry.conf[code];
             auto& info = data.info;
-            info.min  = get_int(kf, grp, "min");
-            info.max  = get_int(kf, grp, "max");
-            info.fuzz = get_int(kf, grp, "fuzz");
-            info.flat = get_int(kf, grp, "flat");
+            info.min  = get_int(kf, group, "min");
+            info.max  = get_int(kf, group, "max");
+            info.fuzz = get_int(kf, group, "fuzz");
+            info.flat = get_int(kf, group, "flat");
             data.flat_centered = false;
-            if (kf.has_key(grp, "flat_type")) {
-                auto val = kf.get_string(grp, "flat_type");
+            if (kf.has_key(group, "flat_type")) {
+                auto val = kf.get_string(group, "flat_type");
                 data.flat_centered = (val == "center") || (val == "centered");
             }
         }
@@ -407,7 +410,7 @@ namespace ControllerDB {
 
         Glib::KeyFile kf;
 
-        kf.set_comment(vendor_str + ":" + product_str + " " + version_str + " " + name);
+        kf.set_comment(" " + vendor_str + ":" + product_str + ":" + version_str + " " + name);
 
         if (vendor)
             kf.set_string("match", "vendor", vendor_str);
@@ -420,13 +423,14 @@ namespace ControllerDB {
 
 
         for (const auto& [axis, data] : configs) {
+            std::string group = code_to_string(evdev::Type::abs, axis);
             const auto& info = data.info;
-            kf.set_integer(axis, "min", info.min);
-            kf.set_integer(axis, "max", info.max);
-            kf.set_integer(axis, "fuzz", info.fuzz);
-            kf.set_integer(axis, "flat", info.flat);
-            kf.set_integer(axis, "res", info.res);
-            kf.set_string(axis, "flat_type",
+            kf.set_integer(group, "min", info.min);
+            kf.set_integer(group, "max", info.max);
+            kf.set_integer(group, "fuzz", info.fuzz);
+            kf.set_integer(group, "flat", info.flat);
+            kf.set_integer(group, "res", info.res);
+            kf.set_string(group, "flat_type",
                           data.flat_centered ? "center" : "zero");
         }
 

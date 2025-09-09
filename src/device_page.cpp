@@ -214,7 +214,7 @@ DevicePage::on_action_save()
         auto name = name_check->get_active() ? device.get_name() : ""s;
         ControllerDB::DevConf conf;
         for  (const auto& [axis, ainfo] : axes) {
-            auto& data = conf[code_to_string(evdev::Type::abs, axis)];
+            auto& data = conf[axis];
             data.info = device.get_abs_info(axis);
             data.flat_centered = ainfo->is_flat_centered();
         }
@@ -322,8 +322,7 @@ DevicePage::try_load_config()
     if (!key || !conf)
         return;
 
-    for (const auto& [code_name, data] : *conf) {
-        auto [type, code] = evdev::Code::parse(code_name);
+    for (const auto& [code, data] : *conf) {
         axes.at(code)->set_flat_centered(data.flat_centered);
         // Note: don't feed a fake zero .val to the kernel nor to the axis_info children.
         evdev::AbsInfo new_info = data.info;
