@@ -53,7 +53,6 @@ to configure a "local install" folder like this:
     make install
     cd test-install
     export GSETTINGS_SCHEMA_DIR=$PWD/share/glib-2.0/schemas
-    LANGUAGE=CODE bin/calibrate-joystick
 
 When the program is run, it will correctly load the translation files as specified in the
 "LANGUAGE" environment variable:
