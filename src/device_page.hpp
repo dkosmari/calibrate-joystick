@@ -65,6 +65,8 @@ class DevicePage {
 
     sigc::connection io_conn;
 
+    bool loaded_config = false;
+
 
     void
     load_widgets();
@@ -132,6 +134,11 @@ public:
 
     void
     update_colors(const App* app);
+
+
+    bool
+    has_loaded_config()
+        const noexcept;
 
 }; // class DevicePage
 

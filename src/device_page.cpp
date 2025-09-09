@@ -315,6 +315,7 @@ DevicePage::disable()
 void
 DevicePage::try_load_config()
 {
+    loaded_config = false;
     auto [key, conf] = ControllerDB::find(device.get_vendor(),
                                           device.get_product(),
                                           device.get_version(),
@@ -339,6 +340,7 @@ DevicePage::try_load_config()
     name_check->set_active(!key->name.empty());
 
     cout << "Applied config file for " << device.get_name() << endl;
+    loaded_config = true;
 }
 
 
@@ -347,4 +349,12 @@ DevicePage::update_colors(const App* app)
 {
     for (auto& [key, val] : axes)
         val->update_colors(app);
+}
+
+
+bool
+DevicePage::has_loaded_config()
+    const noexcept
+{
+    return loaded_config;
 }

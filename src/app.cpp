@@ -279,7 +279,6 @@ void
 App::on_action_settings()
 {
     add_window(*settings_window);
-    // TODO: connect settings.* actions
     settings_window->present();
 }
 
@@ -297,7 +296,7 @@ App::on_activate()
     }
 
     present_main_window();
-    activate_action("refresh");
+    // activate_action("refresh");
 }
 
 
@@ -421,8 +420,6 @@ App::clear_devices()
 void
 App::add_device(const path& dev_path)
 {
-    present_main_window();
-
     try {
         auto [iter, inserted] =
             devices.emplace(dev_path, make_unique<DevicePage>(dev_path));
@@ -434,6 +431,7 @@ App::add_device(const path& dev_path)
         page->update_colors(this);
     }
     catch (std::exception& e) {
+        present_main_window();
         Gtk::MessageDialog dialog{
             *main_window,
             _("Error opening file"),
@@ -441,7 +439,12 @@ App::add_device(const path& dev_path)
             Gtk::MessageType::MESSAGE_ERROR};
         dialog.set_secondary_text(e.what());
         dialog.run();
+        return;
     }
+
+    // Only pop up the main window if there's no config for this device.
+    if (!devices.at(dev_path)->has_loaded_config())
+        present_main_window();
 }
 
 
