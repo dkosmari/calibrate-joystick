@@ -296,7 +296,7 @@ App::on_activate()
     }
 
     present_main_window();
-    // activate_action("refresh");
+    on_action_refresh();
 }
 
 
