@@ -132,6 +132,7 @@ Author: Daniel K. O.
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
                 <child>
                   <!-- n-columns=5 n-rows=3 -->
                   <object class="GtkGrid">
