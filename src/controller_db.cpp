@@ -28,9 +28,16 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
+#ifndef GLIBMM_CHECK_VERSION
+#define GLIBMM_CHECK_VERSION(major, minor, micro)                               \
+    (GLIBMM_MAJOR_VERSION > (major) ||                                          \
+     (GLIBMM_MAJOR_VERSION == (major) && GLIBMM_MINOR_VERSION > (minor)) ||     \
+     (GLIBMM_MAJOR_VERSION == (major) && GLIBMM_MINOR_VERSION == (minor) &&     \
+      GLIBMM_MICRO_VERSION >= (micro)))
+#endif
+
 
 namespace ControllerDB {
-
 
     /*
       Example file:
@@ -104,6 +111,28 @@ namespace ControllerDB {
     }
 
 
+    int
+    get_int(const Glib::KeyFile& kf,
+            const Glib::ustring& group,
+            const Glib::ustring& key)
+    {
+        if (!kf.has_key(group, key))
+            return 0;
+        return kf.get_integer(group, key);
+    }
+
+
+    Glib::ustring
+    get_str(const Glib::KeyFile& kf,
+            const Glib::ustring& group,
+            const Glib::ustring& key)
+    {
+        if (!kf.has_key(group, key))
+            return {};
+        return kf.get_string(group, key);
+    }
+
+
     void
     load_config(const std::filesystem::path& filename)
     {
@@ -118,8 +147,7 @@ namespace ControllerDB {
         key.vendor  = get_hex(kf, "match", "vendor");
         key.product = get_hex(kf, "match", "product");
         key.version = get_hex(kf, "match", "version");
-        if (kf.has_key("match", "name"))
-            key.name = kf.get_string("match", "name");
+        key.name    = get_str(kf, "match", "name");
 
         Entry entry;
         auto groups = kf.get_groups();
@@ -128,10 +156,10 @@ namespace ControllerDB {
                 continue;
             auto& data = entry.conf[grp];
             auto& info = data.info;
-            info.min  = kf.get_integer(grp, "min");
-            info.max  = kf.get_integer(grp, "max");
-            info.fuzz = kf.get_integer(grp, "fuzz");
-            info.flat = kf.get_integer(grp, "flat");
+            info.min  = get_int(kf, grp, "min");
+            info.max  = get_int(kf, grp, "max");
+            info.fuzz = get_int(kf, grp, "fuzz");
+            info.flat = get_int(kf, grp, "flat");
             data.flat_centered = false;
             if (kf.has_key(grp, "flat_type")) {
                 auto val = kf.get_string(grp, "flat_type");
@@ -162,6 +190,9 @@ namespace ControllerDB {
         for (const auto& entry : iter) {
             if (entry.path().extension() != ".conf")
                 continue;
+            // Ignore Emacs temporary files.
+            if (entry.path().stem().string().starts_with(".#"))
+                continue;
             try {
                 load_config(entry.path());
             }
@@ -170,7 +201,6 @@ namespace ControllerDB {
             }
         }
         cout << "Loaded " << configs.size() << " configuration(s)." << endl;
-
     }
 
 
@@ -195,6 +225,11 @@ namespace ControllerDB {
     catch (std::exception& e) {
         cerr << "Error reloading " << filename << ": " << e.what() << endl;
     }
+#if !GLIBMM_CHECK_VERSION(2, 68, 0)
+    catch (Glib::Exception& e) {
+        cerr << "Error reloading " << filename << ": " << e.what() << endl;
+    }
+#endif
 
 
 #ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
@@ -202,10 +237,15 @@ namespace ControllerDB {
     on_db_dir_changed(const Glib::RefPtr<Gio::File>& file1,
                       const Glib::RefPtr<Gio::File>& /*file2*/,
                       Gio::FileMonitorEvent event_type)
+        noexcept
     {
         std::filesystem::path filename = file1->get_path();
 
         if (filename.extension() != ".conf")
+            return;
+
+        // Avoid loading Emacs temporary files.
+        if (filename.stem().string().starts_with(".#"))
             return;
 
         switch (event_type) {
@@ -225,22 +265,33 @@ namespace ControllerDB {
                       GFile* /*file2*/,
                       GFileMonitorEvent event_type,
                       gpointer /*user_data*/)
+        noexcept
     {
-        char* filename1 = g_file_get_path(file1);
-        std::filesystem::path filename = filename1;
-        g_free(filename1);
+        try {
+            char* filename1 = g_file_get_path(file1);
+            std::filesystem::path filename = filename1;
+            g_free(filename1);
 
-        if (filename.extension() != ".conf")
-            return;
+            if (filename.extension() != ".conf")
+                return;
 
-        switch (event_type) {
-            case G_FILE_MONITOR_EVENT_CHANGED: // 0
-            case G_FILE_MONITOR_EVENT_DELETED: // 2
-            case G_FILE_MONITOR_EVENT_CREATED: // 3
-                reload_config(filename);
-                break;
-            default:
-                ;
+            // Avoid loading Emacs temporary files.
+            if (filename.stem().string().starts_with(".#"))
+                return;
+
+            switch (event_type) {
+                case G_FILE_MONITOR_EVENT_CHANGED: // 0
+                case G_FILE_MONITOR_EVENT_DELETED: // 2
+                case G_FILE_MONITOR_EVENT_CREATED: // 3
+                    // cout << "event_type=" << event_type << ", filename=" << filename << endl;
+                    reload_config(filename);
+                    break;
+                default:
+                    ;
+            }
+        }
+        catch (std::exception& e) {
+            cout << "on_db_dir_changed(): " << e.what() << endl;
         }
     }
 #endif
