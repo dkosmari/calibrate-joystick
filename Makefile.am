@@ -9,7 +9,7 @@ EXTRA_DIST = \
 	@PACKAGE@.xml.in \
 	@PACKAGE@.gschema.xml.in \
 	bootstrap \
-	po/README \
+	po/README.md \
 	README.md \
 	ui
 
