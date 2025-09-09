@@ -189,7 +189,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">end</property>
-            <property name="label" translatable="yes">Product:</property>
+            <property name="label" translatable="yes" context="device product">Product:</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -220,7 +220,7 @@
             <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="hexpand">True</property>
-            <property name="label" translatable="yes" context="product version">4567</property>
+            <property name="label" context="product version">4567</property>
             <property name="selectable">True</property>
             <style>
               <class name="monospace"/>
@@ -250,11 +250,11 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="name_check">
-            <property name="label" translatable="yes">match</property>
+            <property name="label" translatable="yes" context="match the names">match</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
-            <property name="tooltip-text" translatable="yes">Match device name when saving or loading calibration.</property>
+            <property name="tooltip-text" translatable="yes">Match device's name when saving or loading calibration.</property>
             <property name="hexpand">False</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
@@ -266,11 +266,11 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="vendor_check">
-            <property name="label" translatable="yes">match</property>
+            <property name="label" translatable="yes" context="match the vendor ID">match</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
-            <property name="tooltip-text" translatable="yes">Match device vendor when saving or loading calibration.</property>
+            <property name="tooltip-text" translatable="yes">Match device's vendor ID when saving or loading calibration.</property>
             <property name="hexpand">False</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
@@ -282,11 +282,11 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="product_check">
-            <property name="label" translatable="yes">match</property>
+            <property name="label" translatable="yes" context="match the product ID">match</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
-            <property name="tooltip-text" translatable="yes">Match device product when saving or loading calibration.</property>
+            <property name="tooltip-text" translatable="yes">Match device's product ID when saving or loading calibration.</property>
             <property name="hexpand">False</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
@@ -298,11 +298,11 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="version_check">
-            <property name="label" translatable="yes">match</property>
+            <property name="label" translatable="yes" context="match the version number">match</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
-            <property name="tooltip-text" translatable="yes">Match device version when saving or loading calibraiton.</property>
+            <property name="tooltip-text" translatable="yes">Match device's version number when saving or loading calibration.</property>
             <property name="hexpand">False</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
@@ -324,6 +324,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Save the calibration parameters to a file.</property>
                 <property name="action-name">dev.save</property>
                 <property name="use-underline">True</property>
                 <property name="always-show-image">True</property>
@@ -430,7 +431,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
-                <property name="tooltip-text" translatable="yes">Reset calibration settings back to the current active settings.</property>
+                <property name="tooltip-text" translatable="yes">Revert the user interface back to the current device parameters.</property>
                 <property name="action-name">dev.revert_all</property>
                 <property name="use-underline">True</property>
                 <property name="always-show-image">True</property>
@@ -479,7 +480,7 @@
                 <property name="can-focus">True</property>
                 <property name="can-default">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Apply all calibration settings to the device.</property>
+                <property name="tooltip-text" translatable="yes">Apply all calibration parameters to the device.</property>
                 <property name="action-name">dev.apply_all</property>
                 <property name="use-underline">True</property>
                 <property name="always-show-image">True</property>

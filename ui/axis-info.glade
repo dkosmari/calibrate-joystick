@@ -162,7 +162,7 @@
 - Value changes smaller than &lt;tt&gt;fuzz&lt;/tt&gt; will be reduced to 25%.
 - Value changes smaller than &lt;tt&gt;2×fuzz&lt;/tt&gt; will be reduced to 50%.</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes" context="axis fuzz" comments="Probably left untranslated.">Fuzz:</property>
+                <property name="label" translatable="yes" context="axis fuzz" comments="Probably best left untranslated.">Fuzz:</property>
                 <property name="single-line-mode">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -177,7 +177,7 @@
               <object class="GtkLabel" id="orig_fuzz_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; &lt;i&gt;fuzz&lt;/i&gt; parameter.</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; &lt;tt&gt;fuzz&lt;/tt&gt; parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -195,7 +195,7 @@
               <object class="GtkLabel" id="orig_flat_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; &lt;i&gt;flat&lt;/i&gt; parameter.</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; &lt;tt&gt;flat&lt;/tt&gt; parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -317,7 +317,7 @@
                 <property name="can-focus">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-markup" translatable="yes">Also known as "&lt;i&gt;dead zone&lt;/i&gt;." Values smaller than this will be interpreted as zero. This is ignored by most applications.</property>
+                <property name="tooltip-markup" translatable="yes">Also known as "&lt;i&gt;dead zone&lt;/i&gt;." Values smaller than &lt;tt&gt;flat&lt;/tt&gt; will be interpreted as zero. This is ignored by most applications.</property>
                 <property name="halign">end</property>
                 <property name="popup">flat_menu</property>
                 <property name="use-popover">False</property>

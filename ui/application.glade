@@ -64,7 +64,11 @@ Author: Daniel K. O.
     <property name="comments" translatable="yes">A utility to calibrate joysticks.</property>
     <property name="website">set-at-runtime</property>
     <property name="authors">Daniel K. O. &lt;dkosmari&gt;</property>
-    <property name="translator-credits">ru: Alexandr Primak &lt;streamdp&gt;</property>
+    <property name="translator-credits">French: nobody
+Italian: nobody
+Portuguese: nobody
+Spanish: nobody
+Russian: Alexandr Primak &lt;streamdp&gt;</property>
     <property name="logo-icon-name">input-gaming</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
@@ -147,7 +151,7 @@ Author: Daniel K. O.
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes" context="Color for the value indicator.">Value:</property>
+                        <property name="label" translatable="yes" context="axis value">Value:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -176,7 +180,7 @@ Author: Daniel K. O.
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes" context="Color for the minimum indicator.">Min:</property>
+                        <property name="label" translatable="yes" context="axis min" comments="Abbreviation for &quot;minimum value.&quot;">Min:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -192,7 +196,7 @@ Author: Daniel K. O.
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes" context="Color for the maximum indicator.">Max:</property>
+                        <property name="label" translatable="yes" context="axis max" comments="Abbreviation for &quot;maximum value.&quot;">Max:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -244,7 +248,7 @@ Author: Daniel K. O.
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes" context="Color for the fuzz indicator.">Fuzz:</property>
+                        <property name="label" translatable="yes" context="axis fuzz" comments="Probably best left untranslated.">Fuzz:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -260,7 +264,7 @@ Author: Daniel K. O.
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes" context="Color for the flat indicator.">Flat:</property>
+                        <property name="label" translatable="yes" context="axis flat" comments="Name for &quot;near zero&quot; field. Probably best left untranslated.">Flat:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -299,7 +303,7 @@ Author: Daniel K. O.
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
-                        <property name="label" translatable="yes" context="The background color.">Background:</property>
+                        <property name="label" translatable="yes" context="background color">Background:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
