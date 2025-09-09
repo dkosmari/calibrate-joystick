@@ -9,34 +9,35 @@ This is a graphical program to quickly calibrate range and deadzones of joystick
 
   - Run the program.
 
-  - On the application window, select the desired input device.
+  - On the application window, select the tab up top, for the desired input device.
 
   - Move the sticks to their extreme positions, press the analog triggers all the way and
-    release. The application will detect what the real range is..
+    release. The application will detect the minimum and maximum values.
 
   - If needed, manually adjust the **Flat** parameter; that is the *dead zone*. You can
     change how the **Flat** region is displayed (around zero, or centered in the min-max
     range) by clicking on the **Flat** button.
 
   - Click **Apply** on the top to apply the calibration to all axes. Or you can use the
-    **Apply** for each button individually.
+    **Apply** for each axis individually.
 
   - Optional: click **Save** to permanently store this calibration to
     `~/.config/calibrate-joysticks/db/`. Only the values that were actually applied to the
-    device will be saved.
+    device will be saved. Whenever you insert that same device again, the saved
+    calibration will be applied.
 
-Note: input devices are enumerated through udev. Only devices with the property
-`ID_INPUT_JOYSTICK=1` are processed. If your joystick isn't shown, use this command to
-inspect it:
-
-    udevadm info /dev/input/eventN
-
-where `eventN` is the desired device. Udev uses heuristics to guess which devices are
-joysticks, but this can be overridden with udev rules.
-
-Note: for security reasons, udev only allows users direct access to devices with the
-`uaccess` tag. If your device was not tagged with `uaccess`, either create a custom udev
-rule to tag it with `uaccess`, or run calibrate-joystick with sudo/root permissions.
+> Note: input devices are enumerated through udev. Only devices with the property
+> `ID_INPUT_JOYSTICK=1` are processed. If your joystick isn't shown, use this command to
+> inspect it:
+>
+>    udevadm info /dev/input/eventN
+>
+> where `eventN` is the desired device. Udev uses heuristics to guess which devices are
+> joysticks, but this can be overridden with udev rules.
+>
+> Security reasons, udev only allows users direct access to devices with the `uaccess`
+> tag. If your device was not tagged with `uaccess`, either create a custom udev rule to
+> tag it with `uaccess`, or run calibrate-joystick with sudo/root permissions.
 
 The program can also be run as a daemon:
 
