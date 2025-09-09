@@ -87,7 +87,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-text" translatable="yes">Minimum value for this axis.</property>
+                <property name="tooltip-text" translatable="yes">The minimum parameter for this axis.</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis min" comments="Abbreviation for &quot;minimum value.&quot;">Min:</property>
                 <property name="single-line-mode">True</property>
@@ -104,7 +104,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-text" translatable="yes">Maximum value for the axis.</property>
+                <property name="tooltip-text" translatable="yes">The maximum parameter for this axis.</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis max" comments="Abbreviation for &quot;maximum value.&quot;">Max:</property>
                 <property name="single-line-mode">True</property>
@@ -121,6 +121,7 @@
               <object class="GtkLabel" id="orig_min_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; minimum parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -138,6 +139,7 @@
               <object class="GtkLabel" id="orig_max_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; maximum parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -155,9 +157,10 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-markup" translatable="yes">Noise filter.
-Variations smaller than this will be ignored.
-When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i&gt;N&lt;/i&gt;, the value will be sent to the application.</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;tt&gt;fuzz&lt;/tt&gt; parameter is used by the kernel to apply a noise filter:
+- Value changes smaller than &lt;tt&gt;fuzz/2&lt;/tt&gt; will be ignored.
+- Value changes smaller than &lt;tt&gt;fuzz&lt;/tt&gt; will be reduced to 25%.
+- Value changes smaller than &lt;tt&gt;2×fuzz&lt;/tt&gt; will be reduced to 50%.</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis fuzz" comments="Probably left untranslated.">Fuzz:</property>
                 <property name="single-line-mode">True</property>
@@ -174,6 +177,7 @@ When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i
               <object class="GtkLabel" id="orig_fuzz_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; &lt;i&gt;fuzz&lt;/i&gt; parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -191,6 +195,7 @@ When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i
               <object class="GtkLabel" id="orig_flat_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; &lt;i&gt;flat&lt;/i&gt; parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -208,8 +213,7 @@ When &lt;i&gt;fuzz = N&lt;/i&gt;, only when the value changes by more than &lt;i
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-text" translatable="yes">Resolution of this axis.
-Most input devices ignore this field.</property>
+                <property name="tooltip-text" translatable="yes">The resolution parameter for this axis. This is ignored by most applications.</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis res" comments="Abbreviation for &quot;resolution.&quot;">Res:</property>
                 <property name="single-line-mode">True</property>
@@ -226,6 +230,7 @@ Most input devices ignore this field.</property>
               <object class="GtkLabel" id="orig_res_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;current&lt;/b&gt; resolution parameter.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -243,7 +248,7 @@ Most input devices ignore this field.</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="tooltip-text" translatable="yes">Raw value of this axis.</property>
+                <property name="tooltip-text" translatable="yes">The current value for this axis.</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes" context="axis value">Value:</property>
                 <property name="single-line-mode">True</property>
@@ -260,6 +265,7 @@ Most input devices ignore this field.</property>
               <object class="GtkLabel" id="value_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="tooltip-text" translatable="yes">The current value.</property>
                 <property name="label">0</property>
                 <property name="width-chars">6</property>
                 <property name="single-line-mode">True</property>
@@ -279,6 +285,7 @@ Most input devices ignore this field.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-markup" translatable="yes">Apply the &lt;b&gt;new&lt;/b&gt; parameters to this axis.</property>
                 <property name="action-name">axis.apply</property>
                 <property name="image">apply_icon</property>
                 <property name="always-show-image">True</property>
@@ -294,6 +301,7 @@ Most input devices ignore this field.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-markup" translatable="yes">Revert the &lt;b&gt;new&lt;/b&gt; parameters back to the &lt;b&gt;current&lt;/b&gt; parameters.</property>
                 <property name="action-name">axis.revert</property>
                 <property name="image">clear_icon</property>
                 <property name="always-show-image">True</property>
@@ -309,6 +317,7 @@ Most input devices ignore this field.</property>
                 <property name="can-focus">True</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-markup" translatable="yes">Also known as "&lt;i&gt;dead zone&lt;/i&gt;." Values smaller than this will be interpreted as zero. This is ignored by most applications.</property>
                 <property name="halign">end</property>
                 <property name="popup">flat_menu</property>
                 <property name="use-popover">False</property>
@@ -316,8 +325,6 @@ Most input devices ignore this field.</property>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="tooltip-markup" translatable="yes">Also known as "&lt;b&gt;dead zone&lt;/b&gt;."
-Values smaller than this will be interpreted as zero.</property>
                     <property name="halign">end</property>
                     <property name="label" translatable="yes" context="axis flat" comments="Name for &quot;near zero&quot; field. Probably best left untranslated.">Flat:</property>
                     <property name="single-line-mode">True</property>
@@ -348,6 +355,7 @@ Values smaller than this will be interpreted as zero.</property>
               <object class="GtkSpinButton" id="calc_min_spin">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;new&lt;/b&gt; minimum parameter.</property>
                 <property name="width-chars">6</property>
                 <property name="text">0</property>
                 <property name="xalign">1</property>
@@ -367,6 +375,7 @@ Values smaller than this will be interpreted as zero.</property>
               <object class="GtkSpinButton" id="calc_max_spin">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;new&lt;/b&gt; maximum parameter.</property>
                 <property name="width-chars">6</property>
                 <property name="text">0</property>
                 <property name="xalign">1</property>
@@ -386,6 +395,7 @@ Values smaller than this will be interpreted as zero.</property>
               <object class="GtkSpinButton" id="calc_fuzz_spin">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;new&lt;/b&gt; &lt;tt&gt;fuzz&lt;/tt&gt; parameter.</property>
                 <property name="width-chars">6</property>
                 <property name="text">0</property>
                 <property name="xalign">1</property>
@@ -406,6 +416,7 @@ Values smaller than this will be interpreted as zero.</property>
               <object class="GtkSpinButton" id="calc_flat_spin">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;new&lt;/b&gt; &lt;tt&gt;flat&lt;/tt&gt; parameter.</property>
                 <property name="width-chars">6</property>
                 <property name="text">0</property>
                 <property name="xalign">1</property>
@@ -426,6 +437,7 @@ Values smaller than this will be interpreted as zero.</property>
               <object class="GtkSpinButton" id="calc_res_spin">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
+                <property name="tooltip-markup" translatable="yes">The &lt;b&gt;new&lt;/b&gt; resolution parameter.</property>
                 <property name="width-chars">6</property>
                 <property name="text">0</property>
                 <property name="xalign">1</property>
