@@ -157,7 +157,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">end</property>
-            <property name="label" translatable="yes" context="device vendor">Vendor:</property>
+            <property name="label" translatable="yes">Vendor ID:</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -189,7 +189,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">end</property>
-            <property name="label" translatable="yes" context="device product">Product:</property>
+            <property name="label" translatable="yes">Product ID:</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -250,7 +250,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="name_check">
-            <property name="label" translatable="yes" context="match the names">Match name</property>
+            <property name="label" translatable="yes">Match device name</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
@@ -266,7 +266,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="vendor_check">
-            <property name="label" translatable="yes" context="match the vendor ID">Match vendor</property>
+            <property name="label" translatable="yes">Match device vendor ID</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
@@ -282,7 +282,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="product_check">
-            <property name="label" translatable="yes" context="match the product ID">Match product</property>
+            <property name="label" translatable="yes">Match device product ID</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
@@ -298,7 +298,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="version_check">
-            <property name="label" translatable="yes" context="match the version number">Match version</property>
+            <property name="label" translatable="yes">Match device version number</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>

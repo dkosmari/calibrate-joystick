@@ -3,7 +3,7 @@
   <menu id="app-menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Refresh</attribute>
+        <attribute name="label" translatable="yes" context="refresh devices">_Refresh</attribute>
         <attribute name="action">app.refresh</attribute>
         <attribute name="accel">F5</attribute>
       </item>

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.5.2+\n"
 "Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2025-09-09 19:18-0300\n"
-"PO-Revision-Date: 2025-09-09 19:20-0300\n"
+"POT-Creation-Date: 2025-09-10 00:04-0300\n"
+"PO-Revision-Date: 2025-09-10 00:06-0300\n"
 "Last-Translator: Daniel K. O.\n"
 "Language-Team: \n"
 "Language: pt\n"
@@ -21,59 +21,59 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
 
-#: src/app.cpp:87
+#: src/app.cpp:85
 msgid "Show program version."
 msgstr "Mostra a versão do programa."
 
-#: src/app.cpp:91
+#: src/app.cpp:89
 msgid "Run in daemon mode."
 msgstr "Executar em modo daemon."
 
-#: src/app.cpp:95
+#: src/app.cpp:93
 msgid "Could not load resources file."
 msgstr "Não pode carregar o arquivo de recursos."
 
-#: src/app.cpp:155 ui/application.glade:371
+#: src/app.cpp:153 ui/application.glade:373
 msgid "_Close"
 msgstr "_Fechar"
 
-#: src/app.cpp:189
+#: src/app.cpp:187
 msgid "Daemon running."
 msgstr "Daemon em execução."
 
-#: src/app.cpp:190 src/app.cpp:370
+#: src/app.cpp:188 src/app.cpp:371
 msgid "Monitoring new joysticks..."
 msgstr "Monitorando novos joysticks..."
 
-#: src/app.cpp:192
+#: src/app.cpp:190
 msgid "Quit daemon"
 msgstr "Terminar daemon"
 
-#: src/app.cpp:211
+#: src/app.cpp:209
 msgid "Open device..."
 msgstr "Abrir dispositivo..."
 
-#: src/app.cpp:218
+#: src/app.cpp:216
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/app.cpp:219 ui/actions.ui:11
+#: src/app.cpp:217 ui/actions.ui:11
 msgid "_Open"
 msgstr "_Abrir"
 
-#: src/app.cpp:222
+#: src/app.cpp:220
 msgid "evdev devices"
 msgstr "dispositivos evdev"
 
-#: src/app.cpp:227
+#: src/app.cpp:225
 msgid "all files"
 msgstr "todos os arquivos"
 
-#: src/app.cpp:369 ui/application.glade:40
+#: src/app.cpp:370 ui/application.glade:40
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
-#: src/app.cpp:437
+#: src/app.cpp:438
 msgid "Error opening file"
 msgstr "Error abrindo o arquivo"
 
@@ -85,11 +85,13 @@ msgstr "Dispositivo desconectado."
 msgid "Input/output error."
 msgstr "Erro de entrada/saída."
 
-#: ui/actions.ui:6
+#. Button to refresh the list of devices.
+#: ui/actions.ui:6 ui/application.glade:432
+msgctxt "refresh devices"
 msgid "_Refresh"
 msgstr "Atualiza_r"
 
-#: ui/actions.ui:18 ui/application.glade:457
+#: ui/actions.ui:18 ui/application.glade:460
 msgid "_Settings"
 msgstr "_Configurações"
 
@@ -101,64 +103,66 @@ msgstr "_Sobre"
 msgid "_Quit"
 msgstr "Sa_ir"
 
-#: ui/application.glade:64
+#: ui/application.glade:63
 msgid "A utility to calibrate joysticks."
 msgstr "Um utilitário para calibrar joysticks."
 
-#: ui/application.glade:154 ui/axis-info.glade:253
+#: ui/application.glade:119
+msgid "Settings for Calibrate Joystick"
+msgstr "Configurações para calibrar joystick"
+
+#: ui/application.glade:156 ui/axis-info.glade:253
 msgctxt "axis value"
 msgid "Value:"
 msgstr "Valor:"
 
 #. Abbreviation for "minimum value."
-#: ui/application.glade:183 ui/axis-info.glade:92
+#: ui/application.glade:185 ui/axis-info.glade:92
 msgctxt "axis min"
 msgid "Min:"
 msgstr "Mín:"
 
 #. Abbreviation for "maximum value."
-#: ui/application.glade:199 ui/axis-info.glade:109
+#: ui/application.glade:201 ui/axis-info.glade:109
 msgctxt "axis max"
 msgid "Max:"
 msgstr "Máx:"
 
 #. Probably best left untranslated.
-#: ui/application.glade:251 ui/axis-info.glade:165
+#: ui/application.glade:253 ui/axis-info.glade:165
 msgctxt "axis fuzz"
 msgid "Fuzz:"
 msgstr "Fuzz:"
 
 #. Name for "near zero" field. Probably best left untranslated.
-#: ui/application.glade:267 ui/axis-info.glade:329
+#: ui/application.glade:269 ui/axis-info.glade:329
 msgctxt "axis flat"
 msgid "Flat:"
 msgstr "Flat:"
 
-#: ui/application.glade:306
+#: ui/application.glade:308
 msgctxt "background color"
 msgid "Background:"
 msgstr "Fundo:"
 
-#: ui/application.glade:354
+#: ui/application.glade:356
 msgid "Colors"
 msgstr "Cores"
 
-#: ui/application.glade:389
+#: ui/application.glade:391
 msgid "_Reset"
 msgstr "_Resetar"
 
-#: ui/application.glade:424
+#: ui/application.glade:395
+msgid "Reset settings back to defaults."
+msgstr "Redefinir as configurações para os padrões."
+
+#: ui/application.glade:427
 msgctxt "application name"
 msgid "Calibrate Joystick"
 msgstr "Calibrar Joystick"
 
-#. Button to refresh the list of devices.
-#: ui/application.glade:429
-msgctxt "refresh devices"
-msgid "_Refresh"
-msgstr "Atualiza_r"
-
-#: ui/application.glade:441
+#: ui/application.glade:444
 msgid "_Quit daemon"
 msgstr "_Terminar daemon"
 
@@ -305,14 +309,12 @@ msgid "Path:"
 msgstr "Caminho:"
 
 #: ui/device-page.glade:160
-msgctxt "device vendor"
-msgid "Vendor:"
-msgstr "Vendedor:"
+msgid "Vendor ID:"
+msgstr "ID do fornecedor:"
 
 #: ui/device-page.glade:192
-msgctxt "device product"
-msgid "Product:"
-msgstr "Produto:"
+msgid "Product ID:"
+msgstr "ID do produto:"
 
 #: ui/device-page.glade:207
 msgctxt "device version"
@@ -320,18 +322,16 @@ msgid "Version:"
 msgstr "Versão:"
 
 #: ui/device-page.glade:253
-msgctxt "match the names"
-msgid "match"
-msgstr "igualar"
+msgid "Match device name"
+msgstr "Nome do dispositivo correspondente"
 
 #: ui/device-page.glade:257
 msgid "Match device's name when saving or loading calibration."
 msgstr "Corresponde ao nome do dispositivo ao salvar ou carregar a calibração."
 
 #: ui/device-page.glade:269
-msgctxt "match the vendor ID"
-msgid "match"
-msgstr "igualar"
+msgid "Match device vendor ID"
+msgstr "Correspondência do ID do fornecedor do dispositivo"
 
 #: ui/device-page.glade:273
 msgid "Match device's vendor ID when saving or loading calibration."
@@ -340,9 +340,8 @@ msgstr ""
 "calibração."
 
 #: ui/device-page.glade:285
-msgctxt "match the product ID"
-msgid "match"
-msgstr "igualar"
+msgid "Match device product ID"
+msgstr "Correspondência do ID do produto do dispositivo"
 
 #: ui/device-page.glade:289
 msgid "Match device's product ID when saving or loading calibration."
@@ -351,9 +350,8 @@ msgstr ""
 "calibração."
 
 #: ui/device-page.glade:301
-msgctxt "match the version number"
-msgid "match"
-msgstr "igualar"
+msgid "Match device version number"
+msgstr "Corresponder com a versão do dispositivo"
 
 #: ui/device-page.glade:305
 msgid "Match device's version number when saving or loading calibration."
