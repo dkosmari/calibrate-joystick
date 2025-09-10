@@ -62,12 +62,13 @@ Author: Daniel K. O.
     <property name="copyright">2025 Daniel K. O.</property>
     <property name="comments" translatable="yes">A utility to calibrate joysticks.</property>
     <property name="website">set-at-runtime</property>
-    <property name="authors">Daniel K. O. &lt;dkosmari&gt;</property>
+    <property name="authors">Daniel K. O. (dkosmari)</property>
     <property name="translator-credits">French (fr): nobody
-Italian (fr): nobody
+German (de): nobody
+Italian (it): nobody
 Portuguese (pt): nobody
 Spanish (es): nobody
-Russian (ru): Alexandr Primak &lt;streamdp&gt;</property>
+Russian (ru): Alexandr Primak (streamdp)</property>
     <property name="logo-icon-name">input-gaming</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
