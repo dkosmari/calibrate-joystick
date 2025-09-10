@@ -45,8 +45,6 @@ using Glib::VariantBase;
 using Glib::VariantType;
 
 
-
-
 #if 0
 #define TRACE cout << __PRETTY_FUNCTION__ << endl
 #else
@@ -287,6 +285,8 @@ App::on_activate()
 {
     TRACE;
 
+    Gtk::Application::on_activate();
+
     load_gui();
 
     if (opt_daemon && silent_start) {
@@ -320,9 +320,11 @@ App::on_handle_local_options(const RefPtr<Glib::VariantDict>& options)
 
 void
 App::on_open(const type_vec_files& files,
-             const ustring&)
+             const ustring& hint)
 {
     TRACE;
+
+    Gtk::Application::on_open(files, hint);
 
     silent_start = false;
 
