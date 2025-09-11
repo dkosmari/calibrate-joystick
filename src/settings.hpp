@@ -13,12 +13,9 @@
 #include <libevdevxx/AbsInfo.hpp>
 
 
-class App;
 class AxisCanvas;
 
 class Settings : public Gtk::ApplicationWindow {
-
-    App* app;
 
     Gtk::ColorButton* background_color_button = nullptr;
     Gtk::ColorButton* value_color_button      = nullptr;
@@ -51,8 +48,7 @@ class Settings : public Gtk::ApplicationWindow {
 public:
 
     Settings(BaseObjectType* cobject,
-             const Glib::RefPtr<Gtk::Builder>& builder,
-             App* app_);
+             const Glib::RefPtr<Gtk::Builder>& builder);
 
 
     void

@@ -8,7 +8,6 @@
 #ifndef AXIS_INFO_HPP
 #define AXIS_INFO_HPP
 
-
 #include <memory>
 #include <string>
 
@@ -16,8 +15,9 @@
 #include <libevdevxx/AbsInfo.hpp>
 #include <libevdevxx/Event.hpp>
 
+#include "colors.hpp"
 
-class App;
+
 class AxisCanvas;
 
 
@@ -96,7 +96,7 @@ class AxisInfo {
     void
     on_changed_flat_to_centered();
 
-    // Disallow moving.
+    // Forbid moving.
     AxisInfo(AxisInfo&& other) = delete;
 
 public:
@@ -122,7 +122,7 @@ public:
 
 
     void
-    update_colors(const App* app);
+    set_colors(const Colors&);
 
 
     void

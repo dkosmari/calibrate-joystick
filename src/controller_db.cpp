@@ -24,10 +24,6 @@
 #endif
 
 
-using std::cout;
-using std::cerr;
-using std::endl;
-
 #ifndef GLIBMM_CHECK_VERSION
 #define GLIBMM_CHECK_VERSION(major, minor, micro)                               \
     (GLIBMM_MAJOR_VERSION > (major) ||                                          \
@@ -37,15 +33,27 @@ using std::endl;
 #endif
 
 
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::exception;
+using std::filesystem::path;
+using std::runtime_error;
+using std::string;
+using std::uint16_t;
+
+using Glib::RefPtr;
+
+
 namespace ControllerDB {
 
     /*
       Example file:
 
       [match]
-      vendor=1a34
-      product=f705
-      version=0110
+      vendor=1234
+      product=5678
+      version=9abc
       name=My Weird Controller
 
       [ABS_X]
@@ -53,6 +61,7 @@ namespace ControllerDB {
       max=250
       fuzz=5
       flat=20
+      res=0
       flat_type=center
 
       [ABS_Y]
@@ -60,12 +69,13 @@ namespace ControllerDB {
       max=250
       fuzz=5
       flat=20
+      res=0
       flat_type=zero
 
       ...
      */
 
-    std::filesystem::path db_dir;
+    path db_dir;
 
     std::map<Key, DevConf> configs;
 
@@ -73,31 +83,31 @@ namespace ControllerDB {
 #define GLIBMM_FILE_MONITOR_IS_BROKEN
 
 #ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
-    Glib::RefPtr<Gio::FileMonitor> db_dir_monitor;
+    RefPtr<Gio::FileMonitor> db_dir_monitor;
 #else
     GFileMonitor* db_dir_monitor = nullptr;
 #endif
 
 
-    std::filesystem::path
+    path
     get_user_config_dir()
     {
         return Glib::get_user_config_dir();
     }
 
 
-    std::uint16_t
+    uint16_t
     get_hex(const Glib::KeyFile& kf,
-            const std::string& group,
-            const std::string& key)
+            const string& group,
+            const string& key)
     {
         if (!kf.has_key(group, key))
             return 0;
-        auto str = kf.get_string(group, key);
+        string str = kf.get_string(group, key);
         if (str.empty())
             return 0;
-        auto result = std::stoul(str, nullptr, 16);
-        if (result > std::numeric_limits<std::uint16_t>::max())
+        auto result = stoul(str, nullptr, 16);
+        if (result > std::numeric_limits<uint16_t>::max())
             return 0;
         return result;
     }
@@ -105,8 +115,8 @@ namespace ControllerDB {
 
     int
     get_int(const Glib::KeyFile& kf,
-            const std::string& group,
-            const std::string& key)
+            const string& group,
+            const string& key)
     {
         if (!kf.has_key(group, key))
             return 0;
@@ -114,10 +124,10 @@ namespace ControllerDB {
     }
 
 
-    std::string
+    string
     get_str(const Glib::KeyFile& kf,
-            const std::string& group,
-            const std::string& key)
+            const string& group,
+            const string& key)
     {
         if (!kf.has_key(group, key))
             return {};
@@ -126,14 +136,14 @@ namespace ControllerDB {
 
 
     void
-    load_config(const std::filesystem::path& filename)
+    load_config(const path& filename)
     {
         Glib::KeyFile kf;
         if (!kf.load_from_file(filename))
-            throw std::runtime_error{"Could not load file."};
+            throw runtime_error{"Could not load file."};
 
         if (!kf.has_group("match"))
-            throw std::runtime_error{"Wrong config file: no [match] section."};
+            throw runtime_error{"Wrong config file: no [match] section."};
 
         Key key;
         key.vendor  = get_hex(kf, "match", "vendor");
@@ -145,12 +155,12 @@ namespace ControllerDB {
         conf.filename = filename;
 
         auto groups = kf.get_groups();
-        for (std::string group : groups) {
+        for (string group : groups) {
             if (group == "match")
                 continue;
             auto [type, code] = evdev::Code::parse(group);
             if (type != evdev::Type::abs)
-                throw std::runtime_error{"Invalid axis: \"" + group + "\""};
+                throw runtime_error{"Invalid axis: \"" + group + "\""};
             auto& data = conf.axes[code];
             auto& info = data.info;
             info.min  = get_int(kf, group, "min");
@@ -192,7 +202,7 @@ namespace ControllerDB {
             try {
                 load_config(entry.path());
             }
-            catch (std::exception& e) {
+            catch (exception& e) {
                 cerr << "Failed to load " << entry.path() << ": " << e.what() << endl;
             }
         }
@@ -201,11 +211,11 @@ namespace ControllerDB {
 
 
     void
-    reload_config(const std::filesystem::path& filename)
+    reload_config(const path& filename)
     try {
         reload_all_configs();
     }
-    catch (std::exception& e) {
+    catch (exception& e) {
         cerr << "Error reloading " << filename << ": " << e.what() << endl;
     }
 #if !GLIBMM_CHECK_VERSION(2, 68, 0)
@@ -218,12 +228,12 @@ namespace ControllerDB {
 #ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
 
     void
-    on_db_dir_changed(const Glib::RefPtr<Gio::File>& file1,
-                      const Glib::RefPtr<Gio::File>& /*file2*/,
+    on_db_dir_changed(const RefPtr<Gio::File>& file1,
+                      const RefPtr<Gio::File>& /*file2*/,
                       Gio::FileMonitorEvent event_type)
         noexcept
     try {
-        std::filesystem::path filename = file1->get_path();
+        path filename = file1->get_path();
 
         if (filename.extension() != ".conf")
             return;
@@ -242,7 +252,7 @@ namespace ControllerDB {
                 ;
         }
     }
-    catch (std::exception& e) {
+    catch (exception& e) {
         cout << "on_db_dir_changed(): " << e.what() << endl;
     }
 
@@ -258,7 +268,7 @@ namespace ControllerDB {
         noexcept
     try {
         char* filename1 = g_file_get_path(file1);
-        std::filesystem::path filename = filename1;
+        path filename = filename1;
         g_free(filename1);
 
         if (filename.extension() != ".conf")
@@ -278,7 +288,7 @@ namespace ControllerDB {
                 ;
         }
     }
-    catch (std::exception& e) {
+    catch (exception& e) {
         cout << "on_db_dir_changed(): " << e.what() << endl;
     }
 
@@ -317,7 +327,7 @@ namespace ControllerDB {
             g_object_unref(gfile);
 #endif
         }
-        catch (std::exception& e) {
+        catch (exception& e) {
             cerr << "Failed to load database: " << e.what() << endl;
         }
     }
@@ -338,10 +348,10 @@ namespace ControllerDB {
     }
 
 
-    std::string
-    replace_invalid_fs_chars(const std::string& input)
+    string
+    replace_invalid_fs_chars(const string& input)
     {
-        std::string result;
+        string result;
         for (unsigned char c : input) {
             if (c == '/' || c == '\0' || c < 32)
                 c = '_';
@@ -351,14 +361,14 @@ namespace ControllerDB {
     }
 
 
-    std::filesystem::path
-    make_filename(std::uint16_t vendor,
-                  std::uint16_t product,
-                  std::uint16_t version,
-                  const std::string& name)
+    path
+    make_filename(uint16_t vendor,
+                  uint16_t product,
+                  uint16_t version,
+                  const string& name)
     {
         using Glib::ustring;
-        std::string result;
+        string result;
 
         if (vendor || product || version)
             result += ustring::sprintf("%04x-%04x-%04x", vendor, product, version);
@@ -371,26 +381,26 @@ namespace ControllerDB {
             result += " (" + safe_name + ")";
 
         if (result.empty())
-            throw std::runtime_error{"Cannot create config file with no match rules."};
+            throw runtime_error{"Cannot create config file with no match rules."};
 
         return db_dir / (result + ".conf");
     }
 
 
     void
-    save(std::uint16_t vendor,
-         std::uint16_t product,
-         std::uint16_t version,
-         const std::string& name,
+    save(uint16_t vendor,
+         uint16_t product,
+         uint16_t version,
+         const string& name,
          DevConf& configs)
     {
         using Glib::ustring;
 
         configs.filename = make_filename(vendor, product, version, name);
 
-        std::string vendor_str = ustring::sprintf("%04x", vendor);
-        std::string product_str = ustring::sprintf("%04x", product);
-        std::string version_str = ustring::sprintf("%04x", version);
+        string vendor_str = ustring::sprintf("%04x", vendor);
+        string product_str = ustring::sprintf("%04x", product);
+        string version_str = ustring::sprintf("%04x", version);
 
         Glib::KeyFile kf;
 
@@ -407,7 +417,7 @@ namespace ControllerDB {
 
 
         for (const auto& [axis, data] : configs.axes) {
-            std::string group = code_to_string(evdev::Type::abs, axis);
+            string group = code_to_string(evdev::Type::abs, axis);
             const auto& info = data.info;
             kf.set_integer(group, "min", info.min);
             kf.set_integer(group, "max", info.max);
@@ -442,10 +452,10 @@ namespace ControllerDB {
 
 
     std::pair<const Key*, const DevConf*>
-    find(std::uint16_t vendor,
-         std::uint16_t product,
-         std::uint16_t version,
-         const std::string& name)
+    find(uint16_t vendor,
+         uint16_t product,
+         uint16_t version,
+         const string& name)
         noexcept
     {
         const Key key{ vendor, product, version, name };

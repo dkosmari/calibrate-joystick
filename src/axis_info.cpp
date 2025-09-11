@@ -11,7 +11,6 @@
 
 #include "axis_info.hpp"
 
-#include "app.hpp"
 #include "axis_canvas.hpp"
 #include "utils.hpp"
 
@@ -21,12 +20,11 @@
 #include <glibmm/i18n.h>
 
 
-using std::string;
 using std::cout;
 using std::endl;
+using std::string;
 
 using Glib::ustring;
-using Gio::SimpleActionGroup;
 using Glib::Variant;
 
 using evdev::AbsInfo;
@@ -34,7 +32,7 @@ using evdev::AbsInfo;
 
 namespace {
 
-    const std::string axis_info_glade = RESOURCE_PREFIX "/ui/axis-info.glade";
+    const string axis_info_glade = RESOURCE_PREFIX "/ui/axis-info.glade";
 
 } // namespace
 
@@ -54,7 +52,7 @@ AxisInfo::AxisInfo(evdev::Code axis_code,
 void
 AxisInfo::create_actions()
 {
-    actions = SimpleActionGroup::create();
+    actions = Gio::SimpleActionGroup::create();
     root().insert_action_group("axis", actions);
 
     action_apply = actions->add_action("apply",
@@ -269,14 +267,9 @@ AxisInfo::disable()
 
 
 void
-AxisInfo::update_colors(const App* app)
+AxisInfo::set_colors(const Colors& c)
 {
-    axis_canvas->set_background_color(app->get_background_color());
-    axis_canvas->set_value_color(app->get_value_color());
-    axis_canvas->set_min_color(app->get_min_color());
-    axis_canvas->set_max_color(app->get_max_color());
-    axis_canvas->set_fuzz_color(app->get_fuzz_color());
-    axis_canvas->set_flat_color(app->get_flat_color());
+    axis_canvas->set_colors(c);
     update_canvas();
 }
 

@@ -12,7 +12,6 @@
 
 #include "device_page.hpp"
 
-#include "app.hpp"
 #include "axis_info.hpp"
 #include "controller_db.hpp"
 #include "utils.hpp"
@@ -27,25 +26,23 @@ using std::cerr;
 using std::cout;
 using std::endl;
 using std::filesystem::path;
-using std::make_unique;
 using std::string;
 
 using namespace std::literals;
 
-using Glib::ustring;
 using Glib::IOCondition;
-using Gio::SimpleActionGroup;
-using Glib::VariantBase;
+using Glib::ustring;
 using Glib::Variant;
+using Glib::VariantBase;
 
-using evdev::Type;
-using evdev::Code;
 using evdev::AbsInfo;
+using evdev::Code;
+using evdev::Type;
 
 
 namespace {
 
-    const std::string device_page_glade = RESOURCE_PREFIX "/ui/device-page.glade";
+    const string device_page_glade = RESOURCE_PREFIX "/ui/device-page.glade";
 
 } // namespace
 
@@ -67,7 +64,7 @@ DevicePage::DevicePage(const path& dev_path) :
     auto abs_codes = device.get_codes(Type::abs);
     for (auto code : abs_codes) {
         auto info = device.get_abs_info(code);
-        auto [iter, inserted] = axes.emplace(code, make_unique<AxisInfo>(code, info));
+        auto [iter, inserted] = axes.emplace(code, std::make_unique<AxisInfo>(code, info));
         if (inserted)
             axes_box->pack_start(iter->second->root(),
                                  Gtk::PackOptions::PACK_SHRINK);
@@ -92,7 +89,7 @@ DevicePage::~DevicePage()
 void
 DevicePage::create_actions()
 {
-    actions = SimpleActionGroup::create();
+    actions = Gio::SimpleActionGroup::create();
     root().insert_action_group("dev", actions);
 
     save_action =
@@ -352,10 +349,10 @@ DevicePage::try_load_config()
 
 
 void
-DevicePage::update_colors(const App* app)
+DevicePage::set_colors(const Colors& c)
 {
     for (auto& [key, val] : axes)
-        val->update_colors(app);
+        val->set_colors(c);
 }
 
 

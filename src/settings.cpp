@@ -125,10 +125,8 @@ Settings::animate_axis_sample()
 
 
 Settings::Settings(BaseObjectType* cobject,
-                   const Glib::RefPtr<Gtk::Builder>& builder,
-                   App* app_) :
-    Gtk::ApplicationWindow{cobject},
-    app{app_}
+                   const Glib::RefPtr<Gtk::Builder>& builder) :
+    Gtk::ApplicationWindow{cobject}
 {
     builder->get_widget("background_color_button", background_color_button);
     builder->get_widget("value_color_button", value_color_button);
@@ -145,7 +143,7 @@ Settings::Settings(BaseObjectType* cobject,
     settings = Gio::Settings::create(APPLICATION_ID);
 
     settings->signal_changed().connect(
-        [this](const Glib::ustring& key)
+                                       [this, app=App::get_default()](const Glib::ustring& key)
         {
             if (key == "background-color") {
                 auto val = Gdk::RGBA{settings->get_string(key)};
@@ -221,7 +219,7 @@ Settings::Settings(BaseObjectType* cobject,
         target->set_flat_color(Gdk::RGBA{settings->get_string("flat-color")});
     };
     // Set the initial values into the App class
-    initialize_colors(app, settings);
+    initialize_colors(App::get_default(), settings);
     // Do the same with sample_axis_canvas
     initialize_colors(sample_axis_canvas, settings);
 

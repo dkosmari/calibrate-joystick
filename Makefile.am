@@ -77,6 +77,7 @@ calibrate_joystick_SOURCES = \
 	src/axis_canvas.hpp \
 	src/axis_info.cpp \
 	src/axis_info.hpp \
+	src/colors.hpp \
 	src/controller_db.cpp \
 	src/controller_db.hpp \
 	src/device_page.cpp \

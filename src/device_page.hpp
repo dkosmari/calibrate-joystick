@@ -18,8 +18,9 @@
 #include <libevdevxx/Event.hpp>
 #include <libevdevxx/Code.hpp>
 
+#include "colors.hpp"
 
-class App;
+
 class AxisInfo;
 
 
@@ -126,7 +127,7 @@ public:
 
 
     void
-    update_colors(const App* app);
+    set_colors(const Colors& c);
 
 
     bool

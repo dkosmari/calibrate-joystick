@@ -13,6 +13,8 @@
 
 #include <libevdevxx/AbsInfo.hpp>
 
+#include "colors.hpp"
+
 
 class AxisCanvas : public Gtk::DrawingArea {
 
@@ -22,12 +24,7 @@ class AxisCanvas : public Gtk::DrawingArea {
     int orig_fuzz_center;
     int calc_fuzz_center;
 
-    Gdk::RGBA background_color;
-    Gdk::RGBA value_color;
-    Gdk::RGBA min_color;
-    Gdk::RGBA max_color;
-    Gdk::RGBA fuzz_color;
-    Gdk::RGBA flat_color;
+    Colors colors;
 
 
     bool
@@ -54,23 +51,27 @@ public:
 
 
     void
-    set_background_color(const Gdk::RGBA& color);
+    set_colors(const Colors& c);
+
 
     void
-    set_value_color(const Gdk::RGBA& color);
+    set_background_color(const Gdk::RGBA& c);
 
     void
-    set_min_color(const Gdk::RGBA& color);
+    set_value_color(const Gdk::RGBA& c);
 
     void
-    set_max_color(const Gdk::RGBA& color);
+    set_min_color(const Gdk::RGBA& c);
 
     void
-    set_fuzz_color(const Gdk::RGBA& color);
+    set_max_color(const Gdk::RGBA& c);
 
     void
-    set_flat_color(const Gdk::RGBA& color);
+    set_fuzz_color(const Gdk::RGBA& c);
 
-};
+    void
+    set_flat_color(const Gdk::RGBA& c);
+
+}; // class AxisCanvas
 
 #endif

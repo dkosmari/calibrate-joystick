@@ -17,6 +17,8 @@
 
 #include <gudevxx/Client.hpp>
 
+#include "colors.hpp"
+
 
 class DevicePage;
 class Settings;
@@ -45,12 +47,7 @@ class App : public Gtk::Application {
     bool opt_daemon = false;
     bool silent_start = false;
 
-    Gdk::RGBA background_color;
-    Gdk::RGBA value_color;
-    Gdk::RGBA min_color;
-    Gdk::RGBA max_color;
-    Gdk::RGBA fuzz_color;
-    Gdk::RGBA flat_color;
+    Colors colors;
 
 
     bool
@@ -114,7 +111,7 @@ class App : public Gtk::Application {
 
 
     void
-    update_colors();
+    on_colors_changed();
 
 public:
 
@@ -131,31 +128,6 @@ public:
 
     void
     remove_device(const std::filesystem::path& dev_path);
-
-
-    const Gdk::RGBA&
-    get_background_color()
-        const noexcept;
-
-    const Gdk::RGBA&
-    get_value_color()
-        const noexcept;
-
-    const Gdk::RGBA&
-    get_min_color()
-        const noexcept;
-
-    const Gdk::RGBA&
-    get_max_color()
-        const noexcept;
-
-    const Gdk::RGBA&
-    get_fuzz_color()
-        const noexcept;
-
-    const Gdk::RGBA&
-    get_flat_color()
-        const noexcept;
 
 
     void

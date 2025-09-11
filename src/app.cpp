@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <vector>
 
 #include <glib.h>
 #ifdef G_OS_UNIX
@@ -35,7 +34,6 @@ using std::endl;
 using std::filesystem::path;
 using std::make_unique;
 using std::string;
-using std::vector;
 
 using Gio::ApplicationFlags;
 using Gio::Resource;
@@ -57,7 +55,7 @@ namespace {
 
     const auto app_flags = ApplicationFlags::APPLICATION_HANDLES_OPEN;
 
-    const std::string application_glade = RESOURCE_PREFIX "/ui/application.glade";
+    const string application_glade = RESOURCE_PREFIX "/ui/application.glade";
 
 
 #ifdef G_OS_UNIX
@@ -75,7 +73,7 @@ namespace {
 
 
 bool
-App::load_resources(const std::filesystem::path& res_path)
+App::load_resources(const path& res_path)
 {
     TRACE;
 
@@ -130,7 +128,7 @@ App::load_widgets()
     about_dialog->set_version(PACKAGE_VERSION);
     about_dialog->add_button(_("_Close"), Gtk::ResponseType::RESPONSE_CLOSE);
 
-    utils::get_widget_derived(builder, "settings_window", settings_window, this);
+    utils::get_widget_derived(builder, "settings_window", settings_window);
 
     utils::get_widget<Gtk::Dialog>(builder, "delete_dialog", delete_dialog);
     delete_dialog->add_button(_("_Cancel"), Gtk::RESPONSE_CANCEL);
@@ -168,7 +166,7 @@ void
 App::connect_uevent()
 {
     if (!uclient) {
-        uclient = gudev::Client{vector<string>{"input"}};
+        uclient.create({"input"});
         uclient.uevent_callback =
             [this](const string& action,
                    const gudev::Device& device)
@@ -281,8 +279,8 @@ App::on_action_settings()
 void
 App::on_action_delete_file(const VariantBase& arg)
 try {
-    auto str = utils::variant_cast<std::string>(arg);
-    std::filesystem::path config_file = str;
+    auto str = utils::variant_cast<string>(arg);
+    path config_file = str;
     if (config_file.empty())
         return;
     if (!exists(config_file))
@@ -428,10 +426,10 @@ App::on_uevent(const string& action,
 
 
 void
-App::update_colors()
+App::on_colors_changed()
 {
     for (auto& [key, val] : devices)
-        val->update_colors(this);
+        val->set_colors(colors);
 }
 
 
@@ -483,7 +481,7 @@ App::add_device(const path& dev_path)
 
         auto& page = iter->second;
         device_notebook->append_page(page->root(), page->get_name());
-        page->update_colors(this);
+        page->set_colors(colors);
     }
     catch (std::exception& e) {
         cerr << "Error in App::add_device(): " << e.what() << endl;
@@ -511,104 +509,56 @@ App::remove_device(const path& dev_path)
 }
 
 
-const Gdk::RGBA&
-App::get_background_color()
-    const noexcept
-{
-    return background_color;
-}
-
-
-const Gdk::RGBA&
-App::get_value_color()
-    const noexcept
-{
-    return value_color;
-}
-
-
-const Gdk::RGBA&
-App::get_min_color()
-    const noexcept
-{
-    return min_color;
-}
-
-
-const Gdk::RGBA&
-App::get_max_color()
-    const noexcept
-{
-    return max_color;
-}
-
-
-const Gdk::RGBA&
-App::get_fuzz_color()
-    const noexcept
-{
-    return fuzz_color;
-}
-
-
-const Gdk::RGBA&
-App::get_flat_color()
-    const noexcept
-{
-    return flat_color;
-}
-
-
 void
 App::set_background_color(const Gdk::RGBA& color)
 {
-    background_color = color;
-    update_colors();
+    colors.background = color;
+    on_colors_changed();
 }
 
 
 void
 App::set_value_color(const Gdk::RGBA& color)
 {
-    value_color = color;
-    update_colors();
+    colors.value = color;
+    on_colors_changed();
 }
 
 
 void
 App::set_min_color(const Gdk::RGBA& color)
 {
-    min_color = color;
-    update_colors();
+    colors.min = color;
+    on_colors_changed();
 }
 
 
 void
 App::set_max_color(const Gdk::RGBA& color)
 {
-    max_color = color;
-    update_colors();
+    colors.max = color;
+    on_colors_changed();
 }
 
 
 void
 App::set_fuzz_color(const Gdk::RGBA& color)
 {
-    fuzz_color = color;
-    update_colors();
+    colors.fuzz = color;
+    on_colors_changed();
 }
 
 
 void
 App::set_flat_color(const Gdk::RGBA& color)
 {
-    flat_color = color;
-    update_colors();
+    colors.flat = color;
+    on_colors_changed();
 }
 
 
-Glib::RefPtr<App>
+RefPtr<App>
 App::get_default()
 {
-    return Glib::RefPtr<App>::cast_static(Gtk::Application::get_default());
+    return RefPtr<App>::cast_static(Gtk::Application::get_default());
 }
