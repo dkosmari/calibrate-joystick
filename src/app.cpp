@@ -30,6 +30,7 @@
 
 
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::filesystem::path;
 using std::make_unique;
@@ -58,51 +59,26 @@ namespace {
 
     const std::string application_glade = RESOURCE_PREFIX "/ui/application.glade";
 
-} // namespace
-
 
 #ifdef G_OS_UNIX
-static
-gboolean
-stop_application(App* app)
-{
-    app->quit();
-    return FALSE;
-}
+
+    gboolean
+    stop_application(App* app)
+    {
+        app->quit();
+        return FALSE;
+    }
+
 #endif
 
-
-App::App() :
-    Gtk::Application{APPLICATION_ID, app_flags}
-{
-    ControllerDB::initialize();
-
-    signal_handle_local_options()
-        .connect(sigc::mem_fun(this, &App::on_handle_local_options));
-
-    add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
-                          "version", 'V',
-                          _("Show program version."));
-
-    add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
-                          "daemon", 'd',
-                          _("Run in daemon mode."));
-
-    if (!load_resources(PACKAGE ".gresource") &&
-        !load_resources(RESOURCES_DIR "/" PACKAGE ".gresource"))
-        throw std::runtime_error{_("Could not load resources file.")};
-}
-
-
-App::~App()
-{
-    ControllerDB::finalize();
-}
+} // namespace
 
 
 bool
 App::load_resources(const std::filesystem::path& res_path)
 {
+    TRACE;
+
     try {
         g_debug("Trying to load resources from \"%s\".", res_path.c_str());
         resource = Resource::create_from_file(res_path);
@@ -119,16 +95,18 @@ App::load_resources(const std::filesystem::path& res_path)
 
 
 void
-App::load_gui()
+App::load_widgets()
 {
+    TRACE;
+
     if (main_window)
         return;
 
     auto builder = Gtk::Builder::create_from_resource(application_glade);
 
-    main_window = get_widget<Gtk::ApplicationWindow>(builder, "main_window");
+    utils::get_widget(builder, "main_window", main_window);
 
-    header_bar = get_widget<Gtk::HeaderBar>(builder, "header_bar");
+    utils::get_widget(builder, "header_bar", header_bar);
     main_window->set_titlebar(*header_bar);
 
     builder->get_widget("device_notebook", device_notebook);
@@ -146,13 +124,33 @@ App::load_gui()
         });
     }
 
-    about_window = get_widget<Gtk::AboutDialog>(builder, "about_dialog");
-    about_window->set_program_name(PACKAGE_NAME);
-    about_window->set_website(PACKAGE_URL);
-    about_window->set_version(PACKAGE_VERSION);
-    about_window->add_button(_("_Close"), Gtk::ResponseType::RESPONSE_CLOSE);
+    utils::get_widget(builder, "about_dialog", about_dialog);
+    about_dialog->set_program_name(PACKAGE_NAME);
+    about_dialog->set_website(PACKAGE_URL);
+    about_dialog->set_version(PACKAGE_VERSION);
+    about_dialog->add_button(_("_Close"), Gtk::ResponseType::RESPONSE_CLOSE);
 
-    settings_window = get_widget_derived<Settings>(builder, "settings_window", this);
+    utils::get_widget_derived(builder, "settings_window", settings_window, this);
+
+    utils::get_widget<Gtk::Dialog>(builder, "delete_dialog", delete_dialog);
+    delete_dialog->add_button(_("_Cancel"), Gtk::RESPONSE_CANCEL);
+    delete_dialog->add_button(_("_Delete"), Gtk::RESPONSE_ACCEPT);
+    delete_dialog->set_default_response(Gtk::RESPONSE_ACCEPT);
+}
+
+
+void
+App::create_actions()
+{
+    add_action("about",       sigc::mem_fun(this, &App::on_action_about));
+    add_action("open",        sigc::mem_fun(this, &App::on_action_open));
+    add_action("quit",        sigc::mem_fun(this, &App::on_action_quit));
+    add_action("refresh",     sigc::mem_fun(this, &App::on_action_refresh));
+    add_action("settings",    sigc::mem_fun(this, &App::on_action_settings));
+
+    add_action_with_parameter("delete_file",
+                              Glib::VARIANT_TYPE_STRING,
+                              sigc::mem_fun(this, &App::on_action_delete_file));
 }
 
 
@@ -195,9 +193,9 @@ App::send_daemon_notification()
 void
 App::on_action_about()
 {
-    add_window(*about_window);
-    about_window->run();
-    about_window->hide();
+    add_window(*about_dialog);
+    about_dialog->run();
+    about_dialog->hide();
 }
 
 
@@ -281,13 +279,74 @@ App::on_action_settings()
 
 
 void
+App::on_action_delete_file(const VariantBase& arg)
+try {
+    auto str = utils::variant_cast<std::string>(arg);
+    std::filesystem::path config_file = str;
+    if (config_file.empty())
+        return;
+    if (!exists(config_file))
+        return;
+    Gtk::Label path_label{config_file.filename().string()};
+    path_label.set_width_chars(50);
+    path_label.set_ellipsize(Pango::EllipsizeMode::ELLIPSIZE_START);
+    path_label.show();
+
+    auto box = delete_dialog->get_content_area();
+    box->pack_start(path_label, true, true);
+
+    if (delete_dialog->run() == Gtk::ResponseType::RESPONSE_ACCEPT) {
+        cout << "Deleting " << config_file << endl;
+        remove(config_file);
+    }
+    delete_dialog->hide();
+}
+catch (std::exception& e) {
+    cerr << "Error: " << e.what() << endl;
+}
+
+
+void
+App::on_startup()
+{
+    TRACE;
+
+    Gtk::Application::on_startup();
+
+#ifdef G_OS_UNIX
+    g_unix_signal_add(SIGINT, G_SOURCE_FUNC(stop_application), this);
+    g_unix_signal_add(SIGTERM, G_SOURCE_FUNC(stop_application), this);
+#endif
+
+    create_actions();
+
+    if (opt_daemon) {
+        //cout << "running as daemon" << endl;
+        hold(); // keep it running without window
+        connect_uevent();
+
+        status_icon = Gtk::StatusIcon::create("input-gaming");
+        status_icon->set_name("none.calibrate_joystick");
+        status_icon->set_title(_("Calibrate Joystick"));
+        status_icon->set_tooltip_text(_("Monitoring new joysticks..."));
+        status_icon->signal_activate().connect(sigc::mem_fun(this, &App::activate));
+        status_icon->set_visible(true);
+
+        // if no status icon is available, send a notification instead
+        if (!status_icon->is_embedded())
+            send_daemon_notification();
+    }
+}
+
+
+void
 App::on_activate()
 {
     TRACE;
 
     Gtk::Application::on_activate();
 
-    load_gui();
+    load_widgets();
 
     if (opt_daemon && silent_start) {
         silent_start = false;
@@ -299,30 +358,13 @@ App::on_activate()
 }
 
 
-int
-App::on_handle_local_options(const RefPtr<Glib::VariantDict>& options)
-{
-    TRACE;
-
-    if (options->contains("version")) {
-        cout << PACKAGE_VERSION << endl;
-        return 0;
-    }
-
-    if (options->contains("daemon")) {
-        silent_start = true;
-        opt_daemon = true;
-    }
-
-    return -1;
-}
-
-
 void
 App::on_open(const type_vec_files& files,
              const ustring& hint)
 {
     TRACE;
+
+    load_widgets();
 
     Gtk::Application::on_open(files, hint);
 
@@ -342,40 +384,22 @@ App::on_open(const type_vec_files& files,
 }
 
 
-void
-App::on_startup()
+int
+App::on_handle_local_options(const RefPtr<Glib::VariantDict>& options)
 {
     TRACE;
 
-    Gtk::Application::on_startup();
-
-#ifdef G_OS_UNIX
-    g_unix_signal_add(SIGINT, G_SOURCE_FUNC(stop_application), this);
-    g_unix_signal_add(SIGTERM, G_SOURCE_FUNC(stop_application), this);
-#endif
-
-    add_action("about",    sigc::mem_fun(this, &App::on_action_about));
-    add_action("open",     sigc::mem_fun(this, &App::on_action_open));
-    add_action("quit",     sigc::mem_fun(this, &App::on_action_quit));
-    add_action("refresh",  sigc::mem_fun(this, &App::on_action_refresh));
-    add_action("settings", sigc::mem_fun(this, &App::on_action_settings));
-
-    if (opt_daemon) {
-        //cout << "running as daemon" << endl;
-        hold(); // keep it running without window
-        connect_uevent();
-
-        status_icon = Gtk::StatusIcon::create("input-gaming");
-        status_icon->set_name("none.calibrate_joystick");
-        status_icon->set_title(_("Calibrate Joystick"));
-        status_icon->set_tooltip_text(_("Monitoring new joysticks..."));
-        status_icon->signal_activate().connect(sigc::mem_fun(this, &App::activate));
-        status_icon->set_visible(true);
-
-        // if no status icon is available, send a notification instead
-        if (!status_icon->is_embedded())
-            send_daemon_notification();
+    if (options->contains("version")) {
+        cout << PACKAGE_VERSION << endl;
+        return 0;
     }
+
+    if (options->contains("daemon")) {
+        silent_start = true;
+        opt_daemon = true;
+    }
+
+    return -1;
 }
 
 
@@ -411,6 +435,34 @@ App::update_colors()
 }
 
 
+App::App() :
+    Gtk::Application{APPLICATION_ID, app_flags}
+{
+    ControllerDB::initialize();
+
+    signal_handle_local_options()
+        .connect(sigc::mem_fun(this, &App::on_handle_local_options));
+
+    add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
+                          "version", 'V',
+                          _("Show program version."));
+
+    add_main_option_entry(OptionType::OPTION_TYPE_BOOL,
+                          "daemon", 'd',
+                          _("Run in daemon mode."));
+
+    if (!load_resources(PACKAGE ".gresource") &&
+        !load_resources(RESOURCES_DIR "/" PACKAGE ".gresource"))
+        throw std::runtime_error{_("Could not load resources file.")};
+}
+
+
+App::~App()
+{
+    ControllerDB::finalize();
+}
+
+
 void
 App::clear_devices()
 {
@@ -421,6 +473,8 @@ App::clear_devices()
 void
 App::add_device(const path& dev_path)
 {
+    TRACE;
+
     try {
         auto [iter, inserted] =
             devices.emplace(dev_path, make_unique<DevicePage>(dev_path));
@@ -428,10 +482,11 @@ App::add_device(const path& dev_path)
             return;
 
         auto& page = iter->second;
-        device_notebook->append_page(page->root(), page->name());
+        device_notebook->append_page(page->root(), page->get_name());
         page->update_colors(this);
     }
     catch (std::exception& e) {
+        cerr << "Error in App::add_device(): " << e.what() << endl;
         present_main_window();
         Gtk::MessageDialog dialog{
             *main_window,
@@ -549,4 +604,11 @@ App::set_flat_color(const Gdk::RGBA& color)
 {
     flat_color = color;
     update_colors();
+}
+
+
+Glib::RefPtr<App>
+App::get_default()
+{
+    return Glib::RefPtr<App>::cast_static(Gtk::Application::get_default());
 }

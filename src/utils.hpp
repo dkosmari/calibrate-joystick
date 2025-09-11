@@ -15,48 +15,47 @@
 
 #include <gtkmm.h>
 
+namespace utils {
 
-extern const std::string ui_axis_info_path;
-extern const std::string ui_device_page_path;
-
-
-template<typename T>
-std::unique_ptr<T>
-get_widget(Glib::RefPtr<Gtk::Builder>& builder,
-           const std::string& name)
-{
-    T* ptr = nullptr;
-    builder->get_widget(name, ptr);
-    if (!ptr)
-        throw std::runtime_error{"widget \"" + name + "\" not found."};
-    ptr->reference(); // keep the widget alive after the builder is destroyed
-    return std::unique_ptr<T>{ptr};
-}
+    template<typename T>
+    void
+    get_widget(Glib::RefPtr<Gtk::Builder>& builder,
+               const std::string& name,
+               std::unique_ptr<T>& result)
+    {
+        T* ptr = nullptr;
+        builder->get_widget(name, ptr);
+        if (!ptr)
+            throw std::runtime_error{"widget \"" + name + "\" not found."};
+        ptr->reference(); // keep the widget alive after the builder is destroyed
+        result.reset(ptr);
+    }
 
 
-template<typename T,
-         typename... Args>
-std::unique_ptr<T>
-get_widget_derived(Glib::RefPtr<Gtk::Builder>& builder,
-                   const std::string& name,
-                   Args&&... args)
-{
-    T* ptr = nullptr;
-    builder->get_widget_derived(name, ptr, std::forward<Args>(args)...);
-    if (!ptr)
-        throw std::runtime_error{"widget \"" + name + "\" not found."};
-    ptr->reference(); // keep the widget alive after the builder is destroyed
-    return std::unique_ptr<T>{ptr};
-}
+    template<typename T,
+             typename... Args>
+    void
+    get_widget_derived(Glib::RefPtr<Gtk::Builder>& builder,
+                       const std::string& name,
+                       std::unique_ptr<T>& result,
+                       Args&&... args)
+    {
+        T* ptr = nullptr;
+        builder->get_widget_derived(name, ptr, std::forward<Args>(args)...);
+        if (!ptr)
+            throw std::runtime_error{"widget \"" + name + "\" not found."};
+        ptr->reference(); // keep the widget alive after the builder is destroyed
+        result.reset(ptr);
+    }
 
 
+    template<typename T>
+    T
+    variant_cast(const Glib::VariantBase& v)
+    {
+        return Glib::VariantBase::cast_dynamic<Glib::Variant<T>>(v).get();
+    }
 
-template<typename T>
-T
-variant_cast(const Glib::VariantBase& v)
-{
-    return Glib::VariantBase::cast_dynamic<Glib::Variant<T>>(v).get();
-}
-
+} // namespace utils
 
 #endif

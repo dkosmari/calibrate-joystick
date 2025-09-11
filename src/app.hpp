@@ -28,8 +28,9 @@ class App : public Gtk::Application {
 
     std::unique_ptr<Gtk::ApplicationWindow> main_window;
     std::unique_ptr<Gtk::HeaderBar> header_bar;
-    std::unique_ptr<Gtk::AboutDialog> about_window;
+    std::unique_ptr<Gtk::AboutDialog> about_dialog;
     std::unique_ptr<Settings> settings_window;
+    std::unique_ptr<Gtk::Dialog> delete_dialog;
 
     Gtk::Notebook* device_notebook = nullptr;
     Gtk::Button* quit_button = nullptr;
@@ -56,7 +57,10 @@ class App : public Gtk::Application {
     load_resources(const std::filesystem::path& res_path);
 
     void
-    load_gui();
+    load_widgets();
+
+    void
+    create_actions();
 
     void
     present_main_window();
@@ -83,22 +87,26 @@ class App : public Gtk::Application {
     void
     on_action_settings();
 
+    void
+    on_action_delete_file(const Glib::VariantBase& arg);
+
+
+    void
+    on_startup()
+        override;
 
     void
     on_activate()
         override;
 
+    void
+    on_open(const type_vec_files& files,
+            const Glib::ustring& hint)
+        override;
+
     int
     on_handle_local_options(const Glib::RefPtr<Glib::VariantDict>& options);
 
-    void
-    on_open(const type_vec_files& files,
-                 const Glib::ustring& hint)
-        override;
-
-    void
-    on_startup()
-        override;
 
     void
     on_uevent(const std::string& action,
@@ -168,7 +176,11 @@ public:
     void
     set_flat_color(const Gdk::RGBA& color);
 
-};
 
+    static
+    Glib::RefPtr<App>
+    get_default();
+
+}; // class App
 
 #endif

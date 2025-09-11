@@ -43,7 +43,11 @@ namespace ControllerDB {
         bool flat_centered = false;
     };
 
-    using DevConf = std::map<evdev::Code, AxisData>;
+
+    struct DevConf {
+        std::map<evdev::Code, AxisData> axes;
+        std::filesystem::path filename;
+    };
 
 
     void
@@ -59,13 +63,7 @@ namespace ControllerDB {
          std::uint16_t product,
          std::uint16_t version,
          const std::string& name,
-         const DevConf& configs);
-
-    void
-    remove(std::uint16_t vendor,
-           std::uint16_t product,
-           std::uint16_t version,
-           const std::string& name);
+         DevConf& configs);
 
     std::pair<const Key*, const DevConf*>
     find(std::uint16_t vendor,

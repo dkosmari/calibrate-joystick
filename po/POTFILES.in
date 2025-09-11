@@ -3,7 +3,6 @@ src/axis_canvas.cpp
 src/axis_info.cpp
 src/device_page.cpp
 src/main.cpp
-src/utils.cpp
 ui/actions.ui
 ui/application.glade
 ui/axis-info.glade

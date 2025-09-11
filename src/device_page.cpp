@@ -23,12 +23,12 @@
 #include <glibmm/i18n.h>
 
 
-using std::cout;
 using std::cerr;
+using std::cout;
 using std::endl;
-using std::string;
-using std::make_unique;
 using std::filesystem::path;
+using std::make_unique;
+using std::string;
 
 using namespace std::literals;
 
@@ -38,17 +38,24 @@ using Gio::SimpleActionGroup;
 using Glib::VariantBase;
 using Glib::Variant;
 
-using Type = evdev::Type;
-using Code = evdev::Code;
+using evdev::Type;
+using evdev::Code;
+using evdev::AbsInfo;
 
 
-DevicePage::DevicePage(const std::filesystem::path& dev_path) :
+namespace {
+
+    const std::string device_page_glade = RESOURCE_PREFIX "/ui/device-page.glade";
+
+} // namespace
+
+
+DevicePage::DevicePage(const path& dev_path) :
     dev_path{dev_path},
     device{dev_path}
 {
     load_widgets();
-
-    setup_actions();
+    create_actions();
 
     name_label->set_label(device.get_name());
     path_label->set_label(dev_path.string());
@@ -83,31 +90,7 @@ DevicePage::~DevicePage()
 
 
 void
-DevicePage::load_widgets()
-{
-    auto builder = Gtk::Builder::create_from_resource(ui_device_page_path);
-
-    device_box = get_widget<Gtk::Box>(builder, "device_box");
-
-    builder->get_widget("path_label", path_label);
-    builder->get_widget("name_label", name_label);
-    builder->get_widget("vendor_label", vendor_label);
-    builder->get_widget("product_label", product_label);
-    builder->get_widget("version_label", version_label);
-
-    builder->get_widget("name_check", name_check);
-    builder->get_widget("vendor_check", vendor_check);
-    builder->get_widget("product_check", product_check);
-    builder->get_widget("version_check", version_check);
-
-    builder->get_widget("axes_box", axes_box);
-    builder->get_widget("info_bar", info_bar);
-    builder->get_widget("error_label", error_label);
-}
-
-
-void
-DevicePage::setup_actions()
+DevicePage::create_actions()
 {
     actions = SimpleActionGroup::create();
     root().insert_action_group("dev", actions);
@@ -131,15 +114,39 @@ DevicePage::setup_actions()
 
     apply_axis_action =
         actions->add_action_with_parameter("apply_axis",
-                                           Glib::VariantType{G_VARIANT_TYPE_UINT16},
+                                           Glib::VARIANT_TYPE_UINT16,
                                            sigc::mem_fun(this,
                                                          &DevicePage::on_action_apply_axis));
 
     revert_axis_action =
         actions->add_action_with_parameter("revert_axis",
-                                           Glib::VariantType{G_VARIANT_TYPE_UINT16},
+                                           Glib::VARIANT_TYPE_UINT16,
                                            sigc::mem_fun(this,
                                                          &DevicePage::on_action_revert_axis));
+}
+
+
+void
+DevicePage::load_widgets()
+{
+    auto builder = Gtk::Builder::create_from_resource(device_page_glade);
+
+    utils::get_widget<Gtk::Box>(builder, "device_box", device_box);
+
+    builder->get_widget("path_label", path_label);
+    builder->get_widget("name_label", name_label);
+    builder->get_widget("vendor_label", vendor_label);
+    builder->get_widget("product_label", product_label);
+    builder->get_widget("version_label", version_label);
+
+    builder->get_widget("name_check", name_check);
+    builder->get_widget("vendor_check", vendor_check);
+    builder->get_widget("product_check", product_check);
+    builder->get_widget("version_check", version_check);
+
+    builder->get_widget("axes_box", axes_box);
+    builder->get_widget("info_bar", info_bar);
+    builder->get_widget("error_label", error_label);
 }
 
 
@@ -147,24 +154,16 @@ Gtk::Widget&
 DevicePage::root()
 {
     if (!device_box)
-        throw std::runtime_error{"Failed to load root widget."};
+        throw std::runtime_error{"DevicePage::root(): missing root widget."};
     return *device_box;
 }
 
 
 string
-DevicePage::name()
+DevicePage::get_name()
     const
 {
     return device.get_name();
-}
-
-
-const path&
-DevicePage::path()
-    const
-{
-    return dev_path;
 }
 
 
@@ -199,7 +198,7 @@ DevicePage::handle_read()
         if (event.type != Type::abs)
             continue;
 
-        axes.at(event.code)->update_value(event.value);
+        axes.at(event.code)->set_calc_value(event.value);
     }
 }
 
@@ -208,17 +207,23 @@ void
 DevicePage::on_action_save()
 {
     try {
+        filename.clear();
+        delete_action->set_enabled(false);
+
         auto vendor = vendor_check->get_active() ? device.get_vendor() : 0;
         auto product = product_check->get_active() ? device.get_product() : 0;
         auto version = version_check->get_active() ? device.get_version() : 0;
         auto name = name_check->get_active() ? device.get_name() : ""s;
         ControllerDB::DevConf conf;
         for  (const auto& [axis, ainfo] : axes) {
-            auto& data = conf[axis];
+            auto& data = conf.axes[axis];
             data.info = device.get_abs_info(axis);
             data.flat_centered = ainfo->is_flat_centered();
         }
-        ControllerDB::save(vendor, product, version, name, std::move(conf));
+        ControllerDB::save(vendor, product, version, name, conf);
+
+        filename = conf.filename;
+        delete_action->set_enabled(true);
     }
     catch (std::exception& e) {
         cerr << "Failed to save: " << e.what() << endl;
@@ -229,15 +234,13 @@ DevicePage::on_action_save()
 void
 DevicePage::on_action_delete()
 {
-    try {
-        auto vendor = vendor_check->get_active() ? device.get_vendor() : 0;
-        auto product = product_check->get_active() ? device.get_product() : 0;
-        auto version = version_check->get_active() ? device.get_version() : 0;
-        auto name = name_check->get_active() ? device.get_name() : ""s;
-        ControllerDB::remove(vendor, product, version, name);
-    }
-    catch (std::exception& e) {
-        cerr << "Failed to remove: " << e.what() << endl;
+    if (filename.empty())
+        return;
+    auto arg = Variant<ustring>::create(filename.string());
+    root().get_action_group("app")->activate_action("delete_file", arg);
+    if (!exists(filename)) {
+        filename.clear();
+        delete_action->set_enabled(false);
     }
 }
 
@@ -259,17 +262,17 @@ DevicePage::on_action_revert_all()
 
 
 void
-DevicePage::on_action_apply_axis(const Glib::VariantBase& arg)
+DevicePage::on_action_apply_axis(const VariantBase& arg)
 {
-    Code code{variant_cast<guint16>(arg)};
+    Code code{utils::variant_cast<guint16>(arg)};
     apply_axis(code);
 }
 
 
 void
-DevicePage::on_action_revert_axis(const Glib::VariantBase& arg)
+DevicePage::on_action_revert_axis(const VariantBase& arg)
 {
-    Code code{variant_cast<guint16>(arg)};
+    Code code{utils::variant_cast<guint16>(arg)};
     revert_axis(code);
 }
 
@@ -315,7 +318,9 @@ DevicePage::disable()
 void
 DevicePage::try_load_config()
 {
-    loaded_config = false;
+    filename.clear();
+    delete_action->set_enabled(false);
+
     auto [key, conf] = ControllerDB::find(device.get_vendor(),
                                           device.get_product(),
                                           device.get_version(),
@@ -323,10 +328,10 @@ DevicePage::try_load_config()
     if (!key || !conf)
         return;
 
-    for (const auto& [code, data] : *conf) {
-        axes.at(code)->set_flat_centered(data.flat_centered);
+    for (const auto& [code, axis] : conf->axes) {
+        axes.at(code)->set_flat_centered(axis.flat_centered);
         // Note: don't feed a fake zero .val to the kernel nor to the axis_info children.
-        evdev::AbsInfo new_info = data.info;
+        AbsInfo new_info = axis.info;
         new_info.val = device.get_abs_info(code).val;
         device.set_kernel_abs_info(code, new_info);
         // cout << "Resetting axis " << code_to_string(type, code) << " to " << new_info << endl;
@@ -339,8 +344,10 @@ DevicePage::try_load_config()
     version_check->set_active(!!key->version);
     name_check->set_active(!key->name.empty());
 
+    filename = conf->filename;
+    delete_action->set_enabled(true);
+
     cout << "Applied config file for " << device.get_name() << endl;
-    loaded_config = true;
 }
 
 
@@ -356,5 +363,5 @@ bool
 DevicePage::has_loaded_config()
     const noexcept
 {
-    return loaded_config;
+    return !filename.empty();
 }

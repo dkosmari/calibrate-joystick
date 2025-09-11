@@ -370,6 +370,7 @@
             <child>
               <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Delete the calibration file.</property>
@@ -445,6 +446,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="icon-name">edit-clear</property>
+                        <property name="use-fallback">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -493,7 +495,8 @@
                       <object class="GtkImage">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="icon-name">dialog-ok</property>
+                        <property name="icon-name">object-select</property>
+                        <property name="use-fallback">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

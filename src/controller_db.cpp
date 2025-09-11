@@ -67,15 +67,7 @@ namespace ControllerDB {
 
     std::filesystem::path db_dir;
 
-
-
-    struct Entry {
-        DevConf conf;
-        std::filesystem::path filename;
-    };
-
-
-    std::map<Key, Entry> configs;
+    std::map<Key, DevConf> configs;
 
 
 #define GLIBMM_FILE_MONITOR_IS_BROKEN
@@ -149,7 +141,9 @@ namespace ControllerDB {
         key.version = get_hex(kf, "match", "version");
         key.name    = get_str(kf, "match", "name");
 
-        Entry entry;
+        DevConf conf;
+        conf.filename = filename;
+
         auto groups = kf.get_groups();
         for (std::string group : groups) {
             if (group == "match")
@@ -157,7 +151,7 @@ namespace ControllerDB {
             auto [type, code] = evdev::Code::parse(group);
             if (type != evdev::Type::abs)
                 throw std::runtime_error{"Invalid axis: \"" + group + "\""};
-            auto& data = entry.conf[code];
+            auto& data = conf.axes[code];
             auto& info = data.info;
             info.min  = get_int(kf, group, "min");
             info.max  = get_int(kf, group, "max");
@@ -169,9 +163,8 @@ namespace ControllerDB {
                 data.flat_centered = (val == "center") || (val == "centered");
             }
         }
-        entry.filename = filename;
 
-        auto [position, inserted] = configs.emplace(key, std::move(entry));
+        auto [position, inserted] = configs.emplace(key, std::move(conf));
         if (!inserted)
             cerr << "Duplicated config in " << filename << endl;
         else
@@ -210,20 +203,7 @@ namespace ControllerDB {
     void
     reload_config(const std::filesystem::path& filename)
     try {
-#if 0
-        // Note: this logic doesn't work well when making a copy, then deleting the original.
-        for (auto& [key, entry] : configs)
-            if (entry.filename == filename) {
-                cout << "Unloaded " << filename << endl;
-                configs.erase(key);
-                break;
-            }
-
-        if (exists(filename))
-            load_config(filename);
-#else
         reload_all_configs();
-#endif
     }
     catch (std::exception& e) {
         cerr << "Error reloading " << filename << ": " << e.what() << endl;
@@ -236,12 +216,13 @@ namespace ControllerDB {
 
 
 #ifndef GLIBMM_FILE_MONITOR_IS_BROKEN
+
     void
     on_db_dir_changed(const Glib::RefPtr<Gio::File>& file1,
                       const Glib::RefPtr<Gio::File>& /*file2*/,
                       Gio::FileMonitorEvent event_type)
         noexcept
-    {
+    try {
         std::filesystem::path filename = file1->get_path();
 
         if (filename.extension() != ".conf")
@@ -261,7 +242,13 @@ namespace ControllerDB {
                 ;
         }
     }
+    catch (std::exception& e) {
+        cout << "on_db_dir_changed(): " << e.what() << endl;
+    }
+
+
 #else
+
     void
     on_db_dir_changed(GFileMonitor* /*monitor*/,
                       GFile* file1,
@@ -269,34 +256,32 @@ namespace ControllerDB {
                       GFileMonitorEvent event_type,
                       gpointer /*user_data*/)
         noexcept
-    {
-        try {
-            char* filename1 = g_file_get_path(file1);
-            std::filesystem::path filename = filename1;
-            g_free(filename1);
+    try {
+        char* filename1 = g_file_get_path(file1);
+        std::filesystem::path filename = filename1;
+        g_free(filename1);
 
-            if (filename.extension() != ".conf")
-                return;
+        if (filename.extension() != ".conf")
+            return;
 
-            // Avoid loading Emacs temporary files.
-            if (filename.stem().string().starts_with(".#"))
-                return;
+        // Avoid loading Emacs temporary files.
+        if (filename.stem().string().starts_with(".#"))
+            return;
 
-            switch (event_type) {
-                case G_FILE_MONITOR_EVENT_CHANGED: // 0
-                case G_FILE_MONITOR_EVENT_DELETED: // 2
-                case G_FILE_MONITOR_EVENT_CREATED: // 3
-                    // cout << "event_type=" << event_type << ", filename=" << filename << endl;
-                    reload_config(filename);
-                    break;
-                default:
-                    ;
-            }
-        }
-        catch (std::exception& e) {
-            cout << "on_db_dir_changed(): " << e.what() << endl;
+        switch (event_type) {
+            case G_FILE_MONITOR_EVENT_CHANGED: // 0
+            case G_FILE_MONITOR_EVENT_DELETED: // 2
+            case G_FILE_MONITOR_EVENT_CREATED: // 3
+                reload_config(filename);
+                break;
+            default:
+                ;
         }
     }
+    catch (std::exception& e) {
+        cout << "on_db_dir_changed(): " << e.what() << endl;
+    }
+
 #endif
 
 
@@ -397,12 +382,11 @@ namespace ControllerDB {
          std::uint16_t product,
          std::uint16_t version,
          const std::string& name,
-         const DevConf& configs)
+         DevConf& configs)
     {
-        // TODO: temporarily disable directory monitoring.
         using Glib::ustring;
 
-        auto filename = make_filename(vendor, product, version, name);
+        configs.filename = make_filename(vendor, product, version, name);
 
         std::string vendor_str = ustring::sprintf("%04x", vendor);
         std::string product_str = ustring::sprintf("%04x", product);
@@ -422,7 +406,7 @@ namespace ControllerDB {
             kf.set_string("match", "name", name);
 
 
-        for (const auto& [axis, data] : configs) {
+        for (const auto& [axis, data] : configs.axes) {
             std::string group = code_to_string(evdev::Type::abs, axis);
             const auto& info = data.info;
             kf.set_integer(group, "min", info.min);
@@ -434,7 +418,9 @@ namespace ControllerDB {
                           data.flat_centered ? "center" : "zero");
         }
 
-        kf.save_to_file(filename);
+        kf.save_to_file(configs.filename);
+        // Note: we don't need to add this DevConf to the controller DB, since
+        // the directory monitor will load it anyway.
     }
 
 
@@ -455,32 +441,6 @@ namespace ControllerDB {
     }
 
 
-    void
-    remove(std::uint16_t vendor,
-           std::uint16_t product,
-           std::uint16_t version,
-           const std::string& name)
-    {
-        const Key key{ vendor, product, version, name };
-        // Fast path: find an exact match.
-        if (auto it = configs.find(key); it != configs.end()) {
-            auto filename = it->second.filename;
-            remove(filename);
-            return;
-        }
-
-        // Slow path: search every key using the match() function.
-        for (auto it = configs.begin(); it != configs.end(); ++it) {
-            const auto& [k, v] = *it;
-            if (match(key, k)) {
-                auto filename = v.filename;
-                remove(filename);
-                return;
-            }
-        }
-    }
-
-
     std::pair<const Key*, const DevConf*>
     find(std::uint16_t vendor,
          std::uint16_t product,
@@ -491,15 +451,14 @@ namespace ControllerDB {
         const Key key{ vendor, product, version, name };
         // Fast path: find an exact match.
         if (auto it = configs.find(key); it != configs.end())
-            return {&it->first, &it->second.conf};
+            return {&it->first, &it->second};
 
         // Slow path: search every key using the match() function.
         for (const auto& [k, v] : configs)
             if (match(key, k))
-                return {&k, &v.conf};
+                return {&k, &v};
 
         return {nullptr, nullptr};
     }
-
 
 } // namespace ControllerDB

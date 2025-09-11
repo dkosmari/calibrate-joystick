@@ -32,48 +32,45 @@ using Glib::Variant;
 using evdev::AbsInfo;
 
 
+namespace {
+
+    const std::string axis_info_glade = RESOURCE_PREFIX "/ui/axis-info.glade";
+
+} // namespace
+
+
 AxisInfo::AxisInfo(evdev::Code axis_code,
                    const AbsInfo& info) :
     code{axis_code}
 {
     load_widgets();
-    name_label->set_label(evdev::code_to_string(evdev::Type::abs, axis_code));
+    create_actions();
 
+    name_label->set_label(evdev::code_to_string(evdev::Type::abs, axis_code));
+    reset(info);
+}
+
+
+void
+AxisInfo::create_actions()
+{
     actions = SimpleActionGroup::create();
     root().insert_action_group("axis", actions);
-
-    // NOTE: since "this" is captured, this object is not movable
-#define CONN_SYNC_SPIN(x)                                               \
-    x ## _changed_conn = calc_ ## x ## _spin->signal_value_changed()    \
-        .connect([this] {                                               \
-            calc.x = calc_ ## x ## _spin->get_value_as_int();           \
-            update_ ## x (calc.x);                                      \
-        })
-
-    CONN_SYNC_SPIN(min);
-    CONN_SYNC_SPIN(max);
-    CONN_SYNC_SPIN(fuzz);
-    CONN_SYNC_SPIN(flat);
-    CONN_SYNC_SPIN(res);
-
-#undef CONN_SYNC_SPIN
 
     action_apply = actions->add_action("apply",
                                        sigc::mem_fun(this, &AxisInfo::on_action_apply));
 
     action_revert = actions->add_action("revert",
                                         sigc::mem_fun(this, &AxisInfo::on_action_revert));
-
-    reset(info);
 }
 
 
 void
 AxisInfo::load_widgets()
 {
-    auto builder = Gtk::Builder::create_from_resource(ui_axis_info_path);
+    auto builder = Gtk::Builder::create_from_resource(axis_info_glade);
 
-    info_frame = get_widget<Gtk::Frame>(builder, "info_frame");
+    utils::get_widget(builder, "info_frame", info_frame);
 
     builder->get_widget("name_label", name_label);
 
@@ -91,14 +88,25 @@ AxisInfo::load_widgets()
     builder->get_widget("calc_flat_spin", calc_flat_spin);
     builder->get_widget("calc_res_spin",  calc_res_spin);
 
+    calc_min_spin->signal_value_changed()
+        .connect([this] { set_calc_min(calc_min_spin->get_value_as_int()); });
+    calc_max_spin->signal_value_changed()
+        .connect([this] { set_calc_max(calc_max_spin->get_value_as_int()); });
+    calc_fuzz_spin->signal_value_changed()
+        .connect([this] { set_calc_fuzz(calc_fuzz_spin->get_value_as_int()); });
+    calc_flat_spin->signal_value_changed()
+        .connect([this] { set_calc_flat(calc_flat_spin->get_value_as_int()); });
+    calc_res_spin->signal_value_changed()
+        .connect([this] { set_calc_res(calc_res_spin->get_value_as_int()); });
+
     builder->get_widget_derived("axis_canvas", axis_canvas, orig);
     update_canvas();
 
     builder->get_widget("flat_item_zero", flat_item_zero);
     builder->get_widget("flat_item_centered", flat_item_centered);
     // Note: GtkRadioMenuItem does not support actions, so we use signals.
-    flat_item_zero    ->signal_toggled().connect([this]{ on_changed_flat_to_zero(); });
-    flat_item_centered->signal_toggled().connect([this]{ on_changed_flat_to_centered(); });
+    flat_item_zero    ->signal_toggled().connect([this] { on_changed_flat_to_zero(); });
+    flat_item_centered->signal_toggled().connect([this] { on_changed_flat_to_centered(); });
 }
 
 
@@ -120,7 +128,7 @@ AxisInfo::update_canvas()
 
 
 void
-AxisInfo::update_value(int value)
+AxisInfo::set_calc_value(int value)
 {
     value_label->set_label(ustring::format(value));
 
@@ -139,7 +147,7 @@ AxisInfo::update_value(int value)
 
 
 void
-AxisInfo::update_min(int min)
+AxisInfo::set_calc_min(int min)
 {
     calc.min = min;
     update_canvas();
@@ -147,7 +155,7 @@ AxisInfo::update_min(int min)
 
 
 void
-AxisInfo::update_max(int max)
+AxisInfo::set_calc_max(int max)
 {
     calc.max = max;
     update_canvas();
@@ -155,7 +163,7 @@ AxisInfo::update_max(int max)
 
 
 void
-AxisInfo::update_fuzz(int fuzz)
+AxisInfo::set_calc_fuzz(int fuzz)
 {
     calc.fuzz = fuzz;
     update_canvas();
@@ -163,7 +171,7 @@ AxisInfo::update_fuzz(int fuzz)
 
 
 void
-AxisInfo::update_flat(int flat)
+AxisInfo::set_calc_flat(int flat)
 {
     calc.flat = flat;
     update_canvas();
@@ -171,7 +179,7 @@ AxisInfo::update_flat(int flat)
 
 
 void
-AxisInfo::update_res(int res)
+AxisInfo::set_calc_res(int res)
 {
     calc.res = res;
     update_canvas();
@@ -181,16 +189,16 @@ AxisInfo::update_res(int res)
 void
 AxisInfo::on_action_apply()
 {
-    root().get_action_group("dev")
-        ->activate_action("apply_axis", Variant<guint16>::create(code));
+    root().get_action_group("dev")->activate_action("apply_axis",
+                                                    Variant<guint16>::create(code));
 }
 
 
 void
 AxisInfo::on_action_revert()
 {
-    root().get_action_group("dev")
-        ->activate_action("revert_axis", Variant<guint16>::create(code));
+    root().get_action_group("dev")->activate_action("revert_axis",
+                                                    Variant<guint16>::create(code));
 }
 
 
@@ -239,7 +247,7 @@ AxisInfo::reset(const AbsInfo& new_orig)
     calc_flat_spin->set_value(calc.flat);
     calc_res_spin ->set_value(calc.res);
 
-    update_value(calc.val);
+    set_calc_value(calc.val);
 
     if (axis_canvas)
         axis_canvas->reset(orig, calc);

@@ -99,6 +99,57 @@ Russian (ru): Alexandr Primak (streamdp)</property>
       </object>
     </child>
   </object>
+  <object class="GtkDialog" id="delete_dialog">
+    <property name="can-focus">False</property>
+    <property name="border-width">6</property>
+    <property name="title" translatable="yes">Confirm file deletion</property>
+    <property name="modal">True</property>
+    <property name="type-hint">dialog</property>
+    <property name="transient-for">main_window</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Do you want to delete this file?</property>
+            <property name="justify">center</property>
+            <property name="wrap">True</property>
+            <property name="width-chars">20</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+              <attribute name="scale" value="1.5"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkImage" id="quit_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>

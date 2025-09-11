@@ -23,14 +23,11 @@ class AxisCanvas;
 
 class AxisInfo {
 
-    template<typename T>
-    using rptr = Glib::RefPtr<T>;
-
-    rptr<Gio::SimpleActionGroup> actions;
-    rptr<Gio::SimpleAction> action_apply;
-    rptr<Gio::SimpleAction> action_revert;
-    rptr<Gio::SimpleAction> action_flat_zero;
-    rptr<Gio::SimpleAction> action_flat_centered;
+    Glib::RefPtr<Gio::SimpleActionGroup> actions;
+    Glib::RefPtr<Gio::SimpleAction> action_apply;
+    Glib::RefPtr<Gio::SimpleAction> action_revert;
+    Glib::RefPtr<Gio::SimpleAction> action_flat_zero;
+    Glib::RefPtr<Gio::SimpleAction> action_flat_centered;
 
     std::unique_ptr<Gtk::Frame> info_frame;
 
@@ -54,12 +51,6 @@ class AxisInfo {
 
     AxisCanvas* axis_canvas = nullptr;
 
-    sigc::connection min_changed_conn;
-    sigc::connection max_changed_conn;
-    sigc::connection fuzz_changed_conn;
-    sigc::connection flat_changed_conn;
-    sigc::connection res_changed_conn;
-
     evdev::Code code;
     evdev::AbsInfo orig;
     evdev::AbsInfo calc;
@@ -68,25 +59,28 @@ class AxisInfo {
 
 
     void
+    create_actions();
+
+    void
     load_widgets();
 
     void
     update_canvas();
 
     void
-    update_min(int min);
+    set_calc_min(int min);
 
     void
-    update_max(int max);
+    set_calc_max(int max);
 
     void
-    update_fuzz(int fuzz);
+    set_calc_fuzz(int fuzz);
 
     void
-    update_flat(int flat);
+    set_calc_flat(int flat);
 
     void
-    update_res(int res);
+    set_calc_res(int res);
 
 
     void
@@ -111,7 +105,7 @@ public:
              const evdev::AbsInfo& info);
 
     void
-    update_value(int value);
+    set_calc_value(int value);
 
     Gtk::Widget&
     root();

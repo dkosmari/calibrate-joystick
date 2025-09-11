@@ -8,10 +8,10 @@
 #ifndef DEVICE_PAGE_HPP
 #define DEVICE_PAGE_HPP
 
-#include <memory>
-#include <string>
 #include <filesystem>
 #include <map>
+#include <memory>
+#include <string>
 
 #include <gtkmm.h>
 #include <libevdevxx/Device.hpp>
@@ -25,25 +25,19 @@ class AxisInfo;
 
 class DevicePage {
 
-    template<typename T>
-    using uptr = std::unique_ptr<T>;
-
-    template<typename T>
-    using rptr = Glib::RefPtr<T>;
-
     std::filesystem::path dev_path;
 
     evdev::Device device;
 
-    rptr<Gio::SimpleActionGroup> actions;
-    rptr<Gio::SimpleAction> save_action;
-    rptr<Gio::SimpleAction> delete_action;
-    rptr<Gio::SimpleAction> apply_all_action;
-    rptr<Gio::SimpleAction> revert_all_action;
-    rptr<Gio::SimpleAction> apply_axis_action;
-    rptr<Gio::SimpleAction> revert_axis_action;
+    Glib::RefPtr<Gio::SimpleActionGroup> actions;
+    Glib::RefPtr<Gio::SimpleAction> save_action;
+    Glib::RefPtr<Gio::SimpleAction> delete_action;
+    Glib::RefPtr<Gio::SimpleAction> apply_all_action;
+    Glib::RefPtr<Gio::SimpleAction> revert_all_action;
+    Glib::RefPtr<Gio::SimpleAction> apply_axis_action;
+    Glib::RefPtr<Gio::SimpleAction> revert_axis_action;
 
-    uptr<Gtk::Box> device_box;
+    std::unique_ptr<Gtk::Box> device_box;
 
     Gtk::Label* path_label    = nullptr;
     Gtk::Label* name_label    = nullptr;
@@ -61,18 +55,18 @@ class DevicePage {
     Gtk::InfoBar* info_bar    = nullptr;
     Gtk::Label*   error_label = nullptr;
 
-    std::map<evdev::Code, uptr<AxisInfo>> axes;
+    std::map<evdev::Code, std::unique_ptr<AxisInfo>> axes;
 
     sigc::connection io_conn;
 
-    bool loaded_config = false;
+    std::filesystem::path filename;
 
+
+    void
+    create_actions();
 
     void
     load_widgets();
-
-    void
-    setup_actions();
 
     bool
     on_io(Glib::IOCondition cond);
@@ -121,16 +115,15 @@ public:
 
     ~DevicePage();
 
+
     Gtk::Widget&
     root();
 
+
     std::string
-    name()
+    get_name()
         const;
 
-    const std::filesystem::path&
-    path()
-        const;
 
     void
     update_colors(const App* app);

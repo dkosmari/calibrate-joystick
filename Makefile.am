@@ -84,7 +84,6 @@ calibrate_joystick_SOURCES = \
 	src/main.cpp \
 	src/settings.cpp \
 	src/settings.hpp \
-	src/utils.cpp \
 	src/utils.hpp
 
 
