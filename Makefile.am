@@ -27,7 +27,7 @@ desktop_DATA = \
 
 # .gresource file
 
-RESOURCES_XML = $(srcdir)/@PACKAGE@.xml
+RESOURCES_XML = @PACKAGE@.xml
 RESOURCES_ARCHIVE = @PACKAGE@.gresource
 
 resourcesdir = $(datadir)/@PACKAGE@
@@ -49,6 +49,16 @@ gsettings_SCHEMAS = @PACKAGE@.gschema.xml
 @GSETTINGS_RULES@
 
 
+if INTERNAL_LIBEVDEVXX
+LIBEVDEVXX_CFLAGS += $(LIBEVDEV_CFLAGS) -I$(srcdir)/external/libevdevxx/include
+LIBEVDEVXX_LIBS += -Lexternal/libevdevxx -levdevxx $(LIBEVDEV_LIBS)
+endif INTERNAL_LIBEVDEVXX
+
+if INTERNAL_LIBGUDEVXX
+LIBGUDEVXX_CFLAGS += $(LIBGUDEV_CFLAGS) -I$(srcdir)/external/libgudevxx/include
+LIBGUDEVXX_LIBS += -Lexternal/libgudevxx -lgudevxx $(LIBGUDEV_LIBS)
+endif INTERNAL_LIBGUDEVXX
+
 
 AM_CPPFLAGS = \
 	$(GTKMM_CFLAGS) \
@@ -66,6 +76,7 @@ LIBS = \
 	$(LIBEVDEVXX_LIBS) \
 	$(LIBINTL) \
 	$(LTLIBICONV)
+
 
 bin_PROGRAMS = calibrate-joystick
 
@@ -86,12 +97,6 @@ calibrate_joystick_SOURCES = \
 	src/settings.cpp \
 	src/settings.hpp \
 	src/utils.hpp
-
-
-dist-hook:
-	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
-	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
-
 
 
 .PHONY: run run-daemon rpm company

@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.70])
 AC_INIT([Calibrate Joystick],
-        [0.5.2+],
+        [0.6.0-rc1],
         [https://github.com/dkosmari/calibrate-joystick/issues],
         [calibrate-joystick],
         [https://github.com/dkosmari/calibrate-joystick])
@@ -15,7 +15,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 
-# Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CPP
@@ -31,10 +30,16 @@ AM_ICONV
 
 
 AC_LANG([C++])
-
 AX_APPEND_COMPILE_FLAGS([-std=c++20], [CXX])
 
-# Checks for libraries.
+
+AC_TYPE_SIZE_T
+AC_TYPE_UINT64_T
+
+
+GLIB_GSETTINGS
+
+
 PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
 
 USE_SYSTEM_LIBEVDEVXX=yes
@@ -51,11 +56,6 @@ AC_ARG_ENABLE([system-libgudevxx],
               [USE_SYSTEM_LIBGUDEVXX=$enableval])
 AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [yes],
           [PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx], [], [USE_SYSTEM_LIBGUDEVXX=no])])
-
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_TYPE_SIZE_T
-AC_TYPE_UINT64_T
 
 
 APPLICATION_ID="none.calibrate_joystick"
@@ -80,29 +80,24 @@ EXTERNAL_SUBDIRS=
 AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBEVDEV], [libevdev])
-              LIBEVDEVXX_CFLAGS="${LIBEVDEV_CFLAGS} -Iexternal/libevdevxx/include"
-              LIBEVDEVXX_LIBS="-Lexternal/libevdevxx -levdevxx ${LIBEVDEV_LIBS}"
               AC_MSG_NOTICE([Using built-in libevdevxx.])
               EXTERNAL_SUBDIRS+=" external/libevdevxx"
               AX_SUBDIRS_CONFIGURE([external/libevdevxx],
                                    [[--disable-shared]])
           ])
+AM_CONDITIONAL([INTERNAL_LIBEVDEVXX], [test "x$USE_SYSTEM_LIBEVDEVXX" = xno])
 
 AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBGUDEV], [gudev-1.0])
-              LIBGUDEVXX_CFLAGS="${LIBGUDEV_CFLAGS} -Iexternal/libgudevxx/include"
-              LIBGUDEVXX_LIBS="-Lexternal/libgudevxx -lgudevxx ${LIBGUDEV_LIBS}"
               AC_MSG_NOTICE([Using built-in libgudevxx.])
               EXTERNAL_SUBDIRS+=" external/libgudevxx"
               AX_SUBDIRS_CONFIGURE([external/libgudevxx],
                                    [[--disable-shared]])
           ])
+AM_CONDITIONAL([INTERNAL_LIBGUDEVXX], [test "x$USE_SYSTEM_LIBGUDEVXX" = xno])
 
 AC_SUBST([EXTERNAL_SUBDIRS])
-
-
-GLIB_GSETTINGS
 
 
 AC_CONFIG_FILES([calibrate-joystick.spec
