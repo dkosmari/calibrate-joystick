@@ -2,10 +2,12 @@
 
 This is a graphical program to quickly calibrate range and deadzones of joysticks.
 
+![calibrate-joystick main window](screenshots/screenshot-1.png)
+
+![calibrate-joystick settings window](screenshots/screenshot-2.png)
+
 
 ## Usage
-
-![calibrate-joystick main window](screenshots/screenshot-1.png)
 
   - Run the program.
 

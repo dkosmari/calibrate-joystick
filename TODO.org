@@ -1,9 +1,9 @@
-* Pending for 0.6.0 [75%]
+* Pending for 0.6.0 [100%]
 :PROPERTIES:
 :COOKIE_DATA: recursive
 :END:
   - [X] Don't present the main window when a device is added, if calibration was
     successful loaded.
   - [X] Update translations.
-  - [ ] Update screenshot.
+  - [X] Update screenshot.
   - [X] Render fuzz better.
