@@ -53,7 +53,7 @@ won't stop the daemon, it must be explicitly closed through the **Quit daemon** 
 
 ### Dependencies
 
-- A C++20 compiler. This is often installed through a meta package like `task-c++` or `build-essential` in your package manager.
+- A C++20 compiler. This is often installed through a meta package like `task-c++-devel` or `build-essential` in your package manager.
 
   Some distros also need manual installation of C development tools like:
     - `autoconf`
