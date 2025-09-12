@@ -107,6 +107,18 @@ gschemas.compiled: $(gsettings_SCHEMAS)
 	$(GLIB_COMPILE_SCHEMAS) --targetdir=$(builddir) $(srcdir)
 
 
+install-exec-hook:
+install-data-hook:
+if INTERNAL_LIBEVDEVXX
+	$(info Removing libevdevxx)
+	$(MAKE) -C external/libevdevxx uninstall DESTDIR=$(DESTDIR)
+endif INTERNAL_LIBEVDEVXX
+if INTERNAL_LIBGUDEVXX
+	$(info Removing libgudevxx)
+	$(MAKE) -C external/libgudevxx uninstall DESTDIR=$(DESTDIR)
+endif INTERNAL_LIBGUDEVXX
+
+
 run: all gschemas.compiled
 	GSETTINGS_SCHEMA_DIR=. ./calibrate-joystick
 
