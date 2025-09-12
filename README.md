@@ -37,7 +37,7 @@ This is a graphical program to quickly calibrate range and deadzones of joystick
 > where `eventN` is the desired device. Udev uses heuristics to guess which devices are
 > joysticks, but this can be overridden with udev rules.
 >
-> Security reasons, udev only allows users direct access to devices with the `uaccess`
+> For security reasons, udev only allows users direct access to devices with the `uaccess`
 > tag. If your device was not tagged with `uaccess`, either create a custom udev rule to
 > tag it with `uaccess`, or run calibrate-joystick with sudo/root permissions.
 
