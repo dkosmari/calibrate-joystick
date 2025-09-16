@@ -14,7 +14,7 @@ WORKDIR /tmp
 
 # Import the key used to sign the packages
 RUN gpg2 --receive-keys 2A8BF440D60CE9D60EC314B2E2FBBA1C0CFCF830
-RUN gpg2 --output dkosmari.asc --export 2A8BF440D60CE9D60EC314B2E2FBBA1C0CFCF830
+RUN gpg2 --output dkosmari.asc --armor --export 2A8BF440D60CE9D60EC314B2E2FBBA1C0CFCF830
 RUN rpm --import dkosmari.asc
 
 RUN wget -q https://github.com/dkosmari/libevdevxx/releases/download/v0.5.3/libevdevxx-static-devel-0.5.3-1.fc42.x86_64.rpm
