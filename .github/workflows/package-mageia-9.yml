@@ -1,0 +1,47 @@
+name: Mageia 9 RPM package
+
+on: [workflow_dispatch]
+
+env:
+  DISTRO: mageia-9
+
+jobs:
+  build-rpm:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Create docker image
+      uses: docker/build-push-action@v6
+      with:
+        tags: image-${{ env.DISTRO }}
+        context: ./packages/${{ env.DISTRO }}
+      env:
+        DOCKER_BUILD_SUMMARY: false
+        DOCKER_BUILD_RECORD_UPLOAD: false
+
+    - name: Build RPM package
+      uses: addnab/docker-run-action@v3
+      with:
+        image: image-${{ env.DISTRO }}
+        options: --name container-${{ env.DISTRO }}
+        run: |
+          ./build.sh
+
+    - name: Copy from container to host
+      uses: tj-actions/docker-cp@v2
+      with:
+        container: container-${{ env.DISTRO }}
+        source: /buildroot/output
+        destination: packages/${{ env.DISTRO }}/output
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.DISTRO }} packages
+        path: packages/${{ env.DISTRO }}/output
+        if-no-files-found: error

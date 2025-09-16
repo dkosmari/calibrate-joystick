@@ -47,4 +47,5 @@ po/remove-potcdate.sed
 po/remove-potcdate.sin
 po/Rules-quot
 po/stamp-po
+SPECS/log.*
 stamp-h1
