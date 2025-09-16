@@ -26,7 +26,7 @@ This is a graphical program to quickly calibrate range and deadzones of joystick
     **Apply** for each axis individually.
 
   - Optional: click **Save** to permanently store this calibration to
-    `~/.config/calibrate-joysticks/db/`. Only the values that were actually applied to the
+    `~/.config/calibrate-joystick/db/`. Only the values that were actually applied to the
     device will be saved. Whenever you insert that same device again, the saved
     calibration will be applied.
 
