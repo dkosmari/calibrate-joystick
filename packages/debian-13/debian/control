@@ -1,0 +1,22 @@
+Source: calibrate-joystick
+Section: utils
+Priority: optional
+Maintainer: Daniel K. O. (@dkosmari)
+Build-Depends:
+ debhelper-compat (= 13),
+ libevdevxx-static-dev,
+ libgudevxx-static-dev,
+Standards-Version: 4.7.0
+Homepage: https://github.com/dkosmari/calibrate-joystick
+Rules-Requires-Root: no
+
+Package: calibrate-joystick
+Architecture: any
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+ libevdev2,
+ libgudev-1.0-0,
+Description: A graphical program to quickly calibrate range and deadzones of joysticks.
+ Use this too to quickly calibrate, save and load calibrations, for your joysticks.
