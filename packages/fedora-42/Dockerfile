@@ -20,7 +20,7 @@ RUN rpm --import dkosmari.asc
 RUN wget -q https://github.com/dkosmari/libevdevxx/releases/download/v0.5.3/libevdevxx-static-devel-0.5.3-1.fc42.x86_64.rpm
 RUN wget -q https://github.com/dkosmari/libgudevxx/releases/download/v0.3/libgudevxx-static-devel-0.3-1.fc42.x86_64.rpm
 
-RUN dnf -qy ./libevdevxx-static-devel-0.5.3-1.fc42.x86_64.rpm ./libgudevxx-static-devel-0.3-1.fc42.x86_64.rpm
+RUN dnf -qy install ./libevdevxx-static-devel-0.5.3-1.fc42.x86_64.rpm ./libgudevxx-static-devel-0.3-1.fc42.x86_64.rpm
 
 
 WORKDIR /root/rpmbuild
