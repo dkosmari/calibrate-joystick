@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.70])
 AC_INIT([Calibrate Joystick],
-        [0.6.0-rc1],
+        [0.6.0],
         [https://github.com/dkosmari/calibrate-joystick/issues],
         [calibrate-joystick],
         [https://github.com/dkosmari/calibrate-joystick])
