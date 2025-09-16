@@ -1,5 +1,7 @@
 # Calibrate Joystick - a tool to calibrate joysticks on Linux systems
 
+![Build status](https://github.com/dkosmari/calibrate-joysticks/actions/workflows/build.yml/badge.svg)
+
 This is a graphical program to quickly calibrate range and deadzones of joysticks.
 
 ![calibrate-joystick main window](screenshots/screenshot-1.png)
