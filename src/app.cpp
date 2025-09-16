@@ -113,7 +113,8 @@ App::load_widgets()
     if (opt_daemon) {
         quit_button->show();
 
-        // every time the window is hidden, send a new notification
+        // If the desktop doesn't have tray icons, use notifications to warn the daemon
+        // got hidden.
         main_window->signal_delete_event().connect([this](GdkEventAny*) -> bool
         {
             if (!status_icon->is_embedded())

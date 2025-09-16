@@ -58,21 +58,17 @@ AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [yes],
           [PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx >= 0.3], [], [USE_SYSTEM_LIBGUDEVXX=no])])
 
 
-APPLICATION_ID="none.calibrate_joystick"
+APPLICATION_ID="com.github.dkosmari.CalibrateJoystick"
 AC_SUBST([APPLICATION_ID])
 AC_DEFINE_UNQUOTED([APPLICATION_ID],
                    ["$APPLICATION_ID"],
                    [GApplication id, must match .desktop file name])
 
-RESOURCE_PREFIX="/none/calibrate_joystick"
+RESOURCE_PREFIX="/com/github/dkosmari/CalibrateJoystick"
 AC_SUBST([RESOURCE_PREFIX])
 AC_DEFINE_UNQUOTED([RESOURCE_PREFIX],
                    ["$RESOURCE_PREFIX"],
-                   [Prefix used in the .gresource file.])
-
-
-TARBALL_NAME="${PACKAGE_TARNAME}-${PACKAGE_VERSION}.tar.gz"
-AC_SUBST([TARBALL_NAME])
+                   [Path prefix used in the .gresource file.])
 
 
 EXTERNAL_SUBDIRS=

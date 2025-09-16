@@ -4,7 +4,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
 	@APPLICATION_ID@.desktop \
-	@APPLICATION_ID@_daemon.desktop \
+	@APPLICATION_ID@Daemon.desktop \
 	@PACKAGE@.gresource.xml.in \
 	@PACKAGE@.gschema.xml.in \
 	bootstrap \
@@ -21,13 +21,13 @@ SUBDIRS = @EXTERNAL_SUBDIRS@ po
 desktopdir = $(datadir)/applications
 desktop_DATA = \
 	$(APPLICATION_ID).desktop \
-	$(APPLICATION_ID)_daemon.desktop
+	$(APPLICATION_ID)Daemon.desktop
 
 
 # .gresource file
 
-gresource_DATA = @PACKAGE@.gresource
 gresourcedir = $(datadir)/@PACKAGE@
+gresource_DATA = @PACKAGE@.gresource
 gresource_DEPS = $(shell $(GLIB_COMPILE_RESOURCES) \
 				--sourcedir=$(srcdir) \
 				--generate-dependencies \

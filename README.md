@@ -1,4 +1,4 @@
-# calibrate-joystick - a tool to calibrate joysticks on Linux systems
+# Calibrate Joystick - a tool to calibrate joysticks on Linux systems
 
 This is a graphical program to quickly calibrate range and deadzones of joysticks.
 
@@ -39,7 +39,7 @@ This is a graphical program to quickly calibrate range and deadzones of joystick
 >
 > For security reasons, udev only allows users direct access to devices with the `uaccess`
 > tag. If your device was not tagged with `uaccess`, either create a custom udev rule to
-> tag it with `uaccess`, or run calibrate-joystick with sudo/root permissions.
+> tag it with `uaccess`, or run `calibrate-joystick` with sudo/root permissions.
 
 The program can also be run as a daemon:
 
@@ -53,7 +53,8 @@ won't stop the daemon, it must be explicitly closed through the **Quit daemon** 
 
 ### Dependencies
 
-- A C++20 compiler. This is often installed through a meta package like `task-c++-devel` or `build-essential` in your package manager.
+- A C++20 compiler. This is often installed through a meta package (or package group) like
+  `task-c++-devel`, `build-essential` or `c-development` in your package manager.
 
   Some distros also need manual installation of C development tools like:
     - `autoconf`
@@ -64,13 +65,13 @@ won't stop the daemon, it must be explicitly closed through the **Quit daemon** 
     - `pkg-config`
 
 - [gtkmm-3.0](http://gtkmm.org): usually available as a package in your distro (you need
-  the "devel" package.)
+  the "dev" or "devel" package.)
 
 - [libevdev](http://www.freedesktop.org/wiki/Software/libevdev): usually available as a
-  package in your distro (you need the "devel" package.)
+  package in your distro (you need the "dev" or "devel" package.)
 
 - [libgudev](http://wiki.gnome.org/Projects/libgudev): usually available as a package in
-  your distro (you need the "devel" package.)
+  your distro (you need the "dev" or "devel" package.)
 
 
 ### Instructions
