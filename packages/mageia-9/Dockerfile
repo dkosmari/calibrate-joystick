@@ -3,7 +3,7 @@ FROM mageia:9
 RUN urpmi -q --auto-update --auto
 
 # install packaging tools
-RUN urpmi -q --auto rpmdevtools bm 
+RUN urpmi -q --auto rpmdevtools bm wget
 
 # install build dependencies
 RUN urpmi -q --auto task-c++-devel
