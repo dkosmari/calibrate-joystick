@@ -2,11 +2,11 @@ name: Build
 
 on:
 
-  # push:
-  #   branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
-  # pull_request:
-  #   branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
   workflow_dispatch:
 
@@ -23,17 +23,12 @@ jobs:
         with:
           submodules: false
 
-      # - name: Install dependencies
-      #   uses: awalsh128/cache-apt-pkgs-action@latest
-      #   with:
-      #     packages: libevdev-dev libgudev-1.0-dev libgtkmm-3.0-dev
-      #     version: build
-
       - name: Install dependencies
         uses: gerlero/apt-install@v1
         with:
           packages: |
             autoconf
+            autoconf-archive
             automake
             autopoint
             intltool
