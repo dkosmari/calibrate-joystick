@@ -2,7 +2,7 @@ FROM fedora:42
 
 # install packaging tools
 RUN dnf -qy group install rpm-development-tools
-RUN dnf -qy install fedora-rpm-macros wget
+RUN dnf -qy install fedora-rpm-macros wget gnupg2
 
 # install build dependencies
 RUN dnf -qy group install c-development
