@@ -21,22 +21,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      # - name: Install dependencies
+      #   uses: awalsh128/cache-apt-pkgs-action@latest
+      #   with:
+      #     packages: libevdev-dev libgudev-1.0-dev libgtkmm-3.0-dev
+      #     version: build
+
       - name: Install dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
+        uses: gerlero/apt-install@v1
         with:
           packages: libevdev-dev libgudev-1.0-dev libgtkmm-3.0-dev
-          version: build
+      
+      - name: Install libevdevxx-static-devel
+        run: |
+          wget -q "https://github.com/dkosmari/libevdevxx/releases/download/v0.5.3/libevdevxx-static-dev_0.5.3-1_amd64.deb"
+          sudo apt -y install ./libevdevxx-static-dev_0.5.3-1_amd64.deb
 
       - name: Install libevdevxx-static-devel
         run: |
-          wget "https://github.com/dkosmari/libevdevxx/releases/download/v0.5.3/libevdevxx-static-dev_0.5.3-1_amd64.deb"
-          apt -y install ./libevdevxx-static-dev_0.5.3-1_amd64.deb
-
-
-      - name: Install libevdevxx-static-devel
-        run: |
-          wget "https://github.com/dkosmari/libgudevxx/releases/download/v0.3/libgudevxx-static-dev_0.3-1_amd64.deb"
-          apt -y install ./libgudevxx-static-dev_0.3-1_amd64.deb
+          wget -q "https://github.com/dkosmari/libgudevxx/releases/download/v0.3/libgudevxx-static-dev_0.3-1_amd64.deb"
+          sudo apt -y install ./libgudevxx-static-dev_0.3-1_amd64.deb
 
       - name: Use ccache
         uses: hendrikmuhs/ccache-action@v1.2
