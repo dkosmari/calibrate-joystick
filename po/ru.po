@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.5.2+\n"
 "Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2025-09-11 20:59-0300\n"
+"POT-Creation-Date: 2025-09-16 00:15-0300\n"
 "PO-Revision-Date: 2025-09-11 04:22-0300\n"
 "Last-Translator: Daniel K. O.\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
@@ -19,63 +19,63 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/app.cpp:129 ui/application.glade:426
+#: src/app.cpp:130 ui/application.glade:426
 msgid "_Close"
 msgstr "_Закрыть"
 
-#: src/app.cpp:134 src/app.cpp:212
+#: src/app.cpp:135 src/app.cpp:213
 msgid "_Cancel"
 msgstr "_Отмена"
 
-#: src/app.cpp:135 ui/device-page.glade:401
+#: src/app.cpp:136 ui/device-page.glade:401
 msgid "_Delete"
 msgstr "_Удалить"
 
-#: src/app.cpp:183
+#: src/app.cpp:184
 msgid "Daemon running."
 msgstr "Демон запущен."
 
-#: src/app.cpp:184 src/app.cpp:329
+#: src/app.cpp:185 src/app.cpp:330
 msgid "Monitoring new joysticks..."
 msgstr "Мониторинг новых джойстиков..."
 
-#: src/app.cpp:186
+#: src/app.cpp:187
 msgid "Quit daemon"
 msgstr "Остановить демон"
 
-#: src/app.cpp:205
+#: src/app.cpp:206
 msgid "Open device..."
 msgstr "Открыть устройство..."
 
-#: src/app.cpp:213 ui/actions.ui:11
+#: src/app.cpp:214 ui/actions.ui:11
 msgid "_Open"
 msgstr "_Открыть"
 
-#: src/app.cpp:216
+#: src/app.cpp:217
 msgid "evdev devices"
 msgstr "устройства evdev"
 
-#: src/app.cpp:221
+#: src/app.cpp:222
 msgid "all files"
 msgstr "все файлы"
 
-#: src/app.cpp:328 ui/application.glade:41
+#: src/app.cpp:329 ui/application.glade:41
 msgid "Calibrate Joystick"
 msgstr "Калибровка джойстика"
 
-#: src/app.cpp:446
+#: src/app.cpp:447
 msgid "Show program version."
 msgstr "Показать версию программы."
 
-#: src/app.cpp:450
+#: src/app.cpp:451
 msgid "Run in daemon mode."
 msgstr "Запустить в режиме демона."
 
-#: src/app.cpp:454
+#: src/app.cpp:455
 msgid "Could not load resources file."
 msgstr "Не удалось загрузить файл ресурсов."
 
-#: src/app.cpp:491
+#: src/app.cpp:492
 msgid "Error opening file"
 msgstr "Ошибка открытия файла"
 
