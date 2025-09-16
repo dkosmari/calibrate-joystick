@@ -21,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          submodules: true
+          submodules: false
 
       # - name: Install dependencies
       #   uses: awalsh128/cache-apt-pkgs-action@latest
@@ -32,8 +32,12 @@ jobs:
       - name: Install dependencies
         uses: gerlero/apt-install@v1
         with:
-          packages: libevdev-dev libgudev-1.0-dev libgtkmm-3.0-dev
-      
+          packages: |
+            autopoint
+            libevdev-dev
+            libgudev-1.0-dev
+            libgtkmm-3.0-dev
+
       - name: Install libevdevxx-static-devel
         run: |
           wget -q "https://github.com/dkosmari/libevdevxx/releases/download/v0.5.3/libevdevxx-static-dev_0.5.3-1_amd64.deb"

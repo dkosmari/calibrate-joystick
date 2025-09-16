@@ -1,4 +1,4 @@
 #!/bin/bash -xe
-(cd external/libevdevxx && ./bootstrap)
-(cd external/libgudevxx && ./bootstrap)
+(cd external/libevdevxx && ./bootstrap) || true
+(cd external/libgudevxx && ./bootstrap) || true
 exec autoreconf --install "$@"
