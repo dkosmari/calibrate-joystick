@@ -100,8 +100,7 @@ AM_CONDITIONAL([INTERNAL_LIBGUDEVXX], [test "x$USE_SYSTEM_LIBGUDEVXX" = xno])
 AC_SUBST([EXTERNAL_SUBDIRS])
 
 
-AC_CONFIG_FILES([calibrate-joystick.spec
-                 calibrate-joystick.xml
+AC_CONFIG_FILES([calibrate-joystick.xml
                  calibrate-joystick.gschema.xml
                  Makefile
                  po/Makefile.in])

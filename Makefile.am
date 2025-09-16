@@ -5,7 +5,6 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 	@APPLICATION_ID@.desktop \
 	@APPLICATION_ID@_daemon.desktop \
-	@PACKAGE@.spec.in \
 	@PACKAGE@.xml.in \
 	@PACKAGE@.gschema.xml.in \
 	bootstrap \
