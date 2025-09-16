@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 	@APPLICATION_ID@.desktop \
 	@APPLICATION_ID@_daemon.desktop \
-	@PACKAGE@.xml.in \
+	@PACKAGE@.gresource.xml.in \
 	@PACKAGE@.gschema.xml.in \
 	bootstrap \
 	po/README.md \
@@ -16,7 +16,7 @@ EXTRA_DIST = \
 SUBDIRS = @EXTERNAL_SUBDIRS@ po
 
 
-# .desktop entry
+# .desktop file
 
 desktopdir = $(datadir)/applications
 desktop_DATA = \
@@ -26,24 +26,21 @@ desktop_DATA = \
 
 # .gresource file
 
-RESOURCES_XML = @PACKAGE@.xml
-RESOURCES_ARCHIVE = @PACKAGE@.gresource
-
-resourcesdir = $(datadir)/@PACKAGE@
-resources_DATA = $(RESOURCES_ARCHIVE)
-
-resources_DEPS = $(shell $(GLIB_COMPILE_RESOURCES) \
+gresource_DATA = @PACKAGE@.gresource
+gresourcedir = $(datadir)/@PACKAGE@
+gresource_DEPS = $(shell $(GLIB_COMPILE_RESOURCES) \
 				--sourcedir=$(srcdir) \
 				--generate-dependencies \
-				$(RESOURCES_XML))
+				$(gresource_DATA).xml)
 
-$(RESOURCES_ARCHIVE): $(RESOURCES_XML) $(resources_DEPS)
+$(gresource_DATA): $(gresource_DATA).xml $(gresources_DEPS)
 	$(GLIB_COMPILE_RESOURCES) $< \
 		--target=$@ \
 		--sourcedir=$(srcdir) \
 		--generate
 
 
+# .gschema file
 gsettings_SCHEMAS = @PACKAGE@.gschema.xml
 @GSETTINGS_RULES@
 
@@ -98,12 +95,7 @@ calibrate_joystick_SOURCES = \
 	src/utils.hpp
 
 
-.PHONY: run run-daemon rpm company
-
-
-# todo: find the name of the compiled schema file, write a rule
-gschemas.compiled: $(gsettings_SCHEMAS)
-	$(GLIB_COMPILE_SCHEMAS) --targetdir=$(builddir) $(srcdir)
+.PHONY: run run-daemon company
 
 
 install-exec-hook:
@@ -118,19 +110,15 @@ if INTERNAL_LIBGUDEVXX
 endif INTERNAL_LIBGUDEVXX
 
 
+# Note: to run without installing, the schema needs to be compiled.
+gschemas.compiled: $(gsettings_SCHEMAS)
+	$(GLIB_COMPILE_SCHEMAS) --targetdir=$(builddir) $(srcdir)
+
 run: all gschemas.compiled
 	GSETTINGS_SCHEMA_DIR=. ./calibrate-joystick
 
 run-daemon: all gschemas.compiled
 	GSETTINGS_SCHEMA_DIR=. ./calibrate-joystick -d
-
-
-RPM_TARBALL_NAME = $(HOME)/rpmbuild/SOURCES/$(TARBALL_NAME)
-
-rpm: @PACKAGE@.spec dist-gzip
-	[ -e $(RPM_TARBALL_NAME) ] || \
-		$(LN_S) $(PWD)/$(TARBALL_NAME) $(RPM_TARBALL_NAME)
-	rpmbuild -ba $<
 
 
 company: compile_flags.txt
@@ -140,5 +128,6 @@ compile_flags.txt: Makefile
 	$(CPP) -xc++ /dev/null -E -Wp,-v 2>&1 | sed -n 's,^ ,-I,p' >> compile_flags.txt
 
 
-CLEANFILES = $(RESOURCES_ARCHIVE) 
+CLEANFILES = $(gresource_DATA)
+
 MOSTLYCLEANFILES = gschemas.compiled

@@ -1,6 +1,7 @@
 syntax: glob
 
 *.gresource
+*.gresource.xml
 *.gschema.valid
 *.gschema.xml
 *.la
@@ -18,7 +19,6 @@ autom4te.cache
 autoscan.log
 build-aux
 calibrate-joystick
-calibrate-joystick.xml
 compile_flags.txt
 config.h
 config.h.in

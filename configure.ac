@@ -47,7 +47,7 @@ AC_ARG_ENABLE([system-libevdevxx],
               [AS_HELP_STRING([--disable-system-libevdevxx], [ignore libevdevxx from the system.])],
               [USE_SYSTEM_LIBEVDEVXX=$enableval])
 AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [yes],
-          [PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx], [], [USE_SYSTEM_LIBEVDEVXX=no])])
+          [PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx >= 0.5.3], [], [USE_SYSTEM_LIBEVDEVXX=no])])
 
 
 USE_SYSTEM_LIBGUDEVXX=yes
@@ -55,7 +55,7 @@ AC_ARG_ENABLE([system-libgudevxx],
               [AS_HELP_STRING([--disable-system-libgudevxx], [ignore libgudevxx from the system.])],
               [USE_SYSTEM_LIBGUDEVXX=$enableval])
 AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [yes],
-          [PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx], [], [USE_SYSTEM_LIBGUDEVXX=no])])
+          [PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx >= 0.3], [], [USE_SYSTEM_LIBGUDEVXX=no])])
 
 
 APPLICATION_ID="none.calibrate_joystick"
@@ -100,7 +100,7 @@ AM_CONDITIONAL([INTERNAL_LIBGUDEVXX], [test "x$USE_SYSTEM_LIBGUDEVXX" = xno])
 AC_SUBST([EXTERNAL_SUBDIRS])
 
 
-AC_CONFIG_FILES([calibrate-joystick.xml
+AC_CONFIG_FILES([calibrate-joystick.gresource.xml
                  calibrate-joystick.gschema.xml
                  Makefile
                  po/Makefile.in])
