@@ -19,9 +19,9 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
-          submodules: false
+          submodules: true
 
       - name: Install dependencies
         uses: gerlero/apt-install@v1
@@ -37,16 +37,6 @@ jobs:
             libgudev-1.0-dev
             libtool
             pkg-config
-
-      - name: Install libevdevxx-static-devel
-        run: |
-          wget -q "https://github.com/dkosmari/libevdevxx/releases/download/v0.5.3/libevdevxx-static-dev_0.5.3-1_amd64.deb"
-          sudo apt install -qy ./libevdevxx-static-dev_0.5.3-1_amd64.deb
-
-      - name: Install libevdevxx-static-devel
-        run: |
-          wget -q "https://github.com/dkosmari/libgudevxx/releases/download/v0.3/libgudevxx-static-dev_0.3-1_amd64.deb"
-          sudo apt install -qy ./libgudevxx-static-dev_0.3-1_amd64.deb
 
       - name: Use ccache
         uses: hendrikmuhs/ccache-action@v1.2

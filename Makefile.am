@@ -13,11 +13,7 @@ EXTRA_DIST = \
 	ui
 
 
-SUBDIRS = @EXTERNAL_SUBDIRS@ po
-
-DIST_SUBDIRS = \
-	external/libevdevxx \
-	external/libgudevxx
+SUBDIRS = @subdirs_extra@ po
 
 
 # .desktop file
@@ -50,13 +46,18 @@ gsettings_SCHEMAS = @PACKAGE@.gschema.xml
 
 
 if INTERNAL_LIBEVDEVXX
+
 LIBEVDEVXX_CFLAGS += $(LIBEVDEV_CFLAGS) -I$(srcdir)/external/libevdevxx/include
 LIBEVDEVXX_LIBS += -Lexternal/libevdevxx -levdevxx $(LIBEVDEV_LIBS)
+
 endif INTERNAL_LIBEVDEVXX
 
+
 if INTERNAL_LIBGUDEVXX
+
 LIBGUDEVXX_CFLAGS += $(LIBGUDEV_CFLAGS) -I$(srcdir)/external/libgudevxx/include
 LIBGUDEVXX_LIBS += -Lexternal/libgudevxx -lgudevxx $(LIBGUDEV_LIBS)
+
 endif INTERNAL_LIBGUDEVXX
 
 

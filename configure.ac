@@ -15,8 +15,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 LT_INIT
 
-IT_PROG_INTLTOOL
-
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_CPP
@@ -28,7 +26,7 @@ AC_PROG_MAKE_SET
 PKG_CHECK_VAR([GLIB_COMPILE_RESOURCES], [gio-2.0], [glib_compile_resources])
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.21.1])
+AM_GNU_GETTEXT_VERSION([0.21])
 AM_ICONV
 
 GETTEXT_PACKAGE="$PACKAGE"
@@ -76,29 +74,24 @@ AC_DEFINE_UNQUOTED([RESOURCE_PREFIX],
                    [Path prefix used in the .gresource file.])
 
 
-EXTERNAL_SUBDIRS=
-
 AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBEVDEV], [libevdev])
               AC_MSG_NOTICE([Using built-in libevdevxx.])
-              EXTERNAL_SUBDIRS+=" external/libevdevxx"
               AX_SUBDIRS_CONFIGURE([external/libevdevxx],
                                    [[--disable-shared]])
           ])
 AM_CONDITIONAL([INTERNAL_LIBEVDEVXX], [test "x$USE_SYSTEM_LIBEVDEVXX" = xno])
 
+
 AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [no],
           [
               PKG_CHECK_MODULES([LIBGUDEV], [gudev-1.0])
               AC_MSG_NOTICE([Using built-in libgudevxx.])
-              EXTERNAL_SUBDIRS+=" external/libgudevxx"
               AX_SUBDIRS_CONFIGURE([external/libgudevxx],
                                    [[--disable-shared]])
           ])
 AM_CONDITIONAL([INTERNAL_LIBGUDEVXX], [test "x$USE_SYSTEM_LIBGUDEVXX" = xno])
-
-AC_SUBST([EXTERNAL_SUBDIRS])
 
 
 AC_CONFIG_FILES([calibrate-joystick.gresource.xml
