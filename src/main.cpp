@@ -21,7 +21,7 @@
 int main(int argc, char* argv[])
 {
     std::setlocale(LC_ALL, "");
-    bindtextdomain(PACKAGE, LOCALEDIR);
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(PACKAGE, "UTF-8");
     textdomain(PACKAGE);
 

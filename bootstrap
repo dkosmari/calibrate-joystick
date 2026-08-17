@@ -17,4 +17,4 @@ recurse_bootstrap external/libgudevxx
 
 
 echo "[${GREEN}${PWD}${NONE}] Running '${YELLOW}autoreconf --install $@${NONE}'"
-exec autoreconf --install "$@"
+exec autoreconf --install --force "$@"

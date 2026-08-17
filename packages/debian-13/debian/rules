@@ -5,4 +5,4 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 # export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1
 
 %:
-	dh $@
+	dh $@ --disable-system-libevdevxx --disable-system-libgudevxx

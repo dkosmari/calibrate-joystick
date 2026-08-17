@@ -1,5 +1,5 @@
 Name:           calibrate-joystick
-Version:        0.6.0
+Version:        0.6.1
 Release:        %mkrel 1
 Summary:        A joystick calibration program.
 Group:          System/Kernel and hardware
@@ -8,8 +8,8 @@ License:        GPLv3+
 URL:            https://github.com/dkosmari/%{name}
 Source0:        https://github.com/dkosmari/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 
-BuildRequires:  pkgconfig(libevdevxx)
-BuildRequires:  pkgconfig(libgudevxx)
+BuildRequires:  pkgconfig(libevdev)
+BuildRequires:  pkgconfig(gudev-1.0)
 BuildRequires:  pkgconfig(gtkmm-3.0)
 
 
@@ -22,7 +22,7 @@ stick around, and apply the calculated minimum and maximum range.
 %autosetup
 
 %build
-%configure 
+%configure --disable-system-libevdevxx --disable-system-libgudevxx
 %make_build
 
 %install

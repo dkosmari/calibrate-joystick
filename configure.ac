@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.70])
 AC_INIT([Calibrate Joystick],
-        [0.6.0],
+        [0.6.1],
         [https://github.com/dkosmari/calibrate-joystick/issues],
         [calibrate-joystick],
         [https://github.com/dkosmari/calibrate-joystick])
@@ -12,8 +12,10 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([foreign subdir-objects])
+AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 LT_INIT
+
+IT_PROG_INTLTOOL
 
 AC_PROG_AWK
 AC_PROG_CC
@@ -26,8 +28,12 @@ AC_PROG_MAKE_SET
 PKG_CHECK_VAR([GLIB_COMPILE_RESOURCES], [gio-2.0], [glib_compile_resources])
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.21])
+AM_GNU_GETTEXT_VERSION([0.21.1])
 AM_ICONV
+
+GETTEXT_PACKAGE="$PACKAGE"
+AC_SUBST([GETTEXT_PACKAGE])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext package name])
 
 
 AC_LANG([C++])

@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 NAME=calibrate-joystick
-VERSION=0.6.0
+VERSION=0.6.1
 TARNAME=${NAME}-${VERSION}
 TARBALL=${TARNAME}.tar.gz
 

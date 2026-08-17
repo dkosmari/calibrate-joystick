@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Daniel K. O. (@dkosmari)
 Build-Depends:
  debhelper-compat (= 13),
- libevdevxx-static-dev,
- libgudevxx-static-dev,
+ libevdev-dev,
+ libgudev-1.0-dev,
 Standards-Version: 4.7.0
 Homepage: https://github.com/dkosmari/calibrate-joystick
 Rules-Requires-Root: no
