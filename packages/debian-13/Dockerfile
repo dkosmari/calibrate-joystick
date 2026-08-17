@@ -7,7 +7,8 @@ RUN apt -q -y install devscripts
 RUN apt -q -y install wget
 
 # Install dependencies
-RUN apt -q -y install build-essential autoconf-archive pkg-config libgtkmm-3.0-dev
+RUN apt -q -y install build-essential autoconf-archive pkg-config
+RUN apt -q -y install libgtkmm-3.0-dev libevdev-dev libgudev-1.0-dev
 
 WORKDIR /tmp
 
