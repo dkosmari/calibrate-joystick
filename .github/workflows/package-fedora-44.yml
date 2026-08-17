@@ -1,9 +1,9 @@
-name: Mageia 9 RPM package
+name: Fedora 44 RPM package
 
 on: [workflow_dispatch]
 
 env:
-  DISTRO: mageia-9
+  DISTRO: fedora-44
 
 jobs:
   build-rpm:
@@ -36,7 +36,7 @@ jobs:
       uses: tj-actions/docker-cp@v2
       with:
         container: container-${{ env.DISTRO }}
-        source: /buildroot/output
+        source: /root/rpmbuild/output
         destination: packages/${{ env.DISTRO }}/output
 
     - name: Upload

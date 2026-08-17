@@ -1,4 +1,4 @@
-FROM fedora:42
+FROM fedora:44
 
 # install packaging tools
 RUN dnf -qy group install rpm-development-tools
