@@ -47,7 +47,8 @@ PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0])
 
 USE_SYSTEM_LIBEVDEVXX=yes
 AC_ARG_ENABLE([system-libevdevxx],
-              [AS_HELP_STRING([--disable-system-libevdevxx], [ignore libevdevxx from the system.])],
+              [AS_HELP_STRING([--disable-system-libevdevxx],
+                              [ignore libevdevxx from the system.])],
               [USE_SYSTEM_LIBEVDEVXX=$enableval])
 AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [yes],
           [PKG_CHECK_MODULES([LIBEVDEVXX], [libevdevxx >= 0.5.3], [], [USE_SYSTEM_LIBEVDEVXX=no])])
@@ -55,7 +56,8 @@ AS_VAR_IF([USE_SYSTEM_LIBEVDEVXX], [yes],
 
 USE_SYSTEM_LIBGUDEVXX=yes
 AC_ARG_ENABLE([system-libgudevxx],
-              [AS_HELP_STRING([--disable-system-libgudevxx], [ignore libgudevxx from the system.])],
+              [AS_HELP_STRING([--disable-system-libgudevxx],
+                              [ignore libgudevxx from the system.])],
               [USE_SYSTEM_LIBGUDEVXX=$enableval])
 AS_VAR_IF([USE_SYSTEM_LIBGUDEVXX], [yes],
           [PKG_CHECK_MODULES([LIBGUDEVXX], [libgudevxx >= 0.3], [], [USE_SYSTEM_LIBGUDEVXX=no])])

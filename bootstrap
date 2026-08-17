@@ -16,5 +16,14 @@ recurse_bootstrap external/libevdevxx
 recurse_bootstrap external/libgudevxx
 
 
-echo "[${GREEN}${PWD}${NONE}] Running '${YELLOW}autoreconf --install $@${NONE}'"
-exec autoreconf --install --force "$@"
+announce_and_run()
+{
+    echo "[${GREEN}${PWD}${NONE}] Running '${YELLOW}$@${NONE}'"
+    "$@" || exit 2
+}
+
+
+announce_and_run autoreconf --install --force --verbose "$@"
+
+
+exit 0

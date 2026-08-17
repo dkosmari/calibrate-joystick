@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: calibrate-joystick 0.6.1\n"
-"Report-Msgid-Bugs-To: https://github.com/dkosmari/calibrate-joystick/issues\n"
-"POT-Creation-Date: 2026-08-17 15:54-0300\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-17 16:41-0300\n"
 "PO-Revision-Date: 2026-08-17 16:02-0300\n"
 "Last-Translator: Daniel K. O.\n"
 "Language-Team: \n"
@@ -20,196 +20,144 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
 
-#: src/app.cpp:130 ui/application.glade:426
+#: ../src/app.cpp:130 ../ui/application.glade.h:17
 msgid "_Close"
 msgstr "_Chiudi"
 
-#: src/app.cpp:135 src/app.cpp:213
+#: ../src/app.cpp:135 ../src/app.cpp:213
 msgid "_Cancel"
 msgstr "A_nnulla"
 
-#: src/app.cpp:136 ui/device-page.glade:401
+#: ../src/app.cpp:136 ../ui/device-page.glade.h:18
 msgid "_Delete"
 msgstr "_Eliminare"
 
-#: src/app.cpp:184
+#: ../src/app.cpp:184
 msgid "Daemon running."
 msgstr "Demone in esecuzione."
 
-#: src/app.cpp:185 src/app.cpp:330
+#: ../src/app.cpp:185 ../src/app.cpp:330
 msgid "Monitoring new joysticks..."
 msgstr "Monitoraggio dei nuovi joystick..."
 
-#: src/app.cpp:187
+#: ../src/app.cpp:187
 msgid "Quit daemon"
 msgstr "Abbandona il demone"
 
-#: src/app.cpp:206
+#: ../src/app.cpp:206
 msgid "Open device..."
 msgstr "Aprire il dispositivo..."
 
-#: src/app.cpp:214 ui/actions.ui:11
+#: ../src/app.cpp:214
 msgid "_Open"
 msgstr "_Apri"
 
-#: src/app.cpp:217
+#: ../src/app.cpp:217
 msgid "evdev devices"
 msgstr "dispositivi evdev"
 
-#: src/app.cpp:222
+#: ../src/app.cpp:222
 msgid "all files"
 msgstr "tutti i file"
 
-#: src/app.cpp:329 ui/application.glade:41
+#: ../src/app.cpp:329 ../ui/application.glade.h:1
 msgid "Calibrate Joystick"
 msgstr "Calibrare il joystick"
 
-#: src/app.cpp:447
+#: ../src/app.cpp:447
 msgid "Show program version."
 msgstr "Mostra la versione del programma."
 
-#: src/app.cpp:451
+#: ../src/app.cpp:451
 msgid "Run in daemon mode."
 msgstr "Eseguire in modalità demone."
 
-#: src/app.cpp:455
+#: ../src/app.cpp:455
 msgid "Could not load resources file."
 msgstr "Impossibile caricare il file delle risorse."
 
-#: src/app.cpp:492
+#: ../src/app.cpp:492
 msgid "Error opening file"
 msgstr "Errore nell'apertura del file"
 
-#: src/device_page.cpp:174
+#: ../src/device_page.cpp:174
 msgid "Device disconnected."
 msgstr "Dispositivo scollegato."
 
-#: src/device_page.cpp:176
+#: ../src/device_page.cpp:176
 msgid "Input/output error."
 msgstr "Errore di entrata/uscita."
 
-#. Button to refresh the list of devices.
-#: ui/actions.ui:6 ui/application.glade:485
-msgctxt "refresh devices"
-msgid "_Refresh"
-msgstr "Aggiorna_re"
-
-#: ui/actions.ui:18 ui/application.glade:513
-msgid "_Settings"
-msgstr "_Impostazioni"
-
-#: ui/actions.ui:25
-msgid "_About"
-msgstr "Circ_a"
-
-#: ui/actions.ui:30
-msgid "_Quit"
-msgstr "Abbandona"
-
-#: ui/application.glade:64
+#: ../ui/application.glade.h:2
 msgid "A utility to calibrate joysticks."
 msgstr "Una utilità per calibrare i joystick."
 
-#: ui/application.glade:106
+#: ../ui/application.glade.h:3
 msgid "Confirm file deletion"
 msgstr "Conferma l'eliminazione del file"
 
-#: ui/application.glade:136
+#: ../ui/application.glade.h:4
 msgid "Do you want to delete this file?"
 msgstr "Vuoi eliminare questo file?"
 
-#: ui/application.glade:172
+#: ../ui/application.glade.h:5
 msgid "Settings for Calibrate Joystick"
 msgstr "Impostazioni per la calibrazione del joystick"
 
-#: ui/application.glade:209 ui/axis-info.glade:254
-msgctxt "axis value"
-msgid "Value:"
-msgstr "Valore:"
-
-#. Abbreviation for "minimum value."
-#: ui/application.glade:238 ui/axis-info.glade:93
-msgctxt "axis min"
-msgid "Min:"
-msgstr "Min:"
-
-#. Abbreviation for "maximum value."
-#: ui/application.glade:254 ui/axis-info.glade:110
-msgctxt "axis max"
-msgid "Max:"
-msgstr "Max:"
-
-#. Probably best left untranslated.
-#: ui/application.glade:306 ui/axis-info.glade:166
-msgctxt "axis fuzz"
-msgid "Fuzz:"
-msgstr "Fuzz:"
-
-#. Name for "near zero" field. Probably best left untranslated.
-#: ui/application.glade:322 ui/axis-info.glade:330
-msgctxt "axis flat"
-msgid "Flat:"
-msgstr "Flat:"
-
-#: ui/application.glade:361
-msgctxt "background color"
-msgid "Background:"
-msgstr "Sfondo:"
-
-#: ui/application.glade:409
+#: ../ui/application.glade.h:16
 msgid "Colors"
 msgstr "Colori"
 
-#: ui/application.glade:444
+#: ../ui/application.glade.h:18
 msgid "_Reset"
 msgstr "_Resettare"
 
-#: ui/application.glade:448
+#: ../ui/application.glade.h:19
 msgid "Reset settings back to defaults."
 msgstr "Ripristina le impostazioni predefinite."
 
-#: ui/application.glade:480
-msgctxt "application name"
-msgid "Calibrate Joystick"
-msgstr "Calibrare il joystick"
-
-#: ui/application.glade:497
+#: ../ui/application.glade.h:23
 msgid "_Quit daemon"
 msgstr "Abban_dona il demone"
 
-#: ui/axis-info.glade:28
+#: ../ui/application.glade.h:24
+msgid "_Settings"
+msgstr "_Impostazioni"
+
+#: ../ui/axis-info.glade.h:1
 msgid "Show flat region around zero."
 msgstr "Mostra la regione piatta attorno allo zero."
 
-#: ui/axis-info.glade:29
+#: ../ui/axis-info.glade.h:2
 msgid "Around zero"
 msgstr "Intorno allo zero"
 
-#: ui/axis-info.glade:38
+#: ../ui/axis-info.glade.h:3
 msgid "Show flat region centered in the min-max range."
 msgstr "Mostra la regione piatta centrata nell'intervallo min-max."
 
-#: ui/axis-info.glade:39
+#: ../ui/axis-info.glade.h:4
 msgid "Centered"
 msgstr "Centrata"
 
-#: ui/axis-info.glade:91
+#: ../ui/axis-info.glade.h:5
 msgid "The minimum parameter for this axis."
 msgstr "Parametro minimo per questo asse."
 
-#: ui/axis-info.glade:108
+#: ../ui/axis-info.glade.h:8
 msgid "The maximum parameter for this axis."
 msgstr "Il parametro massimo per questo asse."
 
-#: ui/axis-info.glade:125
+#: ../ui/axis-info.glade.h:11
 msgid "The <b>current</b> minimum parameter."
 msgstr "Il parametro minimo <b>attuale</b>."
 
-#: ui/axis-info.glade:143
+#: ../ui/axis-info.glade.h:12
 msgid "The <b>current</b> maximum parameter."
 msgstr "Il parametro massimo <b>attuale</b>."
 
-#: ui/axis-info.glade:161
+#: ../ui/axis-info.glade.h:14
+#, no-c-format
 msgid ""
 "The <tt>fuzz</tt> parameter is used by the kernel to apply a noise filter:\n"
 "- Value changes smaller than <tt>fuzz/2</tt> will be ignored.\n"
@@ -224,60 +172,42 @@ msgstr ""
 "- Le variazioni di valore inferiori a <tt>2×fuzz</tt> verranno ridotte al "
 "50%."
 
-#: ui/axis-info.glade:181
+#: ../ui/axis-info.glade.h:20
 msgid "The <b>current</b> <tt>fuzz</tt> parameter."
 msgstr "Il parametro <b>attuale</b> <tt>fuzz</tt>."
 
-#: ui/axis-info.glade:199
+#: ../ui/axis-info.glade.h:21
 msgid "The <b>current</b> <tt>flat</tt> parameter."
 msgstr "Il parametro <b>attuale</b> <tt>piatto</tt>."
 
-#: ui/axis-info.glade:217
+#: ../ui/axis-info.glade.h:22
 msgid ""
 "The resolution parameter for this axis. This is ignored by most applications."
 msgstr ""
 "Parametro di risoluzione per questo asse. Questo parametro viene ignorato "
 "dalla maggior parte delle applicazioni."
 
-#. Abbreviation for "resolution."
-#: ui/axis-info.glade:219
-msgctxt "axis res"
-msgid "Res:"
-msgstr "Ris:"
-
-#: ui/axis-info.glade:234
+#: ../ui/axis-info.glade.h:25
 msgid "The <b>current</b> resolution parameter."
 msgstr "Il parametro di risoluzione <b>corrente</b>."
 
-#: ui/axis-info.glade:252
+#: ../ui/axis-info.glade.h:26
 msgid "The current value for this axis."
 msgstr "Il valore corrente per questo asse."
 
-#: ui/axis-info.glade:269
+#: ../ui/axis-info.glade.h:28
 msgid "The current value."
 msgstr "Il valore attuale."
 
-#. Apply settings for a single axis.
-#: ui/axis-info.glade:285
-msgctxt "axis apply"
-msgid "Apply"
-msgstr "Applicare"
-
-#: ui/axis-info.glade:289
+#: ../ui/axis-info.glade.h:31
 msgid "Apply the <b>new</b> parameters to this axis."
 msgstr "Applica i <b>nuovi</b> parametri a questo asse."
 
-#. Revert settings for a single axis.
-#: ui/axis-info.glade:301
-msgctxt "revert axis"
-msgid "Revert"
-msgstr "Revert"
-
-#: ui/axis-info.glade:305
+#: ../ui/axis-info.glade.h:34
 msgid "Revert the <b>new</b> parameters back to the <b>current</b> parameters."
 msgstr "Ripristina i parametri <b>nuovi</b> ai parametri <b>correnti</b>."
 
-#: ui/axis-info.glade:321
+#: ../ui/axis-info.glade.h:35
 msgid ""
 "Also known as \"<i>dead zone</i>.\" Values smaller than <tt>flat</tt> will "
 "be interpreted as zero. This is ignored by most applications."
@@ -286,140 +216,181 @@ msgstr ""
 "saranno interpretati come zero. Questo viene ignorato dalla maggior parte "
 "delle applicazioni."
 
-#: ui/axis-info.glade:359
+#: ../ui/axis-info.glade.h:38
 msgid "The <b>new</b> minimum parameter."
 msgstr "Il <b>nuovo</b> parametro minimo."
 
-#: ui/axis-info.glade:379
+#: ../ui/axis-info.glade.h:39
 msgid "The <b>new</b> maximum parameter."
 msgstr "Il <b>nuovo</b> parametro massimo."
 
-#: ui/axis-info.glade:399
+#: ../ui/axis-info.glade.h:40
 msgid "The <b>new</b> <tt>fuzz</tt> parameter."
 msgstr "Il <b>nuovo</b> parametro <tt>fuzz</tt>."
 
-#: ui/axis-info.glade:420
+#: ../ui/axis-info.glade.h:41
 msgid "The <b>new</b> <tt>flat</tt> parameter."
 msgstr "Il parametro <b>nuovo</b> <tt>flat</tt>."
 
-#: ui/axis-info.glade:441
+#: ../ui/axis-info.glade.h:42
 msgid "The <b>new</b> resolution parameter."
 msgstr "Il <b>nuovo</b> parametro di risoluzione."
 
-#: ui/device-page.glade:42
+#: ../ui/device-page.glade.h:1
 msgid "Error:"
 msgstr "Errore:"
 
-#: ui/device-page.glade:94
-msgctxt "device name"
-msgid "Name:"
-msgstr "Nome:"
-
-#: ui/device-page.glade:109
-msgctxt "device path"
-msgid "Path:"
-msgstr "Percorso:"
-
-#: ui/device-page.glade:160
+#: ../ui/device-page.glade.h:4
 msgid "Vendor ID:"
 msgstr "ID fornitore:"
 
-#: ui/device-page.glade:192
+#: ../ui/device-page.glade.h:5
 msgid "Product ID:"
 msgstr "ID prodotto:"
 
-#: ui/device-page.glade:207
-msgctxt "device version"
-msgid "Version:"
-msgstr "Versione:"
-
-#: ui/device-page.glade:253
+#: ../ui/device-page.glade.h:7
 msgid "Match device name"
 msgstr "Abbina il nome del dispositivo"
 
-#: ui/device-page.glade:257
+#: ../ui/device-page.glade.h:8
 msgid "Match device's name when saving or loading calibration."
 msgstr "Abbina il nome del dispositivo quando salvi o carichi la calibrazione."
 
-#: ui/device-page.glade:269
+#: ../ui/device-page.glade.h:9
 msgid "Match device vendor ID"
 msgstr "ID fornitore dispositivo corrispondente"
 
-#: ui/device-page.glade:273
+#: ../ui/device-page.glade.h:10
 msgid "Match device's vendor ID when saving or loading calibration."
 msgstr ""
 "Abbinare l'ID del fornitore del dispositivo durante il salvataggio o il "
 "caricamento della calibrazione."
 
-#: ui/device-page.glade:285
+#: ../ui/device-page.glade.h:11
 msgid "Match device product ID"
 msgstr "Abbina l'ID prodotto del dispositivo"
 
-#: ui/device-page.glade:289
+#: ../ui/device-page.glade.h:12
 msgid "Match device's product ID when saving or loading calibration."
 msgstr ""
 "Abbina l'ID prodotto del dispositivo durante il salvataggio o il caricamento "
 "della calibrazione."
 
-#: ui/device-page.glade:301
+#: ../ui/device-page.glade.h:13
 msgid "Match device version number"
 msgstr "Corrispondenza numero di versione del dispositivo"
 
-#: ui/device-page.glade:305
+#: ../ui/device-page.glade.h:14
 msgid "Match device's version number when saving or loading calibration."
 msgstr ""
 "Abbina il numero di versione del dispositivo durante il salvataggio o il "
 "caricamento della calibrazione."
 
-#: ui/device-page.glade:327
+#: ../ui/device-page.glade.h:15
 msgid "Save the calibration parameters to a file."
 msgstr "Salvare i parametri di calibrazione in un file."
 
-#: ui/device-page.glade:352
+#: ../ui/device-page.glade.h:16
 msgid "_Save"
 msgstr "_Salva"
 
-#: ui/device-page.glade:376
+#: ../ui/device-page.glade.h:17
 msgid "Delete the calibration file."
 msgstr "Eliminare il file di calibrazione."
 
-#: ui/device-page.glade:435
+#: ../ui/device-page.glade.h:19
 msgid "Revert the user interface back to the current device parameters."
 msgstr ""
 "Ripristinare i parametri correnti del dispositivo nell'interfaccia utente."
 
-#: ui/device-page.glade:461
+#: ../ui/device-page.glade.h:20
 msgid "_Revert"
 msgstr "_Ripristina"
 
-#: ui/device-page.glade:485
+#: ../ui/device-page.glade.h:21
 msgid "Apply all calibration parameters to the device."
 msgstr "Applicare tutti i parametri di calibrazione al dispositivo."
 
-#: ui/device-page.glade:511
+#: ../ui/device-page.glade.h:22
 msgid "_Apply"
 msgstr "_Applicare"
 
-#: calibrate-joystick.gschema.xml.in:7
-msgid "The background color."
-msgstr "Il colore di sfondo."
+#~ msgctxt "refresh devices"
+#~ msgid "_Refresh"
+#~ msgstr "Aggiorna_re"
 
-#: calibrate-joystick.gschema.xml.in:11
-msgid "The color for the flat indicator."
-msgstr "Il colore per l'indicatore flat."
+#~ msgid "_About"
+#~ msgstr "Circ_a"
 
-#: calibrate-joystick.gschema.xml.in:15
-msgid "The color for the fuzz indicator."
-msgstr "Il colore per l'indicatore fuzz."
+#~ msgid "_Quit"
+#~ msgstr "Abbandona"
 
-#: calibrate-joystick.gschema.xml.in:19
-msgid "The color for the maximum indicator."
-msgstr "Il colore per l'indicatore massimo."
+#~ msgctxt "axis value"
+#~ msgid "Value:"
+#~ msgstr "Valore:"
 
-#: calibrate-joystick.gschema.xml.in:23
-msgid "The color for the minimum indicator."
-msgstr "Il colore per l'indicatore minimo."
+#~ msgctxt "axis min"
+#~ msgid "Min:"
+#~ msgstr "Min:"
 
-#: calibrate-joystick.gschema.xml.in:27
-msgid "The color for the current value indicator."
-msgstr "Colore dell'indicatore del valore corrente."
+#~ msgctxt "axis max"
+#~ msgid "Max:"
+#~ msgstr "Max:"
+
+#~ msgctxt "axis fuzz"
+#~ msgid "Fuzz:"
+#~ msgstr "Fuzz:"
+
+#~ msgctxt "axis flat"
+#~ msgid "Flat:"
+#~ msgstr "Flat:"
+
+#~ msgctxt "background color"
+#~ msgid "Background:"
+#~ msgstr "Sfondo:"
+
+#~ msgctxt "application name"
+#~ msgid "Calibrate Joystick"
+#~ msgstr "Calibrare il joystick"
+
+#~ msgctxt "axis res"
+#~ msgid "Res:"
+#~ msgstr "Ris:"
+
+#~ msgctxt "axis apply"
+#~ msgid "Apply"
+#~ msgstr "Applicare"
+
+#~ msgctxt "revert axis"
+#~ msgid "Revert"
+#~ msgstr "Revert"
+
+#~ msgctxt "device name"
+#~ msgid "Name:"
+#~ msgstr "Nome:"
+
+#~ msgctxt "device path"
+#~ msgid "Path:"
+#~ msgstr "Percorso:"
+
+#~ msgctxt "device version"
+#~ msgid "Version:"
+#~ msgstr "Versione:"
+
+#~ msgid "The background color."
+#~ msgstr "Il colore di sfondo."
+
+#~ msgid "The color for the flat indicator."
+#~ msgstr "Il colore per l'indicatore flat."
+
+#~ msgid "The color for the fuzz indicator."
+#~ msgstr "Il colore per l'indicatore fuzz."
+
+#~ msgid "The color for the maximum indicator."
+#~ msgstr "Il colore per l'indicatore massimo."
+
+#~ msgid "The color for the minimum indicator."
+#~ msgstr "Il colore per l'indicatore minimo."
+
+#~ msgid "The color for the current value indicator."
+#~ msgstr "Colore dell'indicatore del valore corrente."
