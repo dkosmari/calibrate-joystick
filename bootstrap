@@ -23,7 +23,7 @@ announce_and_run()
 }
 
 
-announce_and_run autoreconf --install --force --verbose "$@"
+announce_and_run autoreconf --install --verbose "$@"
 
 
 exit 0
