@@ -15,6 +15,10 @@ EXTRA_DIST = \
 
 SUBDIRS = @EXTERNAL_SUBDIRS@ po
 
+DIST_SUBDIRS = \
+	external/libevdevxx \
+	external/libgudevxx
+
 
 # .desktop file
 
