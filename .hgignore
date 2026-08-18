@@ -50,3 +50,5 @@ po/stamp-it
 po/stamp-po
 SPECS/log.*
 stamp-h1
+packages/\[*\]*
+packages/*.zip

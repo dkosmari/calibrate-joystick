@@ -1,0 +1,43 @@
+pkgname=calibrate-joystick
+pkgver=0.6.1
+pkgrel=1
+arch=('x86_64')
+pkgdesc="A joystick calibration program."
+url="https://github.com/dkosmari/${pkgname}"
+license=('GPL-3.0-or-later')
+makedepends=(
+    'autoconf'
+    'automake'
+    'gtkmm3'
+    'libevdev'
+    'libgudev'
+)
+depends=(
+    'gtkmm3'
+    'libevdev'
+    'libgudev'
+)
+
+source=("https://github.com/dkosmari/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+
+build() {
+    cd "${pkgname}-${pkgver}"
+
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --sbindir=/usr/bin \
+        --localstatedir=/var \
+        --disable-system-libevdevxx \
+        --disable-system-libgudevxx
+
+    make
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    make DESTDIR="${pkgdir}" install
+}
+
+sha256sums=('0d163a4d680f955bca0e9629da771110d67cb4ffc3a032cf1a07e8fcf5159d6e')
