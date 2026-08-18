@@ -1,3 +1,3 @@
 #!/bin/bash -x
 
-exec sudo makepkg --force --clean --syncdeps
+exec makepkg --force --clean --syncdeps
