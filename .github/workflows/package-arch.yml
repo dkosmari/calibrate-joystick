@@ -6,7 +6,7 @@ env:
   DISTRO: archlinux
 
 jobs:
-  build-rpm:
+  build-zst:
 
     runs-on: ubuntu-latest
 
