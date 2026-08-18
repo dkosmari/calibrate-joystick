@@ -1,7 +1,7 @@
 FROM archlinux:base-devel
 
 # install build dependencies
-RUN pacman -S --needed base-devel
+RUN pacman -Sy --needed base-devel
 
 WORKDIR /buildroot
 
