@@ -6,7 +6,7 @@ env:
   DISTRO: archlinux
 
 jobs:
-  build-zst:
+  build-pkg:
 
     runs-on: ubuntu-latest
 
@@ -24,7 +24,7 @@ jobs:
         DOCKER_BUILD_SUMMARY: false
         DOCKER_BUILD_RECORD_UPLOAD: false
 
-    - name: Build ZST package
+    - name: Build PKG
       uses: addnab/docker-run-action@v3
       with:
         image: image-${{ env.DISTRO }}

@@ -24,7 +24,7 @@ jobs:
         DOCKER_BUILD_SUMMARY: false
         DOCKER_BUILD_RECORD_UPLOAD: false
 
-    - name: Build DEB package
+    - name: Build DEB
       uses: addnab/docker-run-action@v3
       with:
         image: image-${{ env.DISTRO }}
