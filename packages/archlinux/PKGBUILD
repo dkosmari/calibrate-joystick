@@ -8,9 +8,14 @@ license=('GPL-3.0-or-later')
 makedepends=(
     'autoconf'
     'automake'
+    'gcc'
+    'gettext'
     'gtkmm3'
+    'intltool'
     'libevdev'
     'libgudev'
+    'libtool'
+    'pkgconf'
 )
 depends=(
     'gtkmm3'

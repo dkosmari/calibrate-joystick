@@ -1,3 +1,9 @@
 #!/bin/bash -x
 
-exec makepkg --force --clean
+makepkg --force --clean || exit 1
+
+mkdir -p output || exit 2
+
+mv --target-directory=output \
+   *.zst \
+   *.zst.sig
